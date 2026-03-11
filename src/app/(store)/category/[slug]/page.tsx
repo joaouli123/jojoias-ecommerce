@@ -4,6 +4,7 @@ import { ProductCard } from "@/components/product/product-card"
 import { getCatalogFacetsAction, getCatalogProductsAction } from "@/actions/products"
 import { MobileFilters } from "@/components/catalog/mobile-filters"
 import { getStoreSettings } from "@/lib/store-settings"
+import { buildBreadcrumbJsonLd, buildPageJsonLd, buildPageMetadata, toAbsoluteUrl } from "@/lib/site-seo"
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://luxijoias.com.br"
 
@@ -75,21 +76,13 @@ function buildCategoryPath(slug: string) {
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params
   const title = formatCategoryTitle(slug)
+  const description = `Compre ${title.toLowerCase()} na Luxijóias com curadoria premium, envio para todo o Brasil e condições especiais no site.`
 
-  return {
+  return buildPageMetadata({
     title,
-    description: `Confira ${title.toLowerCase()} com ofertas exclusivas e entrega rápida em todo o Brasil.`,
-    alternates: {
-      canonical: buildCategoryPath(slug),
-    },
-    openGraph: {
-      title: `${title} | Luxijóias`,
-      description: `Confira ${title.toLowerCase()} com ofertas exclusivas e entrega rápida em todo o Brasil.`,
-      url: `${siteUrl}${buildCategoryPath(slug)}`,
-      type: "website",
-      locale: "pt_BR",
-    },
-  }
+    description,
+    path: buildCategoryPath(slug),
+  })
 }
 
 export default async function CategoryPage({
@@ -145,8 +138,38 @@ export default async function CategoryPage({
     })),
   }
   const categoryPath = buildCategoryPath(slug)
+  const pageDescription = `Compre ${title.toLowerCase()} na Luxijóias com curadoria premium, envio para todo o Brasil e condições especiais no site.`
+  const breadcrumbJsonLd = buildBreadcrumbJsonLd([
+    { name: "Início", path: "/" },
+    { name: title, path: categoryPath },
+  ])
+  const collectionPageJsonLd = {
+    ...buildPageJsonLd({
+      title,
+      description: pageDescription,
+      path: categoryPath,
+      type: "CollectionPage",
+    }),
+    mainEntity: {
+      "@type": "ItemList",
+      itemListElement: products.slice(0, 12).map((product, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        url: `${siteUrl}/produto/${product.slug}`,
+        name: product.name,
+      })),
+    },
+  }
   return (
     <div className="flex flex-col gap-8 pb-16 max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 w-full py-8 md:py-12">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(collectionPageJsonLd) }}
+      />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListJsonLd) }}
@@ -157,7 +180,7 @@ export default async function CategoryPage({
           {title}
         </h1>
         <p className="text-zinc-500 max-w-2xl">
-          Encontre os melhores produtos da categoria {title.toLowerCase()} com ofertas exclusivas e entrega rápida.
+          Compre {title.toLowerCase()} com curadoria premium, envio nacional e condições especiais da Luxijóias.
         </p>
       </div>
 

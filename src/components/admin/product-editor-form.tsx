@@ -41,6 +41,8 @@ type ProductInitialValues = {
   name?: string;
   slug?: string;
   description?: string;
+  metaTitle?: string;
+  metaDescription?: string;
   image?: string;
   galleryImages?: string[];
   price?: number;
@@ -142,6 +144,8 @@ export function ProductEditorForm(props: ProductEditorFormProps) {
   const [name, setName] = useState(initialValues?.name ?? "");
   const [slug, setSlug] = useState(initialValues?.slug ?? "");
   const [description, setDescription] = useState(initialValues?.description ?? "");
+  const [metaTitle, setMetaTitle] = useState(initialValues?.metaTitle ?? "");
+  const [metaDescription, setMetaDescription] = useState(initialValues?.metaDescription ?? "");
   const [categoryId, setCategoryId] = useState(initialValues?.categoryId ?? "");
   const [brandId, setBrandId] = useState(initialValues?.brandId ?? "");
   const [mainImage, setMainImage] = useState(initialValues?.image ?? "");
@@ -190,6 +194,8 @@ export function ProductEditorForm(props: ProductEditorFormProps) {
     name,
     slug,
     description,
+    metaTitle,
+    metaDescription,
     brand: selectedBrand,
     category: selectedCategory,
     price: priceValue,
@@ -275,6 +281,8 @@ export function ProductEditorForm(props: ProductEditorFormProps) {
         title?: string;
         slug?: string;
         description?: string;
+        seoTitle?: string;
+        metaDescription?: string;
         focusKeyword?: string;
       };
       if (!response.ok) {
@@ -290,6 +298,12 @@ export function ProductEditorForm(props: ProductEditorFormProps) {
       }
       if (payload.description) {
         setDescription(payload.description);
+      }
+      if (payload.seoTitle) {
+        setMetaTitle(payload.seoTitle);
+      }
+      if (payload.metaDescription) {
+        setMetaDescription(payload.metaDescription);
       }
       setAiFocusKeyword(payload.focusKeyword || null);
     } catch (error) {
@@ -366,6 +380,18 @@ export function ProductEditorForm(props: ProductEditorFormProps) {
         <div className="space-y-2 md:col-span-2">
           <label htmlFor="description" className="text-sm font-medium text-gray-700">Descrição</label>
           <textarea value={description} onChange={(event) => setDescription(event.target.value)} id="description" name="description" rows={4} className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-zinc-900/20" />
+        </div>
+
+        <div className="space-y-2 md:col-span-2">
+          <label htmlFor="metaTitle" className="text-sm font-medium text-gray-700">Meta title</label>
+          <input value={metaTitle} onChange={(event) => setMetaTitle(event.target.value)} type="text" id="metaTitle" name="metaTitle" maxLength={70} className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-zinc-900/20" placeholder="Título SEO exibido no Google" />
+          <p className="text-xs text-gray-500">Até 70 caracteres. Se ficar vazio, a loja gera automaticamente com base no produto.</p>
+        </div>
+
+        <div className="space-y-2 md:col-span-2">
+          <label htmlFor="metaDescription" className="text-sm font-medium text-gray-700">Meta description</label>
+          <textarea value={metaDescription} onChange={(event) => setMetaDescription(event.target.value)} id="metaDescription" name="metaDescription" rows={3} maxLength={160} className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-zinc-900/20" placeholder="Descrição curta e persuasiva para Google e compartilhamentos" />
+          <p className="text-xs text-gray-500">Até 160 caracteres. Se ficar vazio, a loja gera uma descrição automaticamente.</p>
         </div>
 
         <ProductMediaManager

@@ -13,6 +13,8 @@ export type StoreProduct = {
   name: string;
   slug: string;
   description: string | null;
+  metaTitle: string | null;
+  metaDescription: string | null;
   sku: string | null;
   price: number;
   comparePrice: number | null;
@@ -299,6 +301,8 @@ function mapProduct(product: {
   name: string;
   slug: string;
   description: string | null;
+  metaTitle?: string | null;
+  metaDescription?: string | null;
   sku: string | null;
   price: number;
   comparePrice: number | null;
@@ -323,6 +327,8 @@ function mapProduct(product: {
     name: product.name,
     slug: product.slug,
     description: product.description,
+    metaTitle: product.metaTitle ?? null,
+    metaDescription: product.metaDescription ?? null,
     sku: product.sku,
     price: product.price,
     comparePrice: product.comparePrice,

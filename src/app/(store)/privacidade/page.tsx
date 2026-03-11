@@ -1,29 +1,32 @@
 import type { Metadata } from "next";
 import { InstitutionalHero } from "@/components/store/institutional-hero";
 import { getStoreSettings } from "@/lib/store-settings";
+import { buildBreadcrumbJsonLd, buildPageJsonLd, buildPageMetadata } from "@/lib/site-seo";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://luxijoias.com.br";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildPageMetadata({
   title: "Privacidade",
-  description: "Conheca a politica de privacidade da Luxijóias e como seus dados sao tratados com seguranca e transparencia.",
-  alternates: {
-    canonical: "/privacidade",
-  },
-  openGraph: {
-    title: "Privacidade | Luxijóias",
-    description: "Conheca a politica de privacidade da Luxijóias e como seus dados sao tratados com seguranca e transparencia.",
-    url: `${siteUrl}/privacidade`,
-    type: "website",
-    locale: "pt_BR",
-  },
-};
+  description: "Conheça a política de privacidade da Luxijóias e como seus dados são tratados com segurança e transparência.",
+  path: "/privacidade",
+});
 
 export default async function PrivacyPage() {
   const settings = await getStoreSettings();
+  const breadcrumbJsonLd = buildBreadcrumbJsonLd([
+    { name: "Início", path: "/" },
+    { name: "Privacidade", path: "/privacidade" },
+  ]);
+  const pageJsonLd = buildPageJsonLd({
+    title: "Privacidade",
+    description: "Conheça a política de privacidade da Luxijóias e como seus dados são tratados com segurança e transparência.",
+    path: "/privacidade",
+  });
 
   return (
     <div className="bg-white">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(pageJsonLd) }} />
       <InstitutionalHero
         eyebrow="Privacidade"
         title="Proteção de dados e segurança em cada interação"

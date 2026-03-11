@@ -2,6 +2,8 @@ type ProductSeoInput = {
   name: string
   slug?: string | null
   description?: string | null
+  metaTitle?: string | null
+  metaDescription?: string | null
   brand?: string | null
   category?: string | null
   price?: number | null
@@ -81,6 +83,11 @@ export function buildProductFocusKeyword(input: ProductSeoInput) {
 }
 
 export function buildProductSeoTitle(input: ProductSeoInput, maxLength = 65) {
+  const manualTitle = normalizeText(input.metaTitle)
+  if (manualTitle) {
+    return truncateAtWord(manualTitle, maxLength)
+  }
+
   const siteName = normalizeText(input.siteName) || "Luxijóias"
   const titleSegments = dedupeSegments([
     input.name,
@@ -106,6 +113,11 @@ export function buildProductSeoTitle(input: ProductSeoInput, maxLength = 65) {
 }
 
 export function buildProductMetaDescription(input: ProductSeoInput, maxLength = 160) {
+  const manualDescription = normalizeText(input.metaDescription)
+  if (manualDescription) {
+    return truncateAtWord(manualDescription, maxLength)
+  }
+
   const siteName = normalizeText(input.siteName) || "Luxijóias"
   const description = normalizeText(input.description)
   const priceLabel = formatPrice(input.price)

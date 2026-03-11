@@ -1,23 +1,15 @@
 import type { Metadata } from "next";
 import { InstitutionalHero } from "@/components/store/institutional-hero";
 import { getStoreSettings } from "@/lib/store-settings";
+import { buildBreadcrumbJsonLd, buildPageJsonLd, buildPageMetadata } from "@/lib/site-seo";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://luxijoias.com.br";
 
-export const metadata: Metadata = {
-  title: "Trocas e Devolucoes",
-  description: "Consulte a politica de trocas e devolucoes da Luxijóias e entenda o fluxo de atendimento pos-venda da loja.",
-  alternates: {
-    canonical: "/trocas-e-devolucoes",
-  },
-  openGraph: {
-    title: "Trocas e Devolucoes | Luxijóias",
-    description: "Consulte a politica de trocas e devolucoes da Luxijóias e entenda o fluxo de atendimento pos-venda da loja.",
-    url: `${siteUrl}/trocas-e-devolucoes`,
-    type: "website",
-    locale: "pt_BR",
-  },
-};
+export const metadata: Metadata = buildPageMetadata({
+  title: "Trocas e Devoluções",
+  description: "Consulte a política de trocas e devoluções da Luxijóias e entenda o fluxo de atendimento pós-venda da loja.",
+  path: "/trocas-e-devolucoes",
+});
 
 const steps = [
   "Entre em contato com nossa central informando o número do pedido e o motivo da solicitação.",
@@ -27,9 +19,20 @@ const steps = [
 
 export default async function ExchangesPage() {
   const settings = await getStoreSettings();
+  const breadcrumbJsonLd = buildBreadcrumbJsonLd([
+    { name: "Início", path: "/" },
+    { name: "Trocas e Devoluções", path: "/trocas-e-devolucoes" },
+  ]);
+  const pageJsonLd = buildPageJsonLd({
+    title: "Trocas e Devoluções",
+    description: "Consulte a política de trocas e devoluções da Luxijóias e entenda o fluxo de atendimento pós-venda da loja.",
+    path: "/trocas-e-devolucoes",
+  });
 
   return (
     <div className="bg-white">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(pageJsonLd) }} />
       <InstitutionalHero
         eyebrow="Pós-venda"
         title="Trocas e devoluções com orientação clara e atendimento ágil"

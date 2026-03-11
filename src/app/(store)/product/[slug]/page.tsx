@@ -31,6 +31,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
   const title = buildProductSeoTitle({
     name: product.name,
+    metaTitle: product.metaTitle,
     brand: product.brand,
     category: product.category,
     siteName: "Luxijóias",
@@ -38,6 +39,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const description = buildProductMetaDescription({
     name: product.name,
     description: product.description,
+    metaDescription: product.metaDescription,
     brand: product.brand,
     category: product.category,
     price: product.price,
@@ -109,6 +111,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
   const seoDescription = buildProductMetaDescription({
     name: product.name,
     description,
+    metaDescription: product.metaDescription,
     brand: product.brand,
     category: product.category,
     price: product.price,

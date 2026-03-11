@@ -2,23 +2,15 @@ import type { Metadata } from "next";
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { InstitutionalHero } from "@/components/store/institutional-hero";
+import { buildBreadcrumbJsonLd, buildPageJsonLd, buildPageMetadata } from "@/lib/site-seo";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://luxijoias.com.br";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildPageMetadata({
   title: "FAQ",
-  description: "Veja as duvidas frequentes da Luxijóias sobre pagamento, frete, trocas, devolucoes e acompanhamento de pedidos.",
-  alternates: {
-    canonical: "/faq",
-  },
-  openGraph: {
-    title: "FAQ | Luxijóias",
-    description: "Veja as duvidas frequentes da Luxijóias sobre pagamento, frete, trocas, devolucoes e acompanhamento de pedidos.",
-    url: `${siteUrl}/faq`,
-    type: "website",
-    locale: "pt_BR",
-  },
-};
+  description: "Veja as dúvidas frequentes da Luxijóias sobre pagamento, frete, trocas, devoluções e acompanhamento de pedidos.",
+  path: "/faq",
+});
 
 const faqs = [
   {
@@ -44,8 +36,31 @@ const faqs = [
 ];
 
 export default function FaqPage() {
+  const breadcrumbJsonLd = buildBreadcrumbJsonLd([
+    { name: "Início", path: "/" },
+    { name: "FAQ", path: "/faq" },
+  ]);
+  const faqJsonLd = {
+    ...buildPageJsonLd({
+      title: "FAQ",
+      description: "Veja as dúvidas frequentes da Luxijóias sobre pagamento, frete, trocas, devoluções e acompanhamento de pedidos.",
+      path: "/faq",
+      type: "FAQPage",
+    }),
+    mainEntity: faqs.map((item) => ({
+      "@type": "Question",
+      name: item.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: item.answer,
+      },
+    })),
+  };
+
   return (
     <div className="bg-white">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
       <InstitutionalHero
         eyebrow="FAQ"
         title="Dúvidas frequentes sobre pedidos, pagamentos e atendimento"

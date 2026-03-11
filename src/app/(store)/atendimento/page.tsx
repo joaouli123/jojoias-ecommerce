@@ -3,29 +3,33 @@ import Link from "next/link";
 import { Clock3, Mail, MapPin, MessageCircle, Phone } from "lucide-react";
 import { InstitutionalHero } from "@/components/store/institutional-hero";
 import { getStoreSettings } from "@/lib/store-settings";
+import { buildBreadcrumbJsonLd, buildPageJsonLd, buildPageMetadata } from "@/lib/site-seo";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://luxijoias.com.br";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildPageMetadata({
   title: "Atendimento",
-  description: "Central de ajuda da Luxijóias para suporte sobre produtos, pedidos, entregas, trocas e acompanhamento pos-venda.",
-  alternates: {
-    canonical: "/atendimento",
-  },
-  openGraph: {
-    title: "Atendimento | Luxijóias",
-    description: "Central de ajuda da Luxijóias para suporte sobre produtos, pedidos, entregas, trocas e acompanhamento pos-venda.",
-    url: `${siteUrl}/atendimento`,
-    type: "website",
-    locale: "pt_BR",
-  },
-};
+  description: "Central de ajuda da Luxijóias para suporte sobre produtos, pedidos, entregas, trocas e acompanhamento pós-venda.",
+  path: "/atendimento",
+});
 
 export default async function SupportPage() {
   const settings = await getStoreSettings();
+  const breadcrumbJsonLd = buildBreadcrumbJsonLd([
+    { name: "Início", path: "/" },
+    { name: "Atendimento", path: "/atendimento" },
+  ]);
+  const pageJsonLd = buildPageJsonLd({
+    title: "Atendimento",
+    description: "Central de ajuda da Luxijóias para suporte sobre produtos, pedidos, entregas, trocas e acompanhamento pós-venda.",
+    path: "/atendimento",
+    type: "ContactPage",
+  });
 
   return (
     <div className="bg-white">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(pageJsonLd) }} />
       <InstitutionalHero
         eyebrow="Central de ajuda"
         title="Atendimento próximo para acompanhar sua compra do início ao fim"

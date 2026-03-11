@@ -1,29 +1,32 @@
 import type { Metadata } from "next";
 import { InstitutionalHero } from "@/components/store/institutional-hero";
 import { getStoreSettings } from "@/lib/store-settings";
+import { buildBreadcrumbJsonLd, buildPageJsonLd, buildPageMetadata } from "@/lib/site-seo";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://luxijoias.com.br";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildPageMetadata({
   title: "Termos de Uso",
-  description: "Confira as condicoes gerais de navegacao e compra da Luxijóias, com regras comerciais e operacionais da loja.",
-  alternates: {
-    canonical: "/termos-de-uso",
-  },
-  openGraph: {
-    title: "Termos de Uso | Luxijóias",
-    description: "Confira as condicoes gerais de navegacao e compra da Luxijóias, com regras comerciais e operacionais da loja.",
-    url: `${siteUrl}/termos-de-uso`,
-    type: "website",
-    locale: "pt_BR",
-  },
-};
+  description: "Confira as condições gerais de navegação e compra da Luxijóias, com regras comerciais e operacionais da loja.",
+  path: "/termos-de-uso",
+});
 
 export default async function TermsPage() {
   const settings = await getStoreSettings();
+  const breadcrumbJsonLd = buildBreadcrumbJsonLd([
+    { name: "Início", path: "/" },
+    { name: "Termos de Uso", path: "/termos-de-uso" },
+  ]);
+  const pageJsonLd = buildPageJsonLd({
+    title: "Termos de Uso",
+    description: "Confira as condições gerais de navegação e compra da Luxijóias, com regras comerciais e operacionais da loja.",
+    path: "/termos-de-uso",
+  });
 
   return (
     <div className="bg-white">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(pageJsonLd) }} />
       <InstitutionalHero
         eyebrow="Termos de uso"
         title="Condições gerais para navegar e comprar na Luxijóias"

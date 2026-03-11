@@ -88,6 +88,8 @@ model Product {
   name          String
   slug          String        @unique
   description   String?
+  metaTitle     String?
+  metaDescription String?
   price         Float
   comparePrice  Float?
   sku           String?       @unique

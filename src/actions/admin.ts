@@ -102,6 +102,8 @@ function parseProductFormData(formData: FormData) {
     name: readOptionalString(formData, "name") ?? "",
     slug: generateSlug(readOptionalString(formData, "slug") || readOptionalString(formData, "name") || ""),
     description: readOptionalString(formData, "description"),
+    metaTitle: readOptionalString(formData, "metaTitle"),
+    metaDescription: readOptionalString(formData, "metaDescription"),
     image: readOptionalString(formData, "image") ?? "",
     galleryImages,
     price: parseCurrencyInput(formData.get("price")),
@@ -130,7 +132,7 @@ function canTransitionOrderStatus(currentStatus: OrderStatusKey, nextStatus: Ord
 export async function createProduct(formData: FormData) {
   const actor = await getAdminActor("products:manage");
 
-  const { name, slug, description, image, galleryImages, price, comparePrice, sku, quantity, categoryId, brandId, status, variants } = parseProductFormData(formData);
+  const { name, slug, description, metaTitle, metaDescription, image, galleryImages, price, comparePrice, sku, quantity, categoryId, brandId, status, variants } = parseProductFormData(formData);
 
   let createdProductId: string | null = null;
 
@@ -140,6 +142,8 @@ export async function createProduct(formData: FormData) {
         name,
         slug,
         description,
+        metaTitle,
+        metaDescription,
         image: image || null,
         price,
         comparePrice,
@@ -181,7 +185,7 @@ export async function createProduct(formData: FormData) {
     entityType: "product",
     entityId: createdProductId,
     summary: `Produto ${name} criado.`,
-    metadata: { slug, status, categoryId, brandId, quantity, price },
+    metadata: { slug, status, categoryId, brandId, quantity, price, metaTitle, metaDescription },
   });
 
   revalidatePath("/admin/products");
@@ -230,7 +234,7 @@ export async function deleteProduct(formData: FormData) {
 export async function updateProduct(id: string, formData: FormData) {
   const actor = await getAdminActor("products:manage");
 
-  const { name, slug, description, image, galleryImages, price, comparePrice, sku, quantity, categoryId, brandId, status, variants } = parseProductFormData(formData);
+  const { name, slug, description, metaTitle, metaDescription, image, galleryImages, price, comparePrice, sku, quantity, categoryId, brandId, status, variants } = parseProductFormData(formData);
 
   try {
     await prisma.product.update({
@@ -239,6 +243,8 @@ export async function updateProduct(id: string, formData: FormData) {
         name,
         slug,
         description,
+        metaTitle,
+        metaDescription,
         image: image || null,
         price,
         comparePrice,
@@ -281,7 +287,7 @@ export async function updateProduct(id: string, formData: FormData) {
     entityType: "product",
     entityId: id,
     summary: `Produto ${name} atualizado.`,
-    metadata: { slug, status, categoryId, brandId, quantity, price },
+    metadata: { slug, status, categoryId, brandId, quantity, price, metaTitle, metaDescription },
   });
 
   revalidatePath("/admin/products");

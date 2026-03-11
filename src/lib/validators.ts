@@ -63,6 +63,8 @@ export const productSchema = z.object({
   name: z.string().min(2, "Nome do produto é obrigatório"),
   slug: z.string().min(2, "Slug do produto é obrigatório"),
   description: z.string().optional(),
+  metaTitle: z.string().trim().max(70, "Meta title muito longo").optional(),
+  metaDescription: z.string().trim().max(160, "Meta description muito longa").optional(),
   image: z.union([z.string().url("Imagem principal inválida"), z.string().startsWith("/")]).optional().or(z.literal("")),
   galleryImages: z.array(z.union([z.string().url("Uma das imagens da galeria é inválida"), z.string().startsWith("/")])).optional(),
   price: z.number().positive("Preço deve ser maior que zero"),

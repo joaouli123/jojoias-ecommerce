@@ -2,23 +2,15 @@ import type { Metadata } from "next";
 import { Gem, ShieldCheck, Truck } from "lucide-react";
 import { InstitutionalHero } from "@/components/store/institutional-hero";
 import { getStoreSettings } from "@/lib/store-settings";
+import { buildBreadcrumbJsonLd, buildPageJsonLd, buildPageMetadata } from "@/lib/site-seo";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://luxijoias.com.br";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildPageMetadata({
   title: "Quem Somos",
-  description: "Conheca a Luxijóias, sua curadoria de joias e acessorios com compra segura, entrega agil e atendimento proximo em todo o Brasil.",
-  alternates: {
-    canonical: "/quem-somos",
-  },
-  openGraph: {
-    title: "Quem Somos | Luxijóias",
-    description: "Conheca a Luxijóias, sua curadoria de joias e acessorios com compra segura, entrega agil e atendimento proximo em todo o Brasil.",
-    url: `${siteUrl}/quem-somos`,
-    type: "website",
-    locale: "pt_BR",
-  },
-};
+  description: "Conheça a Luxijóias, sua curadoria de joias e acessórios com compra segura, entrega ágil e atendimento próximo em todo o Brasil.",
+  path: "/quem-somos",
+});
 
 const highlights = [
   {
@@ -40,9 +32,21 @@ const highlights = [
 
 export default async function AboutPage() {
   const settings = await getStoreSettings();
+  const breadcrumbJsonLd = buildBreadcrumbJsonLd([
+    { name: "Início", path: "/" },
+    { name: "Quem Somos", path: "/quem-somos" },
+  ]);
+  const pageJsonLd = buildPageJsonLd({
+    title: settings.aboutTitle,
+    description: settings.aboutDescription,
+    path: "/quem-somos",
+    type: "AboutPage",
+  });
 
   return (
     <div className="bg-white">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(pageJsonLd) }} />
       <InstitutionalHero eyebrow="A Luxijóias" title={settings.aboutTitle} description={settings.aboutDescription} />
 
       <section className="mx-auto grid max-w-5xl gap-10 px-6 py-16 sm:px-8 lg:grid-cols-[1.3fr_0.7fr] lg:px-10 lg:py-20">

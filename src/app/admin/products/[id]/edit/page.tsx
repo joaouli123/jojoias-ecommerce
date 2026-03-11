@@ -56,6 +56,8 @@ export default async function EditProductPage({
             name: product.name,
             slug: product.slug,
             description: product.description || "",
+            metaTitle: product.metaTitle || "",
+            metaDescription: product.metaDescription || "",
             image: product.image || "",
             galleryImages: product.galleryImages.map((image) => image.url),
             price: product.price,

@@ -3,29 +3,33 @@ import Link from "next/link";
 import { Clock3, Mail, MapPin, MessageCircle, Phone } from "lucide-react";
 import { InstitutionalHero } from "@/components/store/institutional-hero";
 import { getStoreSettings } from "@/lib/store-settings";
+import { buildBreadcrumbJsonLd, buildPageJsonLd, buildPageMetadata } from "@/lib/site-seo";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://luxijoias.com.br";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildPageMetadata({
   title: "Contato",
-  description: "Fale com a Luxijóias por telefone, WhatsApp ou e-mail para suporte, duvidas sobre pedidos e atendimento em todo o Brasil.",
-  alternates: {
-    canonical: "/contato",
-  },
-  openGraph: {
-    title: "Contato | Luxijóias",
-    description: "Fale com a Luxijóias por telefone, WhatsApp ou e-mail para suporte, duvidas sobre pedidos e atendimento em todo o Brasil.",
-    url: `${siteUrl}/contato`,
-    type: "website",
-    locale: "pt_BR",
-  },
-};
+  description: "Fale com a Luxijóias por telefone, WhatsApp ou e-mail para suporte, dúvidas sobre pedidos e atendimento em todo o Brasil.",
+  path: "/contato",
+});
 
 export default async function ContactPage() {
   const settings = await getStoreSettings();
+  const breadcrumbJsonLd = buildBreadcrumbJsonLd([
+    { name: "Início", path: "/" },
+    { name: "Contato", path: "/contato" },
+  ]);
+  const pageJsonLd = buildPageJsonLd({
+    title: "Contato",
+    description: "Fale com a Luxijóias por telefone, WhatsApp ou e-mail para suporte, dúvidas sobre pedidos e atendimento em todo o Brasil.",
+    path: "/contato",
+    type: "ContactPage",
+  });
 
   return (
     <div className="bg-white">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(pageJsonLd) }} />
       <InstitutionalHero
         eyebrow="Contato"
         title="Fale com a Luxijóias pelo canal que for mais conveniente para você"
