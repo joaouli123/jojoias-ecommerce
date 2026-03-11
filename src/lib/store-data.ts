@@ -1,4 +1,5 @@
-﻿import { Prisma, ProductStatus } from "@prisma/client";
+﻿import { unstable_cache } from "next/cache";
+import { Prisma, ProductStatus } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 
 function hasDatabaseUrl() {
@@ -378,17 +379,21 @@ export async function getFeaturedProducts(limit = 8): Promise<StoreProduct[]> {
   if (!hasDatabaseUrl()) return [];
 
   try {
-    const products = await prisma.product.findMany({
-      where: { status: "ACTIVE" },
-      include: {
-        category: { select: { name: true, slug: true } },
-        brand: { select: { name: true, slug: true } },
-        galleryImages: true,
-        variants: { where: { isActive: true }, orderBy: [{ createdAt: "asc" }] },
-      },
-      orderBy: [{ createdAt: "desc" }],
-      take: limit,
-    });
+    const products = await unstable_cache(
+      async () => prisma.product.findMany({
+        where: { status: "ACTIVE" },
+        include: {
+          category: { select: { name: true, slug: true } },
+          brand: { select: { name: true, slug: true } },
+          galleryImages: true,
+          variants: { where: { isActive: true }, orderBy: [{ createdAt: "asc" }] },
+        },
+        orderBy: [{ createdAt: "desc" }],
+        take: limit,
+      }),
+      ["store-featured-products", String(limit)],
+      { revalidate: 300, tags: ["store:products"] },
+    )();
 
     return products.map(mapProduct);
   } catch {
@@ -400,19 +405,23 @@ export async function getProductsByCategorySlug(slug: string): Promise<StoreProd
   if (!hasDatabaseUrl()) return [];
 
   try {
-    const products = await prisma.product.findMany({
-      where: {
-        status: "ACTIVE",
-        category: { slug },
-      },
-      include: {
-        category: { select: { name: true, slug: true } },
-        brand: { select: { name: true, slug: true } },
-        galleryImages: true,
-        variants: { where: { isActive: true }, orderBy: [{ createdAt: "asc" }] },
-      },
-      orderBy: [{ createdAt: "desc" }],
-    });
+    const products = await unstable_cache(
+      async () => prisma.product.findMany({
+        where: {
+          status: "ACTIVE",
+          category: { slug },
+        },
+        include: {
+          category: { select: { name: true, slug: true } },
+          brand: { select: { name: true, slug: true } },
+          galleryImages: true,
+          variants: { where: { isActive: true }, orderBy: [{ createdAt: "asc" }] },
+        },
+        orderBy: [{ createdAt: "desc" }],
+      }),
+      ["store-products-by-category", slug],
+      { revalidate: 300, tags: ["store:products", `store:category:${slug}`] },
+    )();
 
     return products.map(mapProduct);
   } catch {
@@ -424,18 +433,22 @@ export async function getProductBySlug(slug: string): Promise<StoreProduct | nul
   if (!hasDatabaseUrl()) return null;
 
   try {
-    const product = await prisma.product.findFirst({
-      where: {
-        slug,
-        status: "ACTIVE",
-      },
-      include: {
-        category: { select: { name: true, slug: true } },
-        brand: { select: { name: true, slug: true } },
-        galleryImages: true,
-        variants: { where: { isActive: true }, orderBy: [{ createdAt: "asc" }] },
-      },
-    });
+    const product = await unstable_cache(
+      async () => prisma.product.findFirst({
+        where: {
+          slug,
+          status: "ACTIVE",
+        },
+        include: {
+          category: { select: { name: true, slug: true } },
+          brand: { select: { name: true, slug: true } },
+          galleryImages: true,
+          variants: { where: { isActive: true }, orderBy: [{ createdAt: "asc" }] },
+        },
+      }),
+      ["store-product-by-slug", slug],
+      { revalidate: 300, tags: ["store:products", `store:product:${slug}`] },
+    )();
 
     return product ? mapProduct(product) : null;
   } catch {
@@ -447,42 +460,50 @@ export async function getRelatedProducts(productId: string, categorySlug: string
   if (!hasDatabaseUrl()) return [];
 
   try {
-    const primary = await prisma.product.findMany({
-      where: {
-        status: "ACTIVE",
-        id: { not: productId },
-        category: { slug: categorySlug },
-      },
-      include: {
-        category: { select: { name: true, slug: true } },
-        brand: { select: { name: true, slug: true } },
-        galleryImages: true,
-        variants: { where: { isActive: true }, orderBy: [{ createdAt: "asc" }] },
-      },
-      orderBy: [{ createdAt: "desc" }],
-      take: limit,
-    });
+    const [primary, fallback] = await unstable_cache(
+      async () => {
+        const primaryResults = await prisma.product.findMany({
+          where: {
+            status: "ACTIVE",
+            id: { not: productId },
+            category: { slug: categorySlug },
+          },
+          include: {
+            category: { select: { name: true, slug: true } },
+            brand: { select: { name: true, slug: true } },
+            galleryImages: true,
+            variants: { where: { isActive: true }, orderBy: [{ createdAt: "asc" }] },
+          },
+          orderBy: [{ createdAt: "desc" }],
+          take: limit,
+        });
 
-    if (primary.length >= limit) {
-      return primary.map(mapProduct);
-    }
+        if (primaryResults.length >= limit) {
+          return [primaryResults, []] as const;
+        }
 
-    const fallback = await prisma.product.findMany({
-      where: {
-        status: "ACTIVE",
-        id: {
-          notIn: [productId, ...primary.map((item) => item.id)],
-        },
+        const fallbackResults = await prisma.product.findMany({
+          where: {
+            status: "ACTIVE",
+            id: {
+              notIn: [productId, ...primaryResults.map((item) => item.id)],
+            },
+          },
+          include: {
+            category: { select: { name: true, slug: true } },
+            brand: { select: { name: true, slug: true } },
+            galleryImages: true,
+            variants: { where: { isActive: true }, orderBy: [{ createdAt: "asc" }] },
+          },
+          orderBy: [{ createdAt: "desc" }],
+          take: limit - primaryResults.length,
+        });
+
+        return [primaryResults, fallbackResults] as const;
       },
-      include: {
-        category: { select: { name: true, slug: true } },
-        brand: { select: { name: true, slug: true } },
-        galleryImages: true,
-        variants: { where: { isActive: true }, orderBy: [{ createdAt: "asc" }] },
-      },
-      orderBy: [{ createdAt: "desc" }],
-      take: limit - primary.length,
-    });
+      ["store-related-products", productId, categorySlug, String(limit)],
+      { revalidate: 300, tags: ["store:products", `store:category:${categorySlug}`] },
+    )();
 
     return [...primary, ...fallback].map(mapProduct);
   } catch {
@@ -496,15 +517,19 @@ export async function getProductReviews(productId: string): Promise<ProductRevie
   }
 
   try {
-    const reviews = await prisma.review.findMany({
-      where: { productId },
-      include: {
-        user: {
-          select: { name: true },
+    const reviews = await unstable_cache(
+      async () => prisma.review.findMany({
+        where: { productId },
+        include: {
+          user: {
+            select: { name: true },
+          },
         },
-      },
-      orderBy: { createdAt: "desc" },
-    });
+        orderBy: { createdAt: "desc" },
+      }),
+      ["store-product-reviews", productId],
+      { revalidate: 300, tags: ["store:reviews", `store:reviews:${productId}`] },
+    )();
 
     const totalReviews = reviews.length;
     const averageRating = totalReviews
@@ -557,15 +582,19 @@ export async function getStoreCategories(limit = 8): Promise<StoreCategory[]> {
   if (!hasDatabaseUrl()) return [];
 
   try {
-    const categories = await prisma.category.findMany({
-      orderBy: [{ name: "asc" }],
-      take: limit,
-      select: {
-        id: true,
-        name: true,
-        slug: true,
-      },
-    });
+    const categories = await unstable_cache(
+      async () => prisma.category.findMany({
+        orderBy: [{ name: "asc" }],
+        take: limit,
+        select: {
+          id: true,
+          name: true,
+          slug: true,
+        },
+      }),
+      ["store-categories", String(limit)],
+      { revalidate: 600, tags: ["store:categories"] },
+    )();
 
     return categories;
   } catch {
@@ -577,24 +606,28 @@ export async function getStoreBrands(limit = 24): Promise<StoreBrand[]> {
   if (!hasDatabaseUrl()) return [];
 
   try {
-    const brands = await prisma.brand.findMany({
-      orderBy: [{ name: "asc" }],
-      take: limit,
-      select: {
-        id: true,
-        name: true,
-        slug: true,
-        _count: {
-          select: {
-            products: {
-              where: {
-                status: "ACTIVE",
+    const brands = await unstable_cache(
+      async () => prisma.brand.findMany({
+        orderBy: [{ name: "asc" }],
+        take: limit,
+        select: {
+          id: true,
+          name: true,
+          slug: true,
+          _count: {
+            select: {
+              products: {
+                where: {
+                  status: "ACTIVE",
+                },
               },
             },
           },
         },
-      },
-    });
+      }),
+      ["store-brands", String(limit)],
+      { revalidate: 600, tags: ["store:brands", "store:products"] },
+    )();
 
     return brands
       .map((brand) => ({
@@ -721,21 +754,25 @@ export async function getStoreBanners(placement: "hero" | "secondary"): Promise<
   const now = new Date();
 
   try {
-    const banners = await prisma.banner.findMany({
-      where: {
-        placement,
-        isActive: true,
-        AND: [
-          {
-            OR: [{ startsAt: null }, { startsAt: { lte: now } }],
-          },
-          {
-            OR: [{ endsAt: null }, { endsAt: { gte: now } }],
-          },
-        ],
-      },
-      orderBy: [{ position: "asc" }, { createdAt: "desc" }],
-    });
+    const banners = await unstable_cache(
+      async () => prisma.banner.findMany({
+        where: {
+          placement,
+          isActive: true,
+          AND: [
+            {
+              OR: [{ startsAt: null }, { startsAt: { lte: now } }],
+            },
+            {
+              OR: [{ endsAt: null }, { endsAt: { gte: now } }],
+            },
+          ],
+        },
+        orderBy: [{ position: "asc" }, { createdAt: "desc" }],
+      }),
+      ["store-banners", placement],
+      { revalidate: 300, tags: ["store:banners", `store:banners:${placement}`] },
+    )();
 
     return banners.map((banner) => ({
       id: banner.id,

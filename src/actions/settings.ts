@@ -1,6 +1,6 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { defaultStoreSettings } from "@/lib/store-settings";
 import { storeSettingsSchema } from "@/lib/validators";
@@ -94,4 +94,5 @@ export async function saveStoreSettings(formData: FormData) {
   revalidatePath("/privacidade");
   revalidatePath("/termos-de-uso");
   revalidatePath("/admin/settings");
+  revalidateTag("store:settings", "max");
 }

@@ -1,7 +1,7 @@
 ﻿"use server";
 
 import { prisma } from "@/lib/prisma";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
 import { Prisma } from "@prisma/client";
 import { generateSlug } from "@/lib/utils";
@@ -186,6 +186,9 @@ export async function createProduct(formData: FormData) {
 
   revalidatePath("/admin/products");
   revalidatePath("/");
+  revalidateTag("store:products", "max");
+  revalidateTag("store:categories", "max");
+  revalidateTag("store:brands", "max");
   redirect("/admin/products");
 }
 
@@ -215,6 +218,9 @@ export async function deleteProduct(formData: FormData) {
     });
 
     revalidatePath("/admin/products");
+    revalidateTag("store:products", "max");
+    revalidateTag("store:categories", "max");
+    revalidateTag("store:brands", "max");
   } catch (error) {
     console.error(error);
     throw new Error("Erro ao excluir produto");
@@ -280,6 +286,9 @@ export async function updateProduct(id: string, formData: FormData) {
 
   revalidatePath("/admin/products");
   revalidatePath("/");
+  revalidateTag("store:products", "max");
+  revalidateTag("store:categories", "max");
+  revalidateTag("store:brands", "max");
   redirect("/admin/products");
 }
 

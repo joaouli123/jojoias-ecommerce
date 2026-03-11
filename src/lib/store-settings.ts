@@ -1,3 +1,4 @@
+import { unstable_cache } from "next/cache";
 import { hasDatabaseUrl, prisma } from "@/lib/prisma";
 
 type StoreSettingsPayload = {
@@ -74,18 +75,29 @@ function safeParseSettings(value: string | null): StoreSettingsPayload {
   }
 }
 
+const getStoreSettingsCached = unstable_cache(
+  async (): Promise<StoreSettings> => {
+    if (!hasDatabaseUrl()) {
+      return defaultStoreSettings;
+    }
+
+    const saved = await prisma.integrationSetting.findUnique({
+      where: { provider: "store_settings" },
+      select: { extraConfig: true },
+    });
+
+    return {
+      ...defaultStoreSettings,
+      ...safeParseSettings(saved?.extraConfig ?? null),
+    };
+  },
+  ["store-settings"],
+  {
+    revalidate: 300,
+    tags: ["store:settings"],
+  },
+);
+
 export async function getStoreSettings(): Promise<StoreSettings> {
-  if (!hasDatabaseUrl()) {
-    return defaultStoreSettings;
-  }
-
-  const saved = await prisma.integrationSetting.findUnique({
-    where: { provider: "store_settings" },
-    select: { extraConfig: true },
-  });
-
-  return {
-    ...defaultStoreSettings,
-    ...safeParseSettings(saved?.extraConfig ?? null),
-  };
+  return getStoreSettingsCached();
 }

@@ -1,4 +1,5 @@
 import type { Metadata } from "next"
+import Image from "next/image"
 import { formatCurrency } from "@/lib/utils"
 import { Star, Truck, ShieldCheck } from "lucide-react"
 import Link from "next/link"
@@ -59,9 +60,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
 export default async function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const product = await getProductBySlugAction(slug);
-  const session = await auth();
-  const settings = await getStoreSettings();
+  const [product, session, settings] = await Promise.all([getProductBySlugAction(slug), auth(), getStoreSettings()]);
 
   if (!product) {
     notFound();
@@ -79,7 +78,20 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
     product.description ||
     "Este é um produto exclusivo de alta qualidade, desenhado para durar e impressionar. Perfeito para ocasiões especiais ou para presentear quem você ama. Fabricado com materiais premium e acabamento impecável.\n\nNossa equipe de designers trabalhou incansavelmente para criar uma peça que não apenas pareça deslumbrante, mas também seja confortável para uso diário. Cada detalhe foi cuidadosamente considerado, desde a seleção dos materiais até o polimento final.";
     
-  const reviewSummary = await getProductReviewsAction(product.id)
+  const [reviewSummary, relatedProducts, canReview] = await Promise.all([
+    getProductReviewsAction(product.id),
+    getRelatedProductsAction(product.id, product.categorySlug, 4),
+    session?.user?.id
+      ? prisma.order.findFirst({
+          where: {
+            userId: session.user.id,
+            status: { in: ["PROCESSING", "SHIPPED", "DELIVERED"] },
+            items: { some: { productId: product.id } },
+          },
+          select: { id: true },
+        }).then(Boolean)
+      : Promise.resolve(false),
+  ]);
   const images = product.images.length
     ? product.images.map((image) => image.url)
     : [product.image || "https://images.unsplash.com/photo-1611095567219-79caa80c5980?q=80&w=800"];
@@ -88,17 +100,6 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
     ? variants.reduce((sum, variant) => sum + variant.quantity, 0)
     : product.quantity
   const productUrl = `${siteUrl}/produto/${product.slug}`
-  const relatedProducts = await getRelatedProductsAction(product.id, product.categorySlug, 4)
-  const canReview = session?.user?.id
-    ? Boolean(await prisma.order.findFirst({
-        where: {
-          userId: session.user.id,
-          status: { in: ["PROCESSING", "SHIPPED", "DELIVERED"] },
-          items: { some: { productId: product.id } },
-        },
-        select: { id: true },
-      }))
-    : false
 
   const breadcrumbJsonLd = {
     "@context": "https://schema.org",
@@ -190,15 +191,27 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
         {/* Left Col: Gallery */}
         <div className="flex flex-col gap-3 md:gap-4 lg:col-span-3">
           <div className="relative aspect-[4/3] w-full rounded-2xl border border-zinc-200 bg-zinc-50 flex items-center justify-center overflow-hidden">
-            {/* Mock Imagem Principal */}
-            <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${images[0]})` }} />
+            <Image
+              src={images[0]}
+              alt={product.name}
+              fill
+              priority
+              sizes="(max-width: 1024px) 100vw, 60vw"
+              className="object-cover"
+            />
           </div>
           
           {/* Thumbnails */}
           <div className="grid grid-cols-4 gap-2 md:gap-3">
             {images.map((image, i) => (
               <button key={i} className="aspect-[4/3] rounded-xl border border-zinc-200 hover:border-[#D4AF37] bg-zinc-50 overflow-hidden relative transition-all opacity-80 hover:opacity-100">
-                <div className={`absolute inset-0 bg-cover bg-center ${i === 0 ? 'opacity-100' : ''}`} style={{ backgroundImage: `url(${image})` }} />
+                <Image
+                  src={image}
+                  alt={`${product.name} ${i + 1}`}
+                  fill
+                  sizes="(max-width: 1024px) 25vw, 180px"
+                  className={`object-cover ${i === 0 ? "opacity-100" : ""}`}
+                />
               </button>
             ))}
           </div>
