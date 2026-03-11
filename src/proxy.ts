@@ -167,13 +167,7 @@ export default async function proxy(request: NextRequest) {
     request.cookies.get("next-auth.session-token")?.value ||
     request.cookies.get("__Secure-next-auth.session-token")?.value;
   const isAuthenticated = Boolean(sessionToken);
-
-  const isAuthPage = pathname.startsWith("/login") || pathname.startsWith("/register");
   const isProtectedPage = pathname.startsWith("/account") || pathname.startsWith("/admin");
-
-  if (isAuthPage && isAuthenticated) {
-    return NextResponse.redirect(new URL("/account", request.url));
-  }
 
   if (isProtectedPage && !isAuthenticated) {
     return NextResponse.redirect(new URL("/login", request.url));
