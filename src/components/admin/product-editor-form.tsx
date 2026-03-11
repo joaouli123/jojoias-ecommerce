@@ -211,6 +211,11 @@ export function ProductEditorForm(props: ProductEditorFormProps) {
     setMediaMessage(null);
     const formData = new FormData();
     formData.append("files", files[0]);
+    formData.append("seoTitle", name || "produto");
+    formData.append("seoDescription", description || "");
+
+    const currentVariant = variants.find((entry) => entry.id === variantId);
+    formData.append("seoRole", currentVariant?.label ? `variacao ${currentVariant.label}` : "imagem da variacao");
 
     try {
       const response = await fetch("/api/upload", {
@@ -314,6 +319,8 @@ export function ProductEditorForm(props: ProductEditorFormProps) {
         <ProductMediaManager
           mainImage={mainImage}
           galleryImages={galleryImages}
+          productTitle={name}
+          productDescription={description}
           onMainImageChange={setMainImage}
           onGalleryImagesChange={setGalleryImages}
         />

@@ -13,6 +13,14 @@ const cloudinaryCloudName = process.env.CLOUDINARY_CLOUD_NAME;
 const cloudinaryApiKey = process.env.CLOUDINARY_API_KEY;
 const cloudinaryApiSecret = process.env.CLOUDINARY_API_SECRET;
 
+type SaveMediaFileOptions = {
+  alt?: string | null;
+  seoTitle?: string | null;
+  seoDescription?: string | null;
+  seoRole?: string | null;
+  index?: number;
+};
+
 if (cloudinaryCloudName && cloudinaryApiKey && cloudinaryApiSecret) {
   cloudinary.config({
     cloud_name: cloudinaryCloudName,
@@ -31,6 +39,66 @@ function normalizeFileName(name: string) {
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "")
     .slice(0, 48) || "arquivo";
+
+  return `${basename}-${crypto.randomUUID().slice(0, 8)}${extension}`;
+}
+
+function normalizeTextFragment(value: string) {
+  return value
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 72);
+}
+
+function buildSeoSnippet(description?: string | null) {
+  if (!description) return "";
+
+  const stopwords = new Set(["de", "da", "do", "das", "dos", "e", "em", "para", "com", "sem", "por", "uma", "um", "ao", "a", "o"]);
+
+  return description
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9\s]+/g, " ")
+    .split(/\s+/)
+    .filter((word) => word.length > 2 && !stopwords.has(word))
+    .slice(0, 6)
+    .join(" ");
+}
+
+function buildSeoAltText(options: SaveMediaFileOptions, originalName: string) {
+  if (options.alt?.trim()) {
+    return options.alt.trim();
+  }
+
+  const title = options.seoTitle?.trim();
+  const role = options.seoRole?.trim();
+  const snippet = buildSeoSnippet(options.seoDescription);
+
+  if (!title) {
+    return path.basename(originalName, path.extname(originalName)).replace(/[-_]+/g, " ").trim();
+  }
+
+  return [title, role, snippet].filter(Boolean).join(" - ").slice(0, 160);
+}
+
+function buildUploadFileName(originalName: string, options: SaveMediaFileOptions) {
+  const baseTitle = options.seoTitle?.trim();
+  const role = options.seoRole?.trim();
+  const snippet = buildSeoSnippet(options.seoDescription);
+  const extension = path.extname(originalName).toLowerCase() || ".bin";
+
+  if (!baseTitle) {
+    return normalizeFileName(originalName);
+  }
+
+  const parts = [baseTitle, role, snippet, typeof options.index === "number" ? String(options.index + 1) : undefined]
+    .filter(Boolean)
+    .map((value) => normalizeTextFragment(String(value)));
+  const basename = parts.join("-").slice(0, 72) || normalizeTextFragment(baseTitle) || "arquivo";
 
   return `${basename}-${crypto.randomUUID().slice(0, 8)}${extension}`;
 }
@@ -89,13 +157,13 @@ function buildOptimizedDeliveryUrl(publicId: string) {
   });
 }
 
-async function optimizeUpload(file: File) {
+async function optimizeUpload(file: File, options: SaveMediaFileOptions = {}) {
   if (file.size > MAX_UPLOAD_BYTES) {
     throw new Error("O arquivo excede o limite de 12 MB.");
   }
 
   const originalBuffer = Buffer.from(await file.arrayBuffer());
-  const normalizedFileName = normalizeFileName(file.name || "upload");
+  const normalizedFileName = buildUploadFileName(file.name || "upload", options);
 
   if (file.type === "image/svg+xml") {
     return {
@@ -131,13 +199,14 @@ async function optimizeUpload(file: File) {
   };
 }
 
-export async function saveMediaFile(file: File, alt?: string | null) {
+export async function saveMediaFile(file: File, options: SaveMediaFileOptions = {}) {
   if (!isSupportedUploadType(file.type)) {
     throw new Error("Formato de arquivo não suportado.");
   }
 
-  const optimized = await optimizeUpload(file);
+  const optimized = await optimizeUpload(file, options);
   const uploaded = await uploadBufferToCloudinary(optimized.buffer, optimized.fileName, optimized.mimeType || "application/octet-stream");
+  const resolvedAlt = buildSeoAltText(options, file.name || optimized.fileName);
 
   return prisma.mediaAsset.create({
     data: {
@@ -147,7 +216,7 @@ export async function saveMediaFile(file: File, alt?: string | null) {
       size: uploaded.bytes,
       path: uploaded.public_id,
       url: file.type === "image/svg+xml" ? uploaded.secure_url : buildOptimizedDeliveryUrl(uploaded.public_id),
-      alt: alt || null,
+      alt: resolvedAlt || null,
       width: optimized.width,
       height: optimized.height,
     },

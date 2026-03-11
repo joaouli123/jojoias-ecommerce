@@ -16,6 +16,8 @@ type MediaAsset = {
 type ProductMediaManagerProps = {
   mainImage: string;
   galleryImages: string[];
+  productTitle?: string;
+  productDescription?: string;
   onMainImageChange: (value: string) => void;
   onGalleryImagesChange: (value: string[]) => void;
 };
@@ -25,7 +27,7 @@ function uniqueUrls(items: string[]) {
 }
 
 export function ProductMediaManager(props: ProductMediaManagerProps) {
-  const { mainImage, galleryImages, onMainImageChange, onGalleryImagesChange } = props;
+  const { mainImage, galleryImages, productTitle, productDescription, onMainImageChange, onGalleryImagesChange } = props;
   const [recentAssets, setRecentAssets] = useState<MediaAsset[]>([]);
   const [message, setMessage] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
@@ -101,6 +103,9 @@ export function ProductMediaManager(props: ProductMediaManagerProps) {
     for (const file of Array.from(files)) {
       formData.append("files", file);
     }
+    formData.append("seoTitle", productTitle || "produto");
+    formData.append("seoDescription", productDescription || "");
+    formData.append("seoRole", mode === "main" ? "imagem principal do produto" : "galeria do produto");
 
     startTransition(async () => {
       try {

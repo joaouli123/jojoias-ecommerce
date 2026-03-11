@@ -42,6 +42,12 @@ export async function POST(request: Request) {
     const formData = await request.formData();
     const altValue = formData.get("alt");
     const alt = typeof altValue === "string" ? altValue.trim() : undefined;
+    const seoTitleValue = formData.get("seoTitle");
+    const seoDescriptionValue = formData.get("seoDescription");
+    const seoRoleValue = formData.get("seoRole");
+    const seoTitle = typeof seoTitleValue === "string" ? seoTitleValue.trim() : undefined;
+    const seoDescription = typeof seoDescriptionValue === "string" ? seoDescriptionValue.trim() : undefined;
+    const seoRole = typeof seoRoleValue === "string" ? seoRoleValue.trim() : undefined;
     const files = formData.getAll("files").filter((entry): entry is File => entry instanceof File && entry.size > 0);
 
     if (!files.length) {
@@ -49,8 +55,8 @@ export async function POST(request: Request) {
     }
 
     const assets = [];
-    for (const file of files.slice(0, 10)) {
-      assets.push(await saveMediaFile(file, alt));
+    for (const [index, file] of files.slice(0, 10).entries()) {
+      assets.push(await saveMediaFile(file, { alt, seoTitle, seoDescription, seoRole, index }));
     }
 
     return NextResponse.json({ assets, message: `${assets.length} arquivo(s) enviado(s) com sucesso.` });
