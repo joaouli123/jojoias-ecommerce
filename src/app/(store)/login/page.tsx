@@ -2,9 +2,11 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { signIn } from "next-auth/react";
+import { getSession, signIn } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+
+const STAFF_ROLES = new Set(["SUPER_ADMIN", "ADMIN", "MANAGER", "EDITOR", "SUPPORT"]);
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -29,7 +31,10 @@ export default function LoginPage() {
       return;
     }
 
-    window.location.href = "/account";
+    const session = await getSession();
+    const destination = STAFF_ROLES.has(session?.user?.role ?? "") ? "/admin" : "/account";
+
+    window.location.href = destination;
   }
 
   return (

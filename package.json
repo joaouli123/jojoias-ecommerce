@@ -3,7 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "npm run dev:reset",
+    "dev:raw": "next dev --webpack",
+    "dev:reset": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/dev-reset.ps1",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",

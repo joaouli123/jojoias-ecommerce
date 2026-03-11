@@ -3,6 +3,7 @@ import Credentials from "next-auth/providers/credentials";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { compare } from "bcryptjs";
 import { prisma } from "@/lib/prisma";
+import { syncConfiguredAdmin } from "@/lib/configured-admin";
 import { loginSchema } from "@/lib/validators";
 
 const nextAuth = NextAuth({
@@ -22,7 +23,11 @@ const nextAuth = NextAuth({
         const parsed = loginSchema.safeParse(credentials);
         if (!parsed.success) return null;
 
-        const { email, password } = parsed.data;
+        const email = parsed.data.email.toLowerCase();
+        const { password } = parsed.data;
+
+        await syncConfiguredAdmin(email);
+
         const user = await prisma.user.findUnique({ where: { email } });
 
         if (!user?.password) return null;

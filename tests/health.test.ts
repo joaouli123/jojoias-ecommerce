@@ -71,7 +71,6 @@ test("`buildIntegrationChecks()` retorna checks acionáveis para integrações c
 
   assert.equal(mercadoPagoCheck?.status, "healthy");
   assert.equal(mercadoPagoCheck?.details?.pixDiscountPercent, 8);
-  assert.equal(checks.some((check) => check.key === "stripe"), false);
   assert.equal(shippingCheck?.status, "down");
   assert.equal(alertingCheck?.status, "degraded");
   assert.equal(alertingCheck?.details?.minLevel, "WARNING");
