@@ -27,7 +27,7 @@ export async function POST(request: NextRequest) {
   await requireAdminPermission("products:manage");
 
   const apiKey = process.env.GEMINI_API_KEY;
-  const model = process.env.GEMINI_MODEL || "gemini-2.5-pro";
+  const model = process.env.GEMINI_MODEL || "gemini-3.1-pro-preview";
   if (!apiKey) {
     return NextResponse.json({ error: "GEMINI_API_KEY não configurada no ambiente." }, { status: 500 });
   }
