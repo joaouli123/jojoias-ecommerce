@@ -12,6 +12,7 @@ type ProductVariantOption = {
   name: string;
   price: number;
   quantity: number;
+  image?: string | null;
 };
 
 type AddToCartFormProps = {
@@ -26,6 +27,40 @@ type AddToCartFormProps = {
   totalAvailableQuantity: number;
 };
 
+const colorMap: Record<string, string> = {
+  dourado: "#D4AF37",
+  dourada: "#D4AF37",
+  ouro: "#D4AF37",
+  prata: "#C0C0C0",
+  prateado: "#C0C0C0",
+  rose: "#B76E79",
+  rosé: "#B76E79",
+  rosa: "#E7A6B5",
+  preto: "#18181B",
+  "preto fosco": "#27272A",
+  branco: "#F5F5F5",
+  cristal: "#E7EEF7",
+  azul: "#70A5FF",
+  verde: "#5DBB87",
+};
+
+function normalizeVariant(option: ProductVariantOption) {
+  const match = option.name.match(/^([^:]+):\s*(.+)$/);
+  const rawType = match?.[1]?.trim().toLowerCase() ?? "opção";
+  const label = match?.[2]?.trim() ?? option.name;
+
+  return {
+    ...option,
+    type: rawType,
+    label,
+  };
+}
+
+function colorForLabel(label: string) {
+  const normalized = label.trim().toLowerCase();
+  return colorMap[normalized] ?? colorMap[normalized.split(" ")[0]] ?? null;
+}
+
 export function AddToCartForm({ product, variants, totalAvailableQuantity }: AddToCartFormProps) {
   const router = useRouter();
   const [quantity, setQuantity] = useState(1);
@@ -33,7 +68,14 @@ export function AddToCartForm({ product, variants, totalAvailableQuantity }: Add
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const selectedVariant = variants.find((variant) => variant.id === variantId);
+  const normalizedVariants = variants.map(normalizeVariant);
+
+  const selectedVariant = normalizedVariants.find((variant) => variant.id === variantId);
+  const sharedType = normalizedVariants.length
+    ? normalizedVariants.every((variant) => variant.type === normalizedVariants[0]?.type)
+      ? normalizedVariants[0]?.type
+      : "opção"
+    : null;
 
   return (
     <form
@@ -85,23 +127,43 @@ export function AddToCartForm({ product, variants, totalAvailableQuantity }: Add
       }}
       className="flex flex-col gap-3"
     >
-      {variants.length ? (
+      {normalizedVariants.length ? (
         <div className="space-y-2">
-          <label htmlFor="variantId" className="text-sm font-semibold text-zinc-900">Escolha a variação</label>
-          <select
-            id="variantId"
-            name="variantId"
-            required
-            value={variantId}
-            onChange={(event) => setVariantId(event.target.value)}
-            className="h-[50px] w-full rounded-[10px] border border-zinc-300 bg-white px-4 text-sm font-medium text-zinc-900 outline-none focus:border-[#D4AF37]"
-          >
-            {variants.map((variant) => (
-              <option key={variant.id} value={variant.id} disabled={variant.quantity <= 0}>
-                {variant.name} — {formatCurrency(variant.price)} {variant.quantity > 0 ? `(${variant.quantity} disponíveis)` : "(indisponível)"}
-              </option>
-            ))}
-          </select>
+          <label className="text-sm font-semibold text-zinc-900">
+            {sharedType === "cor" ? "Escolha a cor" : sharedType === "tamanho" ? "Escolha o tamanho" : "Escolha a variação"}
+          </label>
+          <div className="flex flex-wrap gap-2">
+            {normalizedVariants.map((variant) => {
+              const selected = variant.id === variantId;
+              const unavailable = variant.quantity <= 0;
+              const swatchColor = variant.type === "cor" ? colorForLabel(variant.label) : null;
+
+              return (
+                <button
+                  key={variant.id}
+                  type="button"
+                  onClick={() => setVariantId(variant.id)}
+                  disabled={unavailable}
+                  className={`inline-flex min-h-11 items-center gap-2 rounded-xl border px-3 py-2 text-sm font-medium transition ${variant.type === "tamanho" ? "min-w-[72px] justify-center" : ""} ${selected ? "border-zinc-900 bg-zinc-900 text-white" : "border-zinc-300 bg-white text-zinc-900 hover:border-zinc-500"} ${unavailable ? "cursor-not-allowed opacity-40" : ""}`}
+                  title={`${variant.name} — ${formatCurrency(variant.price)}`}
+                >
+                  {variant.type === "cor" ? (
+                    <span
+                      className={`h-5 w-5 rounded-full border ${selected ? "border-white/70" : "border-zinc-300"}`}
+                      style={{ backgroundColor: swatchColor || "#ffffff" }}
+                    />
+                  ) : null}
+                  <span>{variant.label}</span>
+                </button>
+              );
+            })}
+          </div>
+          {selectedVariant ? (
+            <p className="text-sm text-zinc-600">
+              {formatCurrency(selectedVariant.price)} {selectedVariant.quantity > 0 ? `· ${selectedVariant.quantity} disponíveis` : "· indisponível"}
+            </p>
+          ) : null}
+          <input type="hidden" name="variantId" value={variantId} />
         </div>
       ) : null}
 

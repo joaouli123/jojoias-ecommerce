@@ -16,7 +16,7 @@ export async function Footer() {
           {/* Brand & Newsletter Column */}
           <div className="lg:col-span-5 flex flex-col space-y-8">
             <div>
-              <span className="text-4xl font-serif font-black tracking-tighter text-zinc-950">JoJoias</span>
+              <Image src="/logo-oficial.png" alt="JoJoias Semijoias" width={220} height={66} className="h-auto w-[180px] sm:w-[220px]" />
               <p className="mt-4 text-[15px] leading-relaxed text-zinc-600 max-w-sm">
                 {settings.tagline}
               </p>

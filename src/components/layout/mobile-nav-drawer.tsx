@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useState } from "react";
 import Link from "next/link";
 import { ChevronRight, HeadphonesIcon, LogIn, Menu, Percent, User, X } from "lucide-react";
@@ -40,8 +41,8 @@ export function MobileNavDrawer() {
         aria-hidden={!isOpen}
       >
         <div className="flex items-center justify-between border-b border-zinc-200 px-5 py-4">
-          <div>
-            <p className="text-xs font-bold uppercase tracking-[0.3em] text-[#D4AF37]">JoJoias</p>
+          <div className="space-y-2">
+            <Image src="/logo-oficial.png" alt="JoJoias Semijoias" width={170} height={50} className="h-auto w-[150px]" />
             <h2 className="text-lg font-black text-zinc-900">Menu</h2>
           </div>
           <button

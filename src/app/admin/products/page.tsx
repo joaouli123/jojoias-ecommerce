@@ -1,6 +1,7 @@
-﻿import Link from "next/link";
+﻿import Image from "next/image";
+import Link from "next/link";
 import { prisma } from "@/lib/prisma";
-import { Plus, Edit, Trash2 } from "lucide-react";
+import { Plus, Edit, ExternalLink, Trash2 } from "lucide-react";
 import { deleteProduct } from "@/actions/admin";
 import { requireAdminPagePermission } from "@/lib/admin-auth";
 
@@ -18,7 +19,7 @@ export default async function AdminProductsPage() {
         <h1 className="text-3xl font-bold tracking-tight text-gray-900">Produtos</h1>
         <Link
           href="/admin/products/new"
-          className="inline-flex items-center justify-center rounded-md text-sm font-medium bg-primary-600 text-white hover:bg-primary-700 h-10 px-4 py-2"
+          className="inline-flex h-10 items-center justify-center rounded-md bg-zinc-900 px-4 py-2 text-sm font-medium text-white hover:bg-zinc-800"
         >
           <Plus className="mr-2 h-4 w-4" /> Novo Produto
         </Link>
@@ -51,10 +52,13 @@ export default async function AdminProductsPage() {
                   <td className="p-4">
                     <div className="flex items-center gap-3">
                       <div className="h-12 w-12 overflow-hidden rounded-lg border border-gray-200 bg-gray-50">
-                        {product.image ? <div className="h-full w-full bg-cover bg-center" style={{ backgroundImage: `url(${product.image})` }} /> : null}
+                        {product.image ? <Image src={product.image} alt={product.name} width={48} height={48} className="h-full w-full object-cover" /> : null}
                       </div>
                       <div>
-                        <p className="font-semibold text-gray-900">{product.name}</p>
+                        <Link href={`/produto/${product.slug}`} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 font-semibold text-gray-900 hover:text-[#D4AF37]">
+                          {product.name}
+                          <ExternalLink className="h-3.5 w-3.5" />
+                        </Link>
                         <p className="text-xs text-gray-500 font-mono">SKU: {product.sku || "N/A"}</p>
                       </div>
                     </div>

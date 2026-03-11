@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
-import { Sparkles, Plus, Trash2, UploadCloud } from "lucide-react";
+import { ExternalLink, Sparkles, Plus, Trash2, UploadCloud } from "lucide-react";
 import { ProductMediaManager } from "@/components/admin/product-media-manager";
 
 type CategoryOption = {
@@ -58,8 +58,13 @@ type ProductEditorFormProps = {
   brands: BrandOption[];
   backHref: string;
   submitLabel: string;
+  productPreviewHref?: string;
   initialValues?: ProductInitialValues;
 };
+
+function uniqueUrls(items: string[]) {
+  return Array.from(new Set(items.filter(Boolean)));
+}
 
 const variantTypeOptions = [
   { value: "cor", label: "Cor", presets: ["Dourado", "Prata", "Rosé", "Preto", "Cristal"] },
@@ -143,7 +148,7 @@ function createVariantDraft(partial?: Partial<VariantDraft>): VariantDraft {
 }
 
 export function ProductEditorForm(props: ProductEditorFormProps) {
-  const { action, categories, brands, backHref, submitLabel, initialValues } = props;
+  const { action, categories, brands, backHref, submitLabel, productPreviewHref, initialValues } = props;
   const [name, setName] = useState(initialValues?.name ?? "");
   const [slug, setSlug] = useState(initialValues?.slug ?? "");
   const [description, setDescription] = useState(initialValues?.description ?? "");
@@ -182,6 +187,8 @@ export function ProductEditorForm(props: ProductEditorFormProps) {
   const quickPresets = useMemo(() => {
     return variantTypeOptions.find((option) => option.value === quickVariantType)?.presets ?? [];
   }, [quickVariantType]);
+
+  const productImageOptions = useMemo(() => uniqueUrls([mainImage, ...galleryImages]), [galleryImages, mainImage]);
 
   const variantsJson = JSON.stringify(
     variants
@@ -267,7 +274,7 @@ export function ProductEditorForm(props: ProductEditorFormProps) {
   }
 
   return (
-    <form action={action} className="p-8 space-y-6">
+    <form action={action} className="space-y-6 p-8 pb-28">
       <input type="hidden" name="variantsJson" value={variantsJson} />
 
       <div className="rounded-2xl border border-gray-200 bg-gray-50 px-4 py-4">
@@ -291,17 +298,17 @@ export function ProductEditorForm(props: ProductEditorFormProps) {
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
         <div className="space-y-2">
           <label htmlFor="name" className="text-sm font-medium text-gray-700">Nome do Produto *</label>
-          <input value={name} onChange={(event) => setName(event.target.value)} type="text" id="name" name="name" required className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500" placeholder="Ex: Kit Colar + Pulseira Elegance" />
+          <input value={name} onChange={(event) => setName(event.target.value)} type="text" id="name" name="name" required className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-zinc-900/20" placeholder="Ex: Kit Colar + Pulseira Elegance" />
         </div>
 
         <div className="space-y-2">
           <label htmlFor="slug" className="text-sm font-medium text-gray-700">Slug URL *</label>
-          <input value={slug} onChange={(event) => { setSlug(event.target.value); setSlugTouched(true); }} type="text" id="slug" name="slug" required className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500" placeholder="kit-colar-pulseira-elegance" />
+          <input value={slug} onChange={(event) => { setSlug(event.target.value); setSlugTouched(true); }} type="text" id="slug" name="slug" required className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-zinc-900/20" placeholder="kit-colar-pulseira-elegance" />
         </div>
 
         <div className="space-y-2 md:col-span-2">
           <label htmlFor="description" className="text-sm font-medium text-gray-700">Descrição</label>
-          <textarea value={description} onChange={(event) => setDescription(event.target.value)} id="description" name="description" rows={4} className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500" />
+          <textarea value={description} onChange={(event) => setDescription(event.target.value)} id="description" name="description" rows={4} className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-zinc-900/20" />
         </div>
 
         <ProductMediaManager
@@ -313,27 +320,27 @@ export function ProductEditorForm(props: ProductEditorFormProps) {
 
         <div className="space-y-2">
           <label htmlFor="price" className="text-sm font-medium text-gray-700">Preço (R$) *</label>
-          <input value={price} onChange={(event) => setPrice(event.target.value)} onBlur={() => setPrice(formatCurrencyInput(parseCurrencyFromInput(price)))} type="text" id="price" name="price" required inputMode="decimal" className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500" placeholder="R$ 289,90" />
+          <input value={price} onChange={(event) => setPrice(event.target.value)} onBlur={() => setPrice(formatCurrencyInput(parseCurrencyFromInput(price)))} type="text" id="price" name="price" required inputMode="decimal" className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-zinc-900/20" placeholder="R$ 289,90" />
         </div>
 
         <div className="space-y-2">
           <label htmlFor="comparePrice" className="text-sm font-medium text-gray-700">Preço Comparação (R$)</label>
-          <input value={comparePrice} onChange={(event) => setComparePrice(event.target.value)} onBlur={() => setComparePrice(comparePrice ? formatCurrencyInput(parseCurrencyFromInput(comparePrice)) : "")} type="text" id="comparePrice" name="comparePrice" inputMode="decimal" className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500" placeholder="R$ 389,90" />
+          <input value={comparePrice} onChange={(event) => setComparePrice(event.target.value)} onBlur={() => setComparePrice(comparePrice ? formatCurrencyInput(parseCurrencyFromInput(comparePrice)) : "")} type="text" id="comparePrice" name="comparePrice" inputMode="decimal" className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-zinc-900/20" placeholder="R$ 389,90" />
         </div>
 
         <div className="space-y-2">
           <label htmlFor="sku" className="text-sm font-medium text-gray-700">Código SKU</label>
-          <input defaultValue={initialValues?.sku ?? ""} type="text" id="sku" name="sku" className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500" placeholder="KIT-COLAR-001" />
+          <input defaultValue={initialValues?.sku ?? ""} type="text" id="sku" name="sku" className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-zinc-900/20" placeholder="KIT-COLAR-001" />
         </div>
 
         <div className="space-y-2">
           <label htmlFor="quantity" className="text-sm font-medium text-gray-700">Qtd. Estoque *</label>
-          <input defaultValue={initialValues?.quantity ?? 0} type="number" id="quantity" name="quantity" required min="0" className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500" />
+          <input defaultValue={initialValues?.quantity ?? 0} type="number" id="quantity" name="quantity" required min="0" className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-zinc-900/20" />
         </div>
 
         <div className="space-y-2">
           <label htmlFor="categoryId" className="text-sm font-medium text-gray-700">Categoria *</label>
-          <select id="categoryId" name="categoryId" defaultValue={initialValues?.categoryId ?? ""} required className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 bg-white">
+          <select id="categoryId" name="categoryId" defaultValue={initialValues?.categoryId ?? ""} required className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-zinc-900/20">
             <option value="" disabled hidden>Selecione uma categoria</option>
             {categories.map((cat) => (
               <option key={cat.id} value={cat.id}>{cat.name}</option>
@@ -343,7 +350,7 @@ export function ProductEditorForm(props: ProductEditorFormProps) {
 
         <div className="space-y-2">
           <label htmlFor="brandId" className="text-sm font-medium text-gray-700">Marca</label>
-          <select id="brandId" name="brandId" defaultValue={initialValues?.brandId ?? ""} className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 bg-white">
+          <select id="brandId" name="brandId" defaultValue={initialValues?.brandId ?? ""} className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-zinc-900/20">
             <option value="">Sem marca</option>
             {brands.map((brand) => (
               <option key={brand.id} value={brand.id}>{brand.name}</option>
@@ -353,7 +360,7 @@ export function ProductEditorForm(props: ProductEditorFormProps) {
 
         <div className="space-y-2">
           <label htmlFor="status" className="text-sm font-medium text-gray-700">Status *</label>
-          <select id="status" name="status" defaultValue={initialValues?.status ?? "ACTIVE"} required className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 bg-white">
+          <select id="status" name="status" defaultValue={initialValues?.status ?? "ACTIVE"} required className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-zinc-900/20">
             <option value="ACTIVE">Ativo (Público)</option>
             <option value="DRAFT">Rascunho</option>
             <option value="ARCHIVED">Arquivado</option>
@@ -452,18 +459,18 @@ export function ProductEditorForm(props: ProductEditorFormProps) {
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 gap-4 md:grid-cols-[1fr_auto]">
-                    <div className="space-y-2">
+                  <div className="grid grid-cols-1 gap-4 xl:grid-cols-[220px_minmax(0,1fr)_auto] xl:items-start">
+                    <div className="space-y-2 xl:max-w-[220px]">
                       <label className="text-xs font-semibold uppercase tracking-wide text-gray-500">Imagem da variação</label>
                       <div className="space-y-3 rounded-xl border border-gray-200 bg-gray-50 p-3">
-                        <div className="relative aspect-[4/3] overflow-hidden rounded-xl bg-white">
+                        <div className="relative aspect-square overflow-hidden rounded-xl bg-white">
                           {variant.image ? (
                             <Image src={variant.image} alt={`Prévia da variação ${variant.label || variant.id}`} fill sizes="240px" className="object-cover" />
                           ) : (
                             <div className="flex h-full items-center justify-center text-xs text-gray-400">Sem imagem nesta variação</div>
                           )}
                         </div>
-                        <div className="flex flex-col gap-2 sm:flex-row">
+                        <div className="flex flex-col gap-2">
                           <input value={variant.image} onChange={(event) => setVariants((current) => current.map((entry) => entry.id === variant.id ? { ...entry, image: event.target.value } : entry))} className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm" placeholder="https://... ou URL da biblioteca" />
                           <label className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100">
                             <UploadCloud className="h-4 w-4" /> Upload
@@ -476,6 +483,37 @@ export function ProductEditorForm(props: ProductEditorFormProps) {
                           </label>
                         </div>
                       </div>
+                    </div>
+                    <div className="space-y-3">
+                      <div>
+                        <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">Usar imagem já enviada</p>
+                        <p className="mt-1 text-xs text-gray-500">Selecione uma foto da capa ou da galeria principal do produto, ou mantenha uma imagem exclusiva da variação.</p>
+                      </div>
+                      {productImageOptions.length ? (
+                        <div className="grid grid-cols-3 gap-2 sm:grid-cols-4 lg:grid-cols-5">
+                          {productImageOptions.map((url) => {
+                            const selected = variant.image === url;
+
+                            return (
+                              <button
+                                key={`${variant.id}-${url}`}
+                                type="button"
+                                onClick={() => setVariants((current) => current.map((entry) => entry.id === variant.id ? { ...entry, image: url } : entry))}
+                                className={`overflow-hidden rounded-xl border p-1 transition ${selected ? "border-zinc-900 bg-zinc-900/5" : "border-gray-200 bg-white hover:border-zinc-400"}`}
+                              >
+                                <div className="relative aspect-square overflow-hidden rounded-lg bg-gray-100">
+                                  <Image src={url} alt={`Imagem disponível para a variação ${variant.label || variant.id}`} fill sizes="120px" className="object-cover" />
+                                </div>
+                                <span className="mt-2 block truncate text-[11px] font-medium text-gray-600">{url === mainImage ? "Capa do produto" : "Imagem da galeria"}</span>
+                              </button>
+                            );
+                          })}
+                        </div>
+                      ) : (
+                        <div className="rounded-xl border border-dashed border-gray-300 bg-gray-50 px-4 py-5 text-sm text-gray-500">
+                          Envie a capa ou a galeria do produto acima para reutilizar essas fotos aqui.
+                        </div>
+                      )}
                     </div>
                     <button type="button" onClick={() => setVariants((current) => current.filter((entry) => entry.id !== variant.id))} className="inline-flex items-center justify-center gap-2 self-end rounded-md border border-rose-200 bg-rose-50 px-4 py-2 text-sm font-medium text-rose-700 hover:bg-rose-100">
                       <Trash2 className="h-4 w-4" /> Remover
@@ -490,13 +528,22 @@ export function ProductEditorForm(props: ProductEditorFormProps) {
 
       {mediaMessage ? <p className="rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-600">{mediaMessage}</p> : null}
 
-      <div className="pt-4 border-t border-gray-100 flex justify-end gap-4">
-        <Link href={backHref} className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2">
-          Cancelar
-        </Link>
-        <button type="submit" className="px-4 py-2 text-sm font-medium text-white bg-primary-600 rounded-md hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2">
-          {submitLabel}
-        </button>
+      <div className="sticky bottom-0 z-20 -mx-8 border-t border-gray-200 bg-white/95 px-8 py-4 backdrop-blur">
+        <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+          <div className="flex flex-wrap items-center gap-3">
+            <Link href={backHref} className="inline-flex px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-zinc-900/20 focus:ring-offset-2">
+              Cancelar
+            </Link>
+            {productPreviewHref ? (
+              <Link href={productPreviewHref} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
+                <ExternalLink className="h-4 w-4" /> Abrir produto
+              </Link>
+            ) : null}
+          </div>
+          <button type="submit" className="inline-flex items-center justify-center rounded-md bg-zinc-900 px-5 py-2.5 text-sm font-semibold text-white hover:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-zinc-900/20 focus:ring-offset-2">
+            {submitLabel}
+          </button>
+        </div>
       </div>
     </form>
   );

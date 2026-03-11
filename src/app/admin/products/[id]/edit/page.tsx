@@ -51,6 +51,7 @@ export default async function EditProductPage({
           brands={brands}
           backHref="/admin/products"
           submitLabel="Salvar alterações"
+          productPreviewHref={`/produto/${product.slug}`}
           initialValues={{
             name: product.name,
             slug: product.slug,

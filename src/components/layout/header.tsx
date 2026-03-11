@@ -1,4 +1,5 @@
-﻿import { User, HeadphonesIcon, Menu, MessageCircle, Gem, Sparkles, Smile, Percent, Droplets, CreditCard, Phone, Mail, Clock, ChevronRight, ChevronDown, ArrowRight } from "lucide-react"
+﻿import Image from "next/image"
+import { User, HeadphonesIcon, Menu, MessageCircle, Gem, Sparkles, Smile, Percent, Droplets, CreditCard, Phone, Mail, Clock, ChevronRight, ChevronDown, ArrowRight } from "lucide-react"
 import Link from "next/link"
 import { CartDrawer } from "@/components/cart/cart-drawer"
 import { PixIcon } from "@/components/ui/icons"
@@ -63,18 +64,15 @@ export async function Header() {
           <MobileNavDrawer />
 
           {/* Logo */}
-          <Link href="/" className="flex flex-row items-center justify-center shrink-0 group gap-2">
-            <div className="w-10 h-10 lg:w-12 lg:h-12 bg-zinc-900 rounded-bl-2xl rounded-tr-2xl flex items-center justify-center rotate-45 group-hover:rotate-0 transition-transform duration-500 shadow-md">
-              <Sparkles className="w-5 h-5 lg:w-6 lg:h-6 text-[#D4AF37] -rotate-45 group-hover:rotate-0 transition-transform duration-500" strokeWidth={1.5} />
-            </div>
-            <div className="flex flex-col items-start justify-center">
-              <span className="text-3xl lg:text-4xl font-serif font-black tracking-tighter text-zinc-900 leading-none group-hover:text-[#D4AF37] transition-colors">
-                JoJoias
-              </span>
-              <span className="text-[9px] lg:text-[10px] tracking-[0.3em] text-[#D4AF37] uppercase font-bold mt-1">
-                SEMIJOIAS
-              </span>
-            </div>
+          <Link href="/" className="flex shrink-0 items-center justify-center group">
+            <Image
+              src="/logo-oficial.png"
+              alt="JoJoias Semijoias"
+              width={200}
+              height={60}
+              priority
+              className="h-auto w-[150px] sm:w-[170px] lg:w-[200px]"
+            />
           </Link>
 
           <div className="flex lg:hidden items-center text-zinc-900">

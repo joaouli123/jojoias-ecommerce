@@ -290,6 +290,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
                 name: variant.name,
                 price: variant.price,
                 quantity: variant.quantity,
+                image: variant.image,
               }))}
               totalAvailableQuantity={totalAvailableQuantity}
             />
