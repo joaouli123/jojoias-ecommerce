@@ -30,10 +30,12 @@ export default async function TermsPage() {
         description="Reunimos aqui as principais diretrizes comerciais e operacionais aplicáveis à utilização da loja."
       />
 
-      <section className="mx-auto max-w-4xl px-6 py-14 sm:px-8 lg:px-10 lg:py-16">
-        <article className="whitespace-pre-line text-[15px] leading-8 text-zinc-700 sm:text-base">
-          {settings.termsContent}
-        </article>
+      <section className="mx-auto max-w-5xl px-6 py-12 sm:px-8 lg:px-10 lg:py-14">
+        <div className="max-w-3xl">
+          <article className="whitespace-pre-line text-base leading-8 text-[#3f3f46] opacity-100">
+            {settings.termsContent}
+          </article>
+        </div>
       </section>
     </div>
   );

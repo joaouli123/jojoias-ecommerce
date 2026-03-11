@@ -36,11 +36,11 @@ export default async function ExchangesPage() {
         description="Nosso objetivo é resolver qualquer necessidade com transparência e praticidade para você comprar com confiança."
       />
 
-      <section className="mx-auto max-w-5xl px-6 py-14 sm:px-8 lg:px-10 lg:py-16">
+      <section className="mx-auto max-w-5xl px-6 py-12 sm:px-8 lg:px-10 lg:py-14">
         <div className="grid gap-10 lg:grid-cols-[1fr_0.82fr]">
           <article>
             <h2 className="text-2xl font-bold text-zinc-950">Política de trocas</h2>
-            <p className="mt-5 whitespace-pre-line text-base leading-8 text-zinc-700">{settings.exchangesContent}</p>
+            <p className="mt-5 whitespace-pre-line text-base leading-8 text-[#3f3f46] opacity-100">{settings.exchangesContent}</p>
           </article>
 
           <aside className="rounded-[24px] bg-zinc-50/80 p-8">
