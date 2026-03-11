@@ -120,13 +120,6 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
       "@type": "Brand",
       name: brand,
     },
-    aggregateRating: reviewSummary.totalReviews > 0
-      ? {
-          "@type": "AggregateRating",
-          ratingValue: Number(reviewSummary.averageRating.toFixed(1)),
-          reviewCount: reviewSummary.totalReviews,
-        }
-      : undefined,
     offers: {
       "@type": "Offer",
       url: productUrl,
@@ -186,163 +179,162 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
           hasFreeShipping={hasFreeShipping}
           oldPrice={oldPrice}
           pixPrice={pixPrice}
-          <Suspense fallback={<ProductDetailsTabsSkeleton />}>
-            <ProductDetailsSection
-              productId={product.id}
-              description={description}
-              sku={sku}
-              brand={brand}
-              category={product.category}
-              quantity={product.quantity}
-            />
-          </Suspense>
+          images={images}
+          variants={variants.map((variant) => ({
+            id: variant.id,
+            name: variant.name,
+            price: variant.price,
+            quantity: variant.quantity,
+            image: variant.image ?? null,
+          }))}
+          totalAvailableQuantity={totalAvailableQuantity}
+          whatsappHref={whatsappHref}
+        />
+      </div>
 
-          <Suspense fallback={<RelatedProductsSkeleton />}>
-            <RelatedProductsSection
-              productId={product.id}
-              categorySlug={product.categorySlug}
-              whatsappUrl={settings.whatsappUrl}
-            />
-          </Suspense>
-                  price: relatedProduct.price,
-                  comparePrice: relatedProduct.comparePrice,
-                  image: relatedProduct.image || "",
-
-    async function ProductDetailsSection({
-      productId,
-      description,
-      sku,
-      brand,
-      category,
-      quantity,
-    }: {
-      productId: string
-      description: string
-      sku: string
-      brand: string
-      category: string
-      quantity: number
-    }) {
-      const [reviewSummary, session] = await Promise.all([
-        getProductReviewsAction(productId),
-        auth(),
-      ])
-
-      const canReview = session?.user?.id
-        ? Boolean(await prisma.order.findFirst({
-            where: {
-              userId: session.user.id,
-              status: { in: ["PROCESSING", "SHIPPED", "DELIVERED"] },
-              items: { some: { productId } },
-            },
-            select: { id: true },
-          }))
-        : false
-
-      return (
-        <ProductDetailsTabs
+      <Suspense fallback={<ProductDetailsTabsSkeleton />}>
+        <ProductDetailsSection
+          productId={product.id}
           description={description}
           sku={sku}
           brand={brand}
-          category={category}
-          quantity={quantity}
-          reviewsCount={reviewSummary.totalReviews}
-          averageRating={reviewSummary.averageRating}
-          reviews={reviewSummary.reviews}
-          productId={productId}
-          canReview={canReview}
-          isAuthenticated={Boolean(session?.user?.id)}
+          category={product.category}
+          quantity={product.quantity}
         />
-      )
-    }
+      </Suspense>
 
-    async function RelatedProductsSection({
-      productId,
-      categorySlug,
-      whatsappUrl,
-    }: {
-      productId: string
-      categorySlug: string
-      whatsappUrl: string
-    }) {
-      const relatedProducts = await getRelatedProductsAction(productId, categorySlug, 4)
-
-      if (!relatedProducts.length) {
-        return null
-      }
-
-      return (
-        <section className="mt-14 md:mt-20">
-          <div className="mb-6 flex items-end justify-between gap-4">
-            <div>
-              <p className="text-xs font-black uppercase tracking-[0.3em] text-[#D4AF37]">Sugestões</p>
-              <h2 className="mt-2 text-2xl font-black tracking-tight text-zinc-900">Produtos relacionados</h2>
-            </div>
-            <Link href={`/categoria/${categorySlug}`} className="text-sm font-bold text-zinc-900 hover:text-[#D4AF37] transition-colors">
-              Ver categoria
-            </Link>
-          </div>
-
-          <div className="grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-4">
-            {relatedProducts.map((relatedProduct) => (
-              <ProductCard
-                key={relatedProduct.id}
-                product={{
-                  id: relatedProduct.id,
-                  name: relatedProduct.name,
-                  slug: relatedProduct.slug,
-                  price: relatedProduct.price,
-                  comparePrice: relatedProduct.comparePrice,
-                  image: relatedProduct.image || "",
-                  category: relatedProduct.category,
-                  variantId: relatedProduct.variants.length === 1 ? relatedProduct.variants[0]?.id ?? null : null,
-                  requiresSelection: relatedProduct.variants.length > 1,
-                  whatsappBaseUrl: whatsappUrl,
-                }}
-              />
-            ))}
-          </div>
-        </section>
-      )
-    }
-
-    function ProductDetailsTabsSkeleton() {
-      return (
-        <div className="w-full border-t border-zinc-200 pt-8 md:pt-10 animate-pulse">
-          <div className="mb-6 h-6 w-56 rounded bg-zinc-200 md:mb-8" />
-          <div className="space-y-4">
-            <div className="h-4 w-full rounded bg-zinc-100" />
-            <div className="h-4 w-[92%] rounded bg-zinc-100" />
-            <div className="h-4 w-[88%] rounded bg-zinc-100" />
-          </div>
-        </div>
-      )
-    }
-
-    function RelatedProductsSkeleton() {
-      return (
-        <section className="mt-14 md:mt-20 animate-pulse">
-          <div className="mb-6 h-8 w-64 rounded bg-zinc-200" />
-          <div className="grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-4">
-            {Array.from({ length: 4 }).map((_, index) => (
-              <div key={index} className="aspect-[3/4] rounded-2xl border border-zinc-200 bg-zinc-50" />
-            ))}
-          </div>
-        </section>
-      )
-    }
-                  category: relatedProduct.category,
-                  variantId: relatedProduct.variants.length === 1 ? relatedProduct.variants[0]?.id ?? null : null,
-                  requiresSelection: relatedProduct.variants.length > 1,
-                  whatsappBaseUrl: settings.whatsappUrl,
-                }}
-              />
-            ))}
-          </div>
-        </section>
-      ) : null}
-
+      <Suspense fallback={<RelatedProductsSkeleton />}>
+        <RelatedProductsSection
+          productId={product.id}
+          categorySlug={product.categorySlug}
+          whatsappUrl={settings.whatsappUrl}
+        />
+      </Suspense>
     </div>
+  )
+}
+
+async function ProductDetailsSection({
+  productId,
+  description,
+  sku,
+  brand,
+  category,
+  quantity,
+}: {
+  productId: string
+  description: string
+  sku: string
+  brand: string
+  category: string
+  quantity: number
+}) {
+  const [reviewSummary, session] = await Promise.all([
+    getProductReviewsAction(productId),
+    auth(),
+  ])
+
+  const canReview = session?.user?.id
+    ? Boolean(await prisma.order.findFirst({
+        where: {
+          userId: session.user.id,
+          status: { in: ["PROCESSING", "SHIPPED", "DELIVERED"] },
+          items: { some: { productId } },
+        },
+        select: { id: true },
+      }))
+    : false
+
+  return (
+    <ProductDetailsTabs
+      description={description}
+      sku={sku}
+      brand={brand}
+      category={category}
+      quantity={quantity}
+      reviewsCount={reviewSummary.totalReviews}
+      averageRating={reviewSummary.averageRating}
+      reviews={reviewSummary.reviews}
+      productId={productId}
+      canReview={canReview}
+      isAuthenticated={Boolean(session?.user?.id)}
+    />
+  )
+}
+
+async function RelatedProductsSection({
+  productId,
+  categorySlug,
+  whatsappUrl,
+}: {
+  productId: string
+  categorySlug: string
+  whatsappUrl: string
+}) {
+  const relatedProducts = await getRelatedProductsAction(productId, categorySlug, 4)
+
+  if (!relatedProducts.length) {
+    return null
+  }
+
+  return (
+    <section className="mt-14 md:mt-20">
+      <div className="mb-6 flex items-end justify-between gap-4">
+        <div>
+          <p className="text-xs font-black uppercase tracking-[0.3em] text-[#D4AF37]">Sugestões</p>
+          <h2 className="mt-2 text-2xl font-black tracking-tight text-zinc-900">Produtos relacionados</h2>
+        </div>
+        <Link href={`/categoria/${categorySlug}`} className="text-sm font-bold text-zinc-900 hover:text-[#D4AF37] transition-colors">
+          Ver categoria
+        </Link>
+      </div>
+
+      <div className="grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-4">
+        {relatedProducts.map((relatedProduct) => (
+          <ProductCard
+            key={relatedProduct.id}
+            product={{
+              id: relatedProduct.id,
+              name: relatedProduct.name,
+              slug: relatedProduct.slug,
+              price: relatedProduct.price,
+              comparePrice: relatedProduct.comparePrice,
+              image: relatedProduct.image || "",
+              category: relatedProduct.category,
+              variantId: relatedProduct.variants.length === 1 ? relatedProduct.variants[0]?.id ?? null : null,
+              requiresSelection: relatedProduct.variants.length > 1,
+              whatsappBaseUrl: whatsappUrl,
+            }}
+          />
+        ))}
+      </div>
+    </section>
+  )
+}
+
+function ProductDetailsTabsSkeleton() {
+  return (
+    <div className="w-full border-t border-zinc-200 pt-8 md:pt-10 animate-pulse">
+      <div className="mb-6 h-6 w-56 rounded bg-zinc-200 md:mb-8" />
+      <div className="space-y-4">
+        <div className="h-4 w-full rounded bg-zinc-100" />
+        <div className="h-4 w-[92%] rounded bg-zinc-100" />
+        <div className="h-4 w-[88%] rounded bg-zinc-100" />
+      </div>
+    </div>
+  )
+}
+
+function RelatedProductsSkeleton() {
+  return (
+    <section className="mt-14 md:mt-20 animate-pulse">
+      <div className="mb-6 h-8 w-64 rounded bg-zinc-200" />
+      <div className="grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-4">
+        {Array.from({ length: 4 }).map((_, index) => (
+          <div key={index} className="aspect-[3/4] rounded-2xl border border-zinc-200 bg-zinc-50" />
+        ))}
+      </div>
+    </section>
   )
 }
 
