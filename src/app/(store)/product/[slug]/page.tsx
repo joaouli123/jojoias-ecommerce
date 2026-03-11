@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
 import Link from "next/link"
 import { notFound } from "next/navigation"
-import { cache, Suspense } from "react"
+import { cache } from "react"
 import { getProductBySlugAction, getProductReviewsAction, getRelatedProductsAction } from "@/actions/products"
 import { Breadcrumbs } from "@/components/layout/breadcrumbs"
 import { ProductDetailsTabs } from "@/components/product/product-details-tabs"
@@ -129,9 +129,23 @@ export default async function ProductPage({
     product.description ||
     "Produto exclusivo Luxijóias com acabamento refinado, compra segura e envio para todo o Brasil.";
     
-  const images = product.images.length
-    ? product.images.map((image) => image.url)
-    : [product.image || "https://images.unsplash.com/photo-1611095567219-79caa80c5980?q=80&w=800"];
+  const imageEntries = product.images.length
+    ? product.images.map((image, index) => ({
+        url: image.url,
+        alt: image.alt || (index === 0 ? `${product.name} da Luxijóias` : `${product.name} da Luxijóias - imagem ${index + 1}`),
+      }))
+    : [{
+        url: product.image || "https://images.unsplash.com/photo-1611095567219-79caa80c5980?q=80&w=800",
+        alt: `${product.name} da Luxijóias`,
+      }];
+  const images = imageEntries.map((image) => image.url)
+  const imageObjects = imageEntries.map((image, index) => ({
+    "@type": "ImageObject",
+    url: image.url,
+    contentUrl: image.url,
+    caption: image.alt,
+    name: index === 0 ? product.name : `${product.name} imagem ${index + 1}`,
+  }))
   const variants = product.variants
   const totalAvailableQuantity = variants.length
     ? variants.reduce((sum, variant) => sum + (variant.isActive ? variant.quantity : 0), 0)
@@ -174,13 +188,23 @@ export default async function ProductPage({
     ],
   }
 
+  const webPageJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    url: productUrl,
+    name: product.name,
+    description: seoDescription,
+    primaryImageOfPage: imageObjects[0],
+  }
+
   const productJsonLd = {
     "@context": "https://schema.org",
     "@type": "Product",
     name: product.name,
-    image: images,
+    image: imageObjects,
     description: seoDescription,
     sku,
+    mainEntityOfPage: productUrl,
     category: product.category,
     brand: {
       "@type": "Brand",
@@ -237,6 +261,10 @@ export default async function ProductPage({
       />
       <script
         type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(webPageJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }}
       />
 
@@ -269,7 +297,7 @@ export default async function ProductPage({
           hasFreeShipping={hasFreeShipping}
           oldPrice={oldPrice}
           pixPrice={pixPrice}
-          images={images}
+          images={imageEntries}
           variants={variants.map((variant) => ({
             id: variant.id,
             name: variant.name,

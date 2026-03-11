@@ -5,6 +5,12 @@ import { generateProductSeoWithAi } from "../src/lib/product-seo-ai";
 const prisma = new PrismaClient();
 const DEFAULT_IMPORTED_VARIANT_QUANTITY = 20;
 
+function buildImageAlt(productTitle: string, position: number) {
+  return position === 0
+    ? `${productTitle} da Luxijóias`
+    : `${productTitle} da Luxijóias - imagem ${position + 1}`;
+}
+
 type SourceProduct = {
   sourceUrl: string;
   sourceTitle: string;
@@ -213,7 +219,7 @@ async function main() {
         productId: created.id,
         url,
         position: index,
-        alt: `${seo.title} ${index + 1}`,
+        alt: buildImageAlt(seo.title, index),
       })),
     });
 

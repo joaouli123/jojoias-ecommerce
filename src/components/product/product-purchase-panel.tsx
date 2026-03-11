@@ -35,7 +35,7 @@ type ProductPurchasePanelProps = {
   hasFreeShipping: boolean;
   oldPrice: number;
   pixPrice: number;
-  images: string[];
+  images: Array<{ url: string; alt: string }>;
   variants: ProductVariantOption[];
   totalAvailableQuantity: number;
   whatsappHref: string;
@@ -55,14 +55,21 @@ export function ProductPurchasePanel({
   totalAvailableQuantity,
   whatsappHref,
 }: ProductPurchasePanelProps) {
-  const [activeImage, setActiveImage] = useState(images[0]);
+  const [activeImageUrl, setActiveImageUrl] = useState(images[0]?.url ?? "");
   const initialVariantId = useMemo(
     () => variants.find((variant) => variant.isActive && variant.quantity > 0)?.id ?? null,
     [variants],
   );
 
+  const activeImage = useMemo(
+    () => images.find((image) => image.url === activeImageUrl) ?? images[0],
+    [activeImageUrl, images],
+  );
+
   const galleryImages = useMemo(() => {
-    const orderedImages = [activeImage, ...images.filter((image) => image !== activeImage)];
+    const orderedImages = activeImage
+      ? [activeImage, ...images.filter((image) => image.url !== activeImage.url)]
+      : images;
     return orderedImages.slice(0, Math.max(orderedImages.length, 4));
   }, [activeImage, images]);
 
@@ -71,8 +78,8 @@ export function ProductPurchasePanel({
       <div className="flex flex-col gap-3 md:gap-4 lg:col-span-3">
         <div className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl border border-zinc-200 bg-zinc-50">
           <Image
-            src={activeImage}
-            alt={product.name}
+            src={activeImage?.url || images[0]?.url || ""}
+            alt={activeImage?.alt || product.name}
             fill
             priority
             quality={75}
@@ -83,19 +90,19 @@ export function ProductPurchasePanel({
 
         <div className="grid grid-cols-4 gap-2 md:gap-3">
           {galleryImages.map((image, index) => {
-            const isActive = image === activeImage;
+            const isActive = image.url === activeImage?.url;
 
             return (
               <button
-                key={`${image}-${index}`}
+                key={`${image.url}-${index}`}
                 type="button"
                 aria-label={`Ver imagem ${index + 1} de ${product.name}`}
-                onClick={() => setActiveImage(image)}
+                onClick={() => setActiveImageUrl(image.url)}
                 className={`relative aspect-[4/3] overflow-hidden rounded-xl border bg-zinc-50 transition-all ${isActive ? "border-[#D4AF37] opacity-100 ring-1 ring-[#D4AF37]/40" : "border-zinc-200 opacity-80 hover:border-[#D4AF37] hover:opacity-100"}`}
               >
                 <Image
-                  src={image}
-                  alt={`${product.name} ${index + 1}`}
+                  src={image.url}
+                  alt={image.alt}
                   fill
                   quality={50}
                   sizes="(max-width: 1024px) 25vw, 180px"
@@ -176,7 +183,7 @@ export function ProductPurchasePanel({
             totalAvailableQuantity={totalAvailableQuantity}
             initialVariantId={initialVariantId}
             onVariantChange={(variant) => {
-              setActiveImage(variant?.image || images[0]);
+              setActiveImageUrl(variant?.image || images[0]?.url || "");
             }}
           />
 
