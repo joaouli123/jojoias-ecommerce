@@ -1,9 +1,10 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import Script from "next/script";
-import { ProductCard } from "@/components/product/product-card";
+import { HomeProductCard } from "@/components/product/home-product-card";
 import { getBrandsAction, getCategoriesAction, getFeaturedProductsAction, getStoreBannersAction } from "@/actions/products";
-import { BannerCarousel, CategoriesCarousel, SecondaryBanners, BenefitsCarousel } from "@/components/home/carousels";
+import { BannerCarousel, CategoriesCarousel, SecondaryBanners } from "@/components/home/carousels";
+import { BenefitsStrip } from "@/components/home/benefits-strip";
 import { BrandGrid } from "@/components/catalog/brand-grid";
 import { getStoreSettings } from "@/lib/store-settings";
 
@@ -44,7 +45,6 @@ export default async function Home() {
     "@type": "Organization",
     name: settings.storeName,
     url: siteUrl,
-    email: settings.supportEmail,
     telephone: settings.supportPhone,
     sameAs: [settings.instagramUrl, settings.facebookUrl, settings.youtubeUrl].filter(Boolean),
   };
@@ -59,7 +59,7 @@ export default async function Home() {
 
       <BannerCarousel banners={heroBanners} />
 
-      <BenefitsCarousel />
+      <BenefitsStrip />
 
       <section className="bg-white py-8 md:py-12">
         <SecondaryBanners banners={secondaryBanners} />
@@ -94,19 +94,14 @@ export default async function Home() {
 
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8">
           {featuredProducts.map((product) => (
-            <ProductCard
+            <HomeProductCard
               key={product.id}
               product={{
-                id: product.id,
                 name: product.name,
                 slug: product.slug,
                 price: product.price,
                 comparePrice: product.comparePrice,
                 image: product.image || "",
-                category: product.category,
-                variantId: product.variants.length === 1 ? product.variants[0]?.id ?? null : null,
-                requiresSelection: product.variants.length > 1,
-                whatsappBaseUrl: settings.whatsappUrl,
               }}
             />
           ))}

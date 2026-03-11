@@ -66,11 +66,12 @@ export async function Header() {
           {/* Logo */}
           <Link href="/" className="flex shrink-0 items-center justify-center group">
             <Image
-              src="/logo-oficial.png"
+              src="/logo-oficial.webp"
               alt="JoJoias Semijoias"
               width={200}
               height={60}
               priority
+              sizes="(max-width: 640px) 150px, (max-width: 1024px) 170px, 200px"
               className="h-auto w-[150px] sm:w-[170px] lg:w-[200px]"
             />
           </Link>

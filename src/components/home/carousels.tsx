@@ -73,7 +73,7 @@ export function BannerCarousel({ banners = [] }: { banners?: StoreBanner[] }) {
 
   const fallbackBanners: StoreBanner[] = [
     { id: "hero-1", title: "Banner principal", subtitle: null, imageUrl: "/banner-home-jojoias.avif", mobileUrl: null, href: null, placement: "hero", position: 0 },
-    { id: "hero-2", title: "Banner secundário", subtitle: null, imageUrl: "https://images.unsplash.com/photo-1599643478524-fb66f7f3258c?q=80&w=1920", mobileUrl: "https://images.unsplash.com/photo-1599643478524-fb66f7f3258c?q=80&w=800&h=1200&fit=crop", href: null, placement: "hero", position: 1 },
+    { id: "hero-2", title: "Coleção Premium", subtitle: "Peças com brilho elegante e acabamento refinado.", imageUrl: "/demo-products/banner-hero.svg", mobileUrl: "/demo-products/banner-hero.svg", href: "/search?q=colecao", placement: "hero", position: 1 },
   ];
 
   const items = banners.length ? banners : fallbackBanners;
@@ -86,6 +86,7 @@ export function BannerCarousel({ banners = [] }: { banners?: StoreBanner[] }) {
           className="flex overflow-x-auto snap-x snap-mandatory no-scrollbar"
         >
           {items.map((banner) => {
+            const isFirstBanner = banner.id === items[0]?.id;
             const content = (
               <>
                 <div className="absolute inset-0 hidden md:block">
@@ -93,7 +94,9 @@ export function BannerCarousel({ banners = [] }: { banners?: StoreBanner[] }) {
                     src={banner.imageUrl}
                     alt={banner.title || "Banner principal da loja"}
                     fill
-                    priority={banner.id === items[0]?.id}
+                    priority={isFirstBanner}
+                    fetchPriority={isFirstBanner ? "high" : undefined}
+                    loading={isFirstBanner ? "eager" : "lazy"}
                     sizes="100vw"
                     className="object-cover"
                   />
@@ -103,7 +106,9 @@ export function BannerCarousel({ banners = [] }: { banners?: StoreBanner[] }) {
                     src={banner.mobileUrl || banner.imageUrl}
                     alt={banner.title || "Banner principal da loja"}
                     fill
-                    priority={banner.id === items[0]?.id}
+                    priority={isFirstBanner}
+                    fetchPriority={isFirstBanner ? "high" : undefined}
+                    loading={isFirstBanner ? "eager" : "lazy"}
                     sizes="100vw"
                     className="object-cover"
                   />
@@ -160,9 +165,9 @@ export function SecondaryBanners({ banners = [] }: { banners?: StoreBanner[] }) 
   };
 
   const fallbackBanners: StoreBanner[] = [
-    { id: "secondary-1", title: "Coleção premium", subtitle: null, imageUrl: "https://images.unsplash.com/photo-1617038220319-276d3cfab638?q=80&w=1200", mobileUrl: null, href: "/search?q=colecao", placement: "secondary", position: 0 },
-    { id: "secondary-2", title: "Novidades", subtitle: null, imageUrl: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?q=80&w=1200", mobileUrl: null, href: "/search?q=novidades", placement: "secondary", position: 1 },
-    { id: "secondary-3", title: "Presentes", subtitle: null, imageUrl: "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?q=80&w=1200", mobileUrl: null, href: "/search?q=presentes", placement: "secondary", position: 2 },
+    { id: "secondary-1", title: "Coleção premium", subtitle: null, imageUrl: "/demo-products/colar-constelacao.svg", mobileUrl: null, href: "/search?q=colecao", placement: "secondary", position: 0 },
+    { id: "secondary-2", title: "Novidades", subtitle: null, imageUrl: "/demo-products/kit-elegance.svg", mobileUrl: null, href: "/search?q=novidades", placement: "secondary", position: 1 },
+    { id: "secondary-3", title: "Presentes", subtitle: null, imageUrl: "/demo-products/brinco-gota.svg", mobileUrl: null, href: "/search?q=presentes", placement: "secondary", position: 2 },
   ];
 
   const items = (banners.length ? banners : fallbackBanners).slice(0, 3);
@@ -227,12 +232,12 @@ export function CategoriesCarousel({ categories = [] }: { categories?: StoreCate
   ];
 
   const categoryImages = [
-    "https://images.unsplash.com/photo-1617038220319-276d3cfab638?q=80&w=500&h=500&fit=crop",
-    "https://images.unsplash.com/photo-1599643478524-fb66f7f3258c?q=80&w=500&h=500&fit=crop",
-    "https://images.unsplash.com/photo-1605100804763-247f67b2548e?q=80&w=500&h=500&fit=crop",
-    "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?q=80&w=500&h=500&fit=crop",
-    "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?q=80&w=500&h=500&fit=crop",
-    "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?q=80&w=500&h=500&fit=crop",
+    "/demo-products/kit-elegance.svg",
+    "/demo-products/colar-constelacao.svg",
+    "/demo-products/anel-aura.svg",
+    "/demo-products/pulseira-elos.svg",
+    "/demo-products/brinco-gota.svg",
+    "/demo-products/mix-aneis.svg",
   ];
 
   const items = (categories.length ? categories : fallbackCategories).slice(0, 8);
