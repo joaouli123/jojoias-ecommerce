@@ -4,17 +4,21 @@ import { useCallback, useEffect, useMemo, useState } from "react"
 import { ShoppingCart, X, Trash2, ArrowRight, Minus, Plus } from "lucide-react"
 import { formatCurrency } from "@/lib/utils"
 import Link from "next/link"
-import { CART_UPDATED_EVENT, dispatchCartUpdated, type CartStatePayload } from "@/lib/cart-sync"
+import { CART_UPDATED_EVENT, dispatchCartUpdated, fetchCartState, getEmptyCartState, primeCartState, type CartStatePayload } from "@/lib/cart-sync"
 
 type CartDrawerProps = {
   initialCart?: CartStatePayload
 }
 
-export function CartDrawer({ initialCart = { items: [], subtotal: 0, shipping: 0, total: 0 } }: CartDrawerProps) {
+export function CartDrawer({ initialCart = getEmptyCartState() }: CartDrawerProps) {
   const [isOpen, setIsOpen] = useState(false)
   const [isHoverOpen, setIsHoverOpen] = useState(false)
   const [cart, setCart] = useState<CartStatePayload>(initialCart)
   const [isLoading, setIsLoading] = useState(false)
+
+  useEffect(() => {
+    primeCartState(initialCart)
+  }, [initialCart])
 
   const itemCount = useMemo(
     () => cart.items.reduce((acc, item) => acc + item.quantity, 0),
@@ -24,9 +28,7 @@ export function CartDrawer({ initialCart = { items: [], subtotal: 0, shipping: 0
   const syncCart = useCallback(async () => {
     setIsLoading(true)
     try {
-      const response = await fetch("/api/cart", { method: "GET", cache: "no-store" })
-      if (!response.ok) return
-      const payload = (await response.json()) as CartStatePayload
+      const payload = await fetchCartState()
       setCart(payload)
     } finally {
       setIsLoading(false)
@@ -78,12 +80,28 @@ export function CartDrawer({ initialCart = { items: [], subtotal: 0, shipping: 0
 
   useEffect(() => {
     if (!isOpen) return
-    void syncCart()
+    void (async () => {
+      setIsLoading(true)
+      try {
+        const payload = await fetchCartState(true)
+        setCart(payload)
+      } finally {
+        setIsLoading(false)
+      }
+    })()
   }, [isOpen, syncCart])
 
   useEffect(() => {
     if (!isHoverOpen) return
-    void syncCart()
+    void (async () => {
+      setIsLoading(true)
+      try {
+        const payload = await fetchCartState(true)
+        setCart(payload)
+      } finally {
+        setIsLoading(false)
+      }
+    })()
   }, [isHoverOpen, syncCart])
 
   useEffect(() => {
