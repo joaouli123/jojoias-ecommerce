@@ -1,0 +1,1 @@
+export { BrandCatalogPage as default, generateBrandCatalogMetadata as generateMetadata } from "../../_shared/brand-catalog-page";

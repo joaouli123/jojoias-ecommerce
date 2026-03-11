@@ -1,0 +1,1 @@
+export { BrandsListPage as default, brandsListMetadata as metadata } from "../_shared/brands-list-page";

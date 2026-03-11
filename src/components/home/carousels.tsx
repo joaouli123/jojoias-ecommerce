@@ -1,0 +1,252 @@
+﻿"use client";
+
+import { useRef } from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import Link from "next/link";
+import { ShieldCheck, Truck, CreditCard, Map } from "lucide-react";
+import type { StoreBanner, StoreCategory } from "@/lib/store-data";
+
+export function BenefitsCarousel() {
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  const scroll = (direction: "left" | "right") => {
+    if (scrollRef.current) {
+      const scrollAmount = direction === "left" ? -300 : 300;
+      scrollRef.current.scrollBy({ left: scrollAmount, behavior: "smooth" });
+    }
+  };
+
+  const benefits = [
+    { icon: ShieldCheck, title: "Loja 100% segura", subtitle: "selo de segurança" },
+    { icon: Map, title: "Entregamos", subtitle: "em todo o Brasil" },
+    { icon: CreditCard, title: "Parcele suas compras", subtitle: "em até 12x" },
+    { icon: Truck, title: "Frete grátis", subtitle: "para SP" },
+  ];
+
+  return (
+    <section className="bg-white pt-8 md:pt-12 relative group max-w-[1440px] w-full mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="rounded-xl border border-zinc-200 bg-zinc-50/50 px-2 py-6 md:px-0 relative w-full">
+        <div 
+          ref={scrollRef}
+          className="flex overflow-x-auto snap-x snap-mandatory no-scrollbar md:grid md:grid-cols-4 items-center w-full"
+        >
+          {benefits.map((benefit, i) => (
+            <div key={i} className={`flex items-center px-2 min-w-full md:min-w-0 snap-center justify-center w-full group/item ${i !== benefits.length - 1 ? 'md:border-r md:border-zinc-200' : ''}`}>
+              <div className="flex items-center gap-4 p-3 rounded-xl transition-colors hover:bg-zinc-100/50 w-full justify-center">
+                <benefit.icon className="w-8 h-8 stroke-[1.5] text-zinc-900 shrink-0" />
+                <div className="flex flex-col text-left">
+                  <strong className="block text-sm md:text-[15px] font-bold text-zinc-950 leading-tight">{benefit.title}</strong>
+                  <span className="text-xs md:text-[13px] text-zinc-600">{benefit.subtitle}</span>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <button 
+        onClick={() => scroll("left")}
+        className="absolute left-1 top-[55%] -translate-y-1/2 w-10 h-10 items-center justify-center bg-white rounded-full shadow-lg z-10 text-zinc-900 md:hidden flex"
+      >
+        <ChevronLeft className="w-6 h-6" />
+      </button>
+      <button 
+        onClick={() => scroll("right")}
+        className="absolute right-1 top-[55%] -translate-y-1/2 w-10 h-10 items-center justify-center bg-white rounded-full shadow-lg z-10 text-zinc-900 md:hidden flex"
+      >
+        <ChevronRight className="w-6 h-6" />
+      </button>
+    </section>
+  );
+}
+
+export function BannerCarousel({ banners = [] }: { banners?: StoreBanner[] }) {
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  const scroll = (direction: "left" | "right") => {
+    if (scrollRef.current) {
+      const scrollAmount = direction === "left" ? -scrollRef.current.clientWidth : scrollRef.current.clientWidth;
+      scrollRef.current.scrollBy({ left: scrollAmount, behavior: "smooth" });
+    }
+  };
+
+  const fallbackBanners: StoreBanner[] = [
+    { id: "hero-1", title: "Banner principal", subtitle: null, imageUrl: "/banner1.png", mobileUrl: null, href: null, placement: "hero", position: 0 },
+    { id: "hero-2", title: "Banner secundário", subtitle: null, imageUrl: "https://images.unsplash.com/photo-1599643478524-fb66f7f3258c?q=80&w=1920", mobileUrl: "https://images.unsplash.com/photo-1599643478524-fb66f7f3258c?q=80&w=800&h=1200&fit=crop", href: null, placement: "hero", position: 1 },
+  ];
+
+  const items = banners.length ? banners : fallbackBanners;
+
+  return (
+    <section className="w-full max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 mt-4 md:mt-6 relative group">
+      <div className="relative rounded-2xl md:rounded-3xl overflow-hidden shadow-sm">
+        <div 
+          ref={scrollRef}
+          className="flex overflow-x-auto snap-x snap-mandatory no-scrollbar"
+        >
+          {items.map((banner) => {
+            const content = (
+              <>
+                <div className="absolute inset-0 hidden bg-cover bg-center md:block" style={{ backgroundImage: `url(${banner.imageUrl})` }} />
+                <div className="absolute inset-0 bg-cover bg-center md:hidden" style={{ backgroundImage: `url(${banner.mobileUrl || banner.imageUrl})` }} />
+                <div className="absolute inset-0 bg-gradient-to-r from-black/55 via-black/15 to-transparent" />
+                {(banner.title || banner.subtitle) ? (
+                  <div className="absolute inset-x-0 bottom-0 z-10 p-6 text-white md:p-10">
+                    <div className="max-w-xl">
+                      <h2 className="text-2xl font-black tracking-tight md:text-4xl">{banner.title}</h2>
+                      {banner.subtitle ? <p className="mt-3 text-sm leading-6 text-white/90 md:text-base">{banner.subtitle}</p> : null}
+                    </div>
+                  </div>
+                ) : null}
+              </>
+            );
+
+            return banner.href ? (
+              <Link key={banner.id} href={banner.href} className="relative min-w-full h-[50vh] md:h-[480px] snap-center block">
+                {content}
+              </Link>
+            ) : (
+              <div key={banner.id} className="min-w-full h-[50vh] md:h-[480px] snap-center relative">
+                {content}
+              </div>
+            );
+          })}
+        </div>
+        
+        <button 
+          onClick={() => scroll("left")}
+          className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 flex items-center justify-center bg-white/90 rounded-full shadow-md z-10 text-zinc-900 opacity-0 group-hover:opacity-100 transition-opacity md:flex"
+        >
+          <ChevronLeft className="w-6 h-6" />
+        </button>
+        <button 
+          onClick={() => scroll("right")}
+          className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 flex items-center justify-center bg-white/90 rounded-full shadow-md z-10 text-zinc-900 opacity-0 group-hover:opacity-100 transition-opacity md:flex"
+        >
+          <ChevronRight className="w-6 h-6" />
+        </button>
+      </div>
+    </section>
+  );
+}
+
+export function SecondaryBanners({ banners = [] }: { banners?: StoreBanner[] }) {
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  const scroll = (direction: "left" | "right") => {
+    if (scrollRef.current) {
+      const scrollAmount = direction === "left" ? -300 : 300;
+      scrollRef.current.scrollBy({ left: scrollAmount, behavior: "smooth" });
+    }
+  };
+
+  const fallbackBanners: StoreBanner[] = [
+    { id: "secondary-1", title: "Coleção premium", subtitle: null, imageUrl: "https://images.unsplash.com/photo-1617038220319-276d3cfab638?q=80&w=1200", mobileUrl: null, href: "/search?q=colecao", placement: "secondary", position: 0 },
+    { id: "secondary-2", title: "Novidades", subtitle: null, imageUrl: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?q=80&w=1200", mobileUrl: null, href: "/search?q=novidades", placement: "secondary", position: 1 },
+    { id: "secondary-3", title: "Presentes", subtitle: null, imageUrl: "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?q=80&w=1200", mobileUrl: null, href: "/search?q=presentes", placement: "secondary", position: 2 },
+  ];
+
+  const items = (banners.length ? banners : fallbackBanners).slice(0, 3);
+
+  return (
+    <section className="max-w-[1440px] w-full mx-auto px-4 sm:px-6 lg:px-8 pb-8 md:pb-12 relative group">
+      <div 
+        ref={scrollRef}
+        className="flex overflow-x-auto snap-x snap-mandatory gap-4 no-scrollbar pb-2 md:grid md:grid-cols-3 md:gap-6 md:overflow-visible md:pb-0"
+      >
+        {items.map((banner) => (
+          <Link key={banner.id} href={banner.href || "/"} className="min-w-[85vw] md:min-w-0 h-[220px] md:h-[250px] snap-center rounded-xl overflow-hidden relative block group/banner border border-zinc-200 bg-white">
+            <div className="absolute inset-0 bg-cover bg-center transform group-hover/banner:scale-105 transition-transform duration-500" style={{ backgroundImage: `url(${banner.imageUrl})` }} />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/10 to-transparent" />
+            <div className="absolute inset-x-0 bottom-0 z-10 p-5 text-white">
+              <h3 className="text-lg font-bold tracking-tight">{banner.title}</h3>
+              {banner.subtitle ? <p className="mt-1 text-sm text-white/90">{banner.subtitle}</p> : null}
+            </div>
+          </Link>
+        ))}
+      </div>
+
+      <button 
+        onClick={() => scroll("left")}
+        className="absolute left-1 md:-left-4 top-1/2 -translate-y-1/2 w-10 h-10 items-center justify-center bg-white rounded-full shadow-lg z-10 text-zinc-900 group-hover:opacity-100 transition-opacity flex md:hidden"
+      >
+        <ChevronLeft className="w-6 h-6" />
+      </button>
+      <button 
+        onClick={() => scroll("right")}
+        className="absolute right-1 md:-right-4 top-1/2 -translate-y-1/2 w-10 h-10 items-center justify-center bg-white rounded-full shadow-lg z-10 text-zinc-900 group-hover:opacity-100 transition-opacity flex md:hidden"
+      >
+        <ChevronRight className="w-6 h-6" />
+      </button>
+    </section>
+  );
+}
+
+export function CategoriesCarousel({ categories = [] }: { categories?: StoreCategory[] }) {
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  const scroll = (direction: "left" | "right") => {
+    if (scrollRef.current) {
+      const scrollAmount = direction === "left" ? -300 : 300;
+      scrollRef.current.scrollBy({ left: scrollAmount, behavior: "smooth" });
+    }
+  };
+
+  const fallbackCategories = [
+    { name: "Acessórios", slug: "acessorios" },
+    { name: "Colares", slug: "colares" },
+    { name: "Anéis", slug: "aneis" },
+    { name: "Pulseiras", slug: "pulseiras" },
+    { name: "Brincos", slug: "brincos" },
+    { name: "Presentes", slug: "presentes" },
+  ];
+
+  const categoryImages = [
+    "https://images.unsplash.com/photo-1617038220319-276d3cfab638?q=80&w=500&h=500&fit=crop",
+    "https://images.unsplash.com/photo-1599643478524-fb66f7f3258c?q=80&w=500&h=500&fit=crop",
+    "https://images.unsplash.com/photo-1605100804763-247f67b2548e?q=80&w=500&h=500&fit=crop",
+    "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?q=80&w=500&h=500&fit=crop",
+    "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?q=80&w=500&h=500&fit=crop",
+    "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?q=80&w=500&h=500&fit=crop",
+  ];
+
+  const items = (categories.length ? categories : fallbackCategories).slice(0, 8);
+
+  return (
+    <section className="max-w-[1440px] mx-auto w-full px-4 sm:px-6 lg:px-8 py-8 md:py-10 relative">
+      <h2 className="text-3xl font-black text-zinc-950 tracking-tight mb-8 text-center">Compre por Categoria</h2>
+      
+      <div className="relative group">
+        <div 
+          ref={scrollRef}
+          className="flex overflow-x-auto snap-x snap-mandatory gap-5 no-scrollbar pb-2 xl:justify-center"
+        >
+          {items.map((cat, i) => (
+            <Link key={i} href={"/categoria/" + cat.slug} className="min-w-[132px] snap-center block shrink-0 text-center group/cat">
+              <div className="w-[132px] h-[132px] rounded-full overflow-hidden relative border border-zinc-200 bg-white">
+                <div
+                  className="absolute inset-0 bg-cover bg-center transform group-hover/cat:scale-110 transition-transform duration-700"
+                  style={{ backgroundImage: `url(${categoryImages[i % categoryImages.length]})` }}
+                />
+              </div>
+              <span className="mt-4 block text-[17px] text-zinc-900 font-bold tracking-tight">{cat.name}</span>
+            </Link>
+          ))}
+        </div>
+
+        <button 
+          onClick={() => scroll("left")}
+          className="absolute -left-4 md:left-0 top-[33%] -translate-y-1/2 w-12 h-12 flex items-center justify-center bg-zinc-200/80 rounded-full z-10 text-zinc-700 xl:hidden"
+        >
+          <ChevronLeft className="w-6 h-6" />
+        </button>
+        <button 
+          onClick={() => scroll("right")}
+          className="absolute -right-4 md:right-0 top-[33%] -translate-y-1/2 w-12 h-12 flex items-center justify-center bg-zinc-200/80 rounded-full z-10 text-zinc-700 xl:hidden"
+        >
+          <ChevronRight className="w-6 h-6" />
+        </button>
+      </div>
+    </section>
+  );
+}

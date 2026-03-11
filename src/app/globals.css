@@ -1,0 +1,35 @@
+﻿@import "tailwindcss";
+
+@theme {
+  --color-brand: #111111;
+  --color-brand-hover: #000000;
+  --color-accent: #D4AF37;
+  --color-pix: #32BCAD;
+  --color-whatsapp: #25D366;
+  --color-base: #FAFAFA;
+  --color-surface: #ffffff;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+
+:root {
+  --background: var(--color-base);
+  --foreground: #111111;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-inter), sans-serif;
+}
+
+/* Esconder scrollbar em navegadores Webkit (Chrome, Safari, Edge) */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Esconder scrollbar no IE, Edge e Firefox */
+.no-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
