@@ -141,6 +141,7 @@ export function BannerCarousel({ banners = [] }: { banners?: StoreBanner[] }) {
                     alt={imageAlt}
                     fill
                     priority={isFirstBanner}
+                    quality={60}
                     fetchPriority={isFirstBanner ? "high" : undefined}
                     loading={isFirstBanner ? "eager" : "lazy"}
                     sizes="100vw"
@@ -153,6 +154,7 @@ export function BannerCarousel({ banners = [] }: { banners?: StoreBanner[] }) {
                     alt={imageAlt}
                     fill
                     priority={isFirstBanner}
+                    quality={60}
                     fetchPriority={isFirstBanner ? "high" : undefined}
                     loading={isFirstBanner ? "eager" : "lazy"}
                     sizes="100vw"
@@ -237,8 +239,9 @@ export function SecondaryBanners({ banners = [] }: { banners?: StoreBanner[] }) 
           <Link key={banner.id} href={banner.href || "/"} className="min-w-[85vw] md:min-w-0 h-[220px] md:h-[250px] snap-center rounded-xl overflow-hidden relative block bg-white">
             <Image
               src={imageUrl}
-              alt=""
+              alt={banner.title || "Banner promocional da Luxijóias"}
               fill
+              quality={55}
               sizes="(max-width: 768px) 85vw, 33vw"
               className="object-cover transition-transform duration-500 hover:scale-[1.02]"
             />

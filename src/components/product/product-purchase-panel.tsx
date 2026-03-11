@@ -71,6 +71,7 @@ export function ProductPurchasePanel({
             alt={product.name}
             fill
             priority
+            quality={75}
             sizes="(max-width: 1024px) 100vw, 60vw"
             className="object-cover"
           />
@@ -92,6 +93,7 @@ export function ProductPurchasePanel({
                   src={image}
                   alt={`${product.name} ${index + 1}`}
                   fill
+                  quality={50}
                   sizes="(max-width: 1024px) 25vw, 180px"
                   className="object-cover"
                 />
