@@ -34,15 +34,16 @@ export function MobileNavDrawer() {
         <div className="fixed inset-0 z-50 bg-black/45 backdrop-blur-sm" onClick={() => setIsOpen(false)} />
       ) : null}
 
+      {isOpen ? (
       <aside
-        className={`fixed inset-y-0 left-0 z-[60] flex w-full max-w-sm flex-col bg-white shadow-2xl transition-transform duration-300 ${
-          isOpen ? "translate-x-0" : "-translate-x-full"
-        }`}
-        aria-hidden={!isOpen}
+        className="fixed inset-y-0 left-0 z-[60] flex w-full max-w-sm flex-col bg-white shadow-2xl transition-transform duration-300 translate-x-0"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Menu mobile"
       >
         <div className="flex items-center justify-between border-b border-zinc-200 px-5 py-4">
           <div className="space-y-2">
-            <Image src="/logo-oficial.webp" alt="JoJoias Semijoias" width={170} height={50} sizes="150px" className="h-auto w-[150px]" />
+            <Image src="/logo-oficial.avif" alt="JoJoias Semijoias" width={170} height={50} sizes="150px" className="h-auto w-[150px]" />
             <h2 className="text-lg font-black text-zinc-900">Menu</h2>
           </div>
           <button
@@ -108,6 +109,7 @@ export function MobileNavDrawer() {
           </Link>
         </div>
       </aside>
+      ) : null}
     </>
   );
 }

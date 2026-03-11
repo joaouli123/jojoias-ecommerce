@@ -110,7 +110,7 @@ export function ProductCard({ product }: ProductCardProps) {
       {/* Badges de Destaque */}
       {hasDiscount && (
         <div className="absolute left-2 top-2 z-20">
-          <span className="bg-[#D4AF37] text-white text-[10px] font-bold px-2 py-1 rounded-sm shadow-sm tracking-wide">
+          <span className="bg-[#D4AF37] text-[#111111] text-[10px] font-bold px-2 py-1 rounded-sm shadow-sm tracking-wide">
             {discountPercent}% OFF
           </span>
         </div>
@@ -119,7 +119,7 @@ export function ProductCard({ product }: ProductCardProps) {
       {/* Imagem Container */}
       <div className="relative aspect-[4/3] w-full overflow-hidden mb-4 rounded-[20px]">
         <Image
-          src={product.image || "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?q=80&w=600&h=600&fit=crop"}
+          src={product.image || "/demo-products/kit-elegance.svg"}
           alt={product.name}
           fill
           sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"

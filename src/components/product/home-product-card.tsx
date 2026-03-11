@@ -24,7 +24,7 @@ export function HomeProductCard({ product }: HomeProductCardProps) {
     <Link href={`/produto/${product.slug}`} className="group relative flex flex-col rounded-[20px] border border-zinc-200 bg-white p-2 transition-all hover:scale-[1.01] sm:p-3">
       {hasDiscount ? (
         <div className="absolute left-2 top-2 z-20">
-          <span className="rounded-sm bg-[#D4AF37] px-2 py-1 text-[10px] font-bold tracking-wide text-white shadow-sm">
+          <span className="rounded-sm bg-[#D4AF37] px-2 py-1 text-[10px] font-bold tracking-wide text-[#111111] shadow-sm">
             OFERTA
           </span>
         </div>

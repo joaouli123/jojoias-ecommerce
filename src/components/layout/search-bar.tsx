@@ -110,9 +110,10 @@ export function SearchBar() {
           }}
           onFocus={() => setIsOpen(true)}
           placeholder="Digite o que você procura..."
-          className="h-12 w-full rounded-[20px] border border-zinc-500 lg:border-zinc-200 bg-white lg:bg-zinc-50/50 pl-4 pr-12 text-sm outline-none transition-all focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37] focus:bg-white placeholder:text-zinc-600"
+          aria-label="Buscar produtos"
+          className="h-[52px] w-full rounded-[20px] border border-zinc-500 lg:border-zinc-200 bg-white lg:bg-zinc-50/50 pl-4 pr-14 text-sm outline-none transition-all focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37] focus:bg-white placeholder:text-zinc-600 sm:h-12"
         />
-        <button type="submit" className="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-900 lg:text-zinc-400 hover:text-[#D4AF37] transition-colors" aria-label="Buscar produtos">
+        <button type="submit" className="absolute right-1.5 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full text-zinc-900 transition-colors hover:text-[#D4AF37] lg:text-zinc-400 sm:h-10 sm:w-10" aria-label="Buscar produtos">
           {isLoading ? <Loader2 className="h-5 w-5 animate-spin" /> : <Search className="h-5 w-5" />}
         </button>
       </form>

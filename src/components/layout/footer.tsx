@@ -16,7 +16,7 @@ export async function Footer() {
           {/* Brand & Newsletter Column */}
           <div className="lg:col-span-5 flex flex-col space-y-8">
             <div>
-              <Image src="/logo-oficial.webp" alt="JoJoias Semijoias" width={220} height={66} sizes="(max-width: 640px) 180px, 220px" className="h-auto w-[180px] sm:w-[220px]" />
+              <Image src="/logo-oficial.avif" alt="JoJoias Semijoias" width={220} height={66} sizes="(max-width: 640px) 180px, 220px" className="h-auto w-[180px] sm:w-[220px]" />
               <p className="mt-4 text-[15px] leading-relaxed text-zinc-600 max-w-sm">
                 {settings.tagline}
               </p>
@@ -119,7 +119,7 @@ export async function Footer() {
         <div className="pt-10 flex flex-col xl:flex-row items-center xl:items-start justify-between gap-8">
           <div className="flex flex-col sm:flex-row items-center sm:items-start gap-8 md:gap-14">
             <div>
-              <span className="block text-[11px] font-bold uppercase tracking-widest text-zinc-400 mb-4 text-center sm:text-left">Pagamento Seguro</span>
+              <span className="block text-[11px] font-bold uppercase tracking-widest text-zinc-500 mb-4 text-center sm:text-left">Pagamento Seguro</span>
               <div className="flex items-center justify-center sm:justify-start">
                 <Image
                   src="/formas-pagamento-jojoias.avif"
@@ -133,7 +133,7 @@ export async function Footer() {
             </div>
 
             <div>
-              <span className="block text-[11px] font-bold uppercase tracking-widest text-zinc-400 mb-4 text-center sm:text-left">Compra Garantida</span>
+              <span className="block text-[11px] font-bold uppercase tracking-widest text-zinc-500 mb-4 text-center sm:text-left">Compra Garantida</span>
               <div className="flex items-center justify-center sm:justify-start">
                 <Image
                   src="/selos-seguranca-google.avif"

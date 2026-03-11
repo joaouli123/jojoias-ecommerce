@@ -7,6 +7,16 @@ import Link from "next/link";
 import { ShieldCheck, Truck, CreditCard, Map } from "lucide-react";
 import type { StoreBanner, StoreCategory } from "@/lib/store-data";
 
+function resolveBannerImageUrl(imageUrl: string | null | undefined, fallbackUrl: string) {
+  if (!imageUrl) return fallbackUrl;
+
+  if (imageUrl.includes("images.unsplash.com") || imageUrl.includes("plus.unsplash.com")) {
+    return fallbackUrl;
+  }
+
+  return imageUrl;
+}
+
 export function BenefitsCarousel() {
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -46,13 +56,17 @@ export function BenefitsCarousel() {
       </div>
 
       <button 
+        type="button"
         onClick={() => scroll("left")}
+        aria-label="Ver benefícios anteriores"
         className="absolute left-1 top-[55%] -translate-y-1/2 w-10 h-10 items-center justify-center bg-white rounded-full shadow-lg z-10 text-zinc-900 md:hidden flex"
       >
         <ChevronLeft className="w-6 h-6" />
       </button>
       <button 
+        type="button"
         onClick={() => scroll("right")}
+        aria-label="Ver próximos benefícios"
         className="absolute right-1 top-[55%] -translate-y-1/2 w-10 h-10 items-center justify-center bg-white rounded-full shadow-lg z-10 text-zinc-900 md:hidden flex"
       >
         <ChevronRight className="w-6 h-6" />
@@ -87,12 +101,22 @@ export function BannerCarousel({ banners = [] }: { banners?: StoreBanner[] }) {
         >
           {items.map((banner) => {
             const isFirstBanner = banner.id === items[0]?.id;
+            const desktopImage = resolveBannerImageUrl(
+              banner.imageUrl,
+              isFirstBanner ? "/banner-home-jojoias.avif" : "/demo-products/banner-hero.svg",
+            );
+            const mobileImage = resolveBannerImageUrl(
+              banner.mobileUrl || banner.imageUrl,
+              isFirstBanner ? "/banner-home-jojoias.avif" : "/demo-products/banner-hero.svg",
+            );
+            const hasVisibleCopy = Boolean(banner.title || banner.subtitle);
+            const imageAlt = banner.href && hasVisibleCopy ? "" : banner.title || "Banner principal da loja";
             const content = (
               <>
                 <div className="absolute inset-0 hidden md:block">
                   <Image
-                    src={banner.imageUrl}
-                    alt={banner.title || "Banner principal da loja"}
+                    src={desktopImage}
+                    alt={imageAlt}
                     fill
                     priority={isFirstBanner}
                     fetchPriority={isFirstBanner ? "high" : undefined}
@@ -103,8 +127,8 @@ export function BannerCarousel({ banners = [] }: { banners?: StoreBanner[] }) {
                 </div>
                 <div className="absolute inset-0 md:hidden">
                   <Image
-                    src={banner.mobileUrl || banner.imageUrl}
-                    alt={banner.title || "Banner principal da loja"}
+                    src={mobileImage}
+                    alt={imageAlt}
                     fill
                     priority={isFirstBanner}
                     fetchPriority={isFirstBanner ? "high" : undefined}
@@ -138,13 +162,17 @@ export function BannerCarousel({ banners = [] }: { banners?: StoreBanner[] }) {
         </div>
         
         <button 
+          type="button"
           onClick={() => scroll("left")}
+          aria-label="Ver banner anterior"
           className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 flex items-center justify-center bg-white/90 rounded-full shadow-md z-10 text-zinc-900 opacity-0 group-hover:opacity-100 transition-opacity md:flex"
         >
           <ChevronLeft className="w-6 h-6" />
         </button>
         <button 
+          type="button"
           onClick={() => scroll("right")}
+          aria-label="Ver próximo banner"
           className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 flex items-center justify-center bg-white/90 rounded-full shadow-md z-10 text-zinc-900 opacity-0 group-hover:opacity-100 transition-opacity md:flex"
         >
           <ChevronRight className="w-6 h-6" />
@@ -171,6 +199,11 @@ export function SecondaryBanners({ banners = [] }: { banners?: StoreBanner[] }) 
   ];
 
   const items = (banners.length ? banners : fallbackBanners).slice(0, 3);
+  const fallbackImages = [
+    "/demo-products/colar-constelacao.svg",
+    "/demo-products/kit-elegance.svg",
+    "/demo-products/brinco-gota.svg",
+  ];
 
   return (
     <section className="max-w-[1440px] w-full mx-auto px-4 sm:px-6 lg:px-8 pb-8 md:pb-12 relative group">
@@ -178,11 +211,14 @@ export function SecondaryBanners({ banners = [] }: { banners?: StoreBanner[] }) 
         ref={scrollRef}
         className="flex overflow-x-auto snap-x snap-mandatory gap-4 no-scrollbar pb-2 md:grid md:grid-cols-3 md:gap-6 md:overflow-visible md:pb-0"
       >
-        {items.map((banner) => (
+        {items.map((banner, index) => {
+          const imageUrl = resolveBannerImageUrl(banner.imageUrl, fallbackImages[index] || fallbackImages[0]);
+
+          return (
           <Link key={banner.id} href={banner.href || "/"} className="min-w-[85vw] md:min-w-0 h-[220px] md:h-[250px] snap-center rounded-xl overflow-hidden relative block group/banner border border-zinc-200 bg-white">
             <Image
-              src={banner.imageUrl}
-              alt={banner.title || "Banner promocional da loja"}
+              src={imageUrl}
+              alt=""
               fill
               sizes="(max-width: 768px) 85vw, 33vw"
               className="object-cover transform group-hover/banner:scale-105 transition-transform duration-500"
@@ -193,17 +229,22 @@ export function SecondaryBanners({ banners = [] }: { banners?: StoreBanner[] }) 
               {banner.subtitle ? <p className="mt-1 text-sm text-white/90">{banner.subtitle}</p> : null}
             </div>
           </Link>
-        ))}
+          );
+        })}
       </div>
 
       <button 
+        type="button"
         onClick={() => scroll("left")}
+        aria-label="Ver promoções anteriores"
         className="absolute left-1 md:-left-4 top-1/2 -translate-y-1/2 w-10 h-10 items-center justify-center bg-white rounded-full shadow-lg z-10 text-zinc-900 group-hover:opacity-100 transition-opacity flex md:hidden"
       >
         <ChevronLeft className="w-6 h-6" />
       </button>
       <button 
+        type="button"
         onClick={() => scroll("right")}
+        aria-label="Ver próximas promoções"
         className="absolute right-1 md:-right-4 top-1/2 -translate-y-1/2 w-10 h-10 items-center justify-center bg-white rounded-full shadow-lg z-10 text-zinc-900 group-hover:opacity-100 transition-opacity flex md:hidden"
       >
         <ChevronRight className="w-6 h-6" />
@@ -256,7 +297,7 @@ export function CategoriesCarousel({ categories = [] }: { categories?: StoreCate
               <div className="w-[132px] h-[132px] rounded-full overflow-hidden relative border border-zinc-200 bg-white">
                 <Image
                   src={categoryImages[i % categoryImages.length]}
-                  alt={`Categoria ${cat.name}`}
+                  alt=""
                   fill
                   sizes="132px"
                   className="object-cover transform group-hover/cat:scale-110 transition-transform duration-700"
@@ -268,13 +309,17 @@ export function CategoriesCarousel({ categories = [] }: { categories?: StoreCate
         </div>
 
         <button 
+          type="button"
           onClick={() => scroll("left")}
+          aria-label="Ver categorias anteriores"
           className="absolute -left-4 md:left-0 top-[33%] -translate-y-1/2 w-12 h-12 flex items-center justify-center bg-zinc-200/80 rounded-full z-10 text-zinc-700 xl:hidden"
         >
           <ChevronLeft className="w-6 h-6" />
         </button>
         <button 
+          type="button"
           onClick={() => scroll("right")}
+          aria-label="Ver próximas categorias"
           className="absolute -right-4 md:right-0 top-[33%] -translate-y-1/2 w-12 h-12 flex items-center justify-center bg-zinc-200/80 rounded-full z-10 text-zinc-700 xl:hidden"
         >
           <ChevronRight className="w-6 h-6" />

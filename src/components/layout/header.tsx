@@ -46,10 +46,17 @@ export async function Header() {
                     <strong className="font-black">{message}</strong>
                   </span>
                 ))}
-                <Link href={settings.announcementLinkHref} className="flex items-center gap-2 underline decoration-transparent underline-offset-4 transition hover:decoration-current">
-                  <CreditCard className="w-3.5 h-3.5" />
-                  {settings.announcementLinkLabel}
-                </Link>
+                {duplicate === 0 ? (
+                  <Link href={settings.announcementLinkHref} className="flex items-center gap-2 underline decoration-transparent underline-offset-4 transition hover:decoration-current">
+                    <CreditCard className="w-3.5 h-3.5" />
+                    {settings.announcementLinkLabel}
+                  </Link>
+                ) : (
+                  <span className="flex items-center gap-2 underline decoration-transparent underline-offset-4">
+                    <CreditCard className="w-3.5 h-3.5" />
+                    {settings.announcementLinkLabel}
+                  </span>
+                )}
               </div>
             ))}
           </div>
@@ -66,7 +73,7 @@ export async function Header() {
           {/* Logo */}
           <Link href="/" className="flex shrink-0 items-center justify-center group">
             <Image
-              src="/logo-oficial.webp"
+              src="/logo-oficial.avif"
               alt="JoJoias Semijoias"
               width={200}
               height={60}
@@ -169,7 +176,7 @@ export async function Header() {
                 <span className="text-[15px] font-medium text-zinc-800 px-1 mb-2">Rastrear Pedido</span>
                 <form action="/rastreio" className="relative">
                   <input name="pedido" type="text" placeholder="Pedido ou rastreio" className="w-full border border-zinc-200 rounded-full h-11 pl-4 pr-12 text-[14px] outline-none focus:border-[#D4AF37] transition-colors shadow-sm" />
-                  <button type="submit" className="absolute right-1.5 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center text-zinc-900 hover:text-[#D4AF37] transition-colors">
+                  <button type="submit" aria-label="Rastrear pedido" className="absolute right-1.5 top-1/2 -translate-y-1/2 w-10 h-10 flex items-center justify-center rounded-full text-zinc-900 hover:text-[#D4AF37] transition-colors">
                     <ArrowRight className="w-4 h-4" />
                   </button>
                 </form>
