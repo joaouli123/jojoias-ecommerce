@@ -3,7 +3,6 @@ import { ArrowRight, MessageSquareText } from "lucide-react";
 import { redirect } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { getCartAction } from "@/actions/cart";
-import { createOrderAction } from "@/actions/orders";
 import { auth } from "@/auth";
 import { formatCurrency } from "@/lib/utils";
 import { prisma } from "@/lib/prisma";
@@ -81,7 +80,7 @@ export default async function CheckoutPage() {
           Voltar ao carrinho
         </Link>
       </div>
-      <CheckoutProtectedForm action={createOrderAction} checkoutToken={checkoutToken}>
+      <CheckoutProtectedForm checkoutToken={checkoutToken}>
         <div className="lg:col-span-8 space-y-6">
           <CheckoutMobileSummary items={cart.items} subtotal={cart.subtotal} pixDiscountPercent={pixDiscountPercent} />
 

@@ -16,12 +16,34 @@ type MercadoPagoPreferenceResponse = {
 };
 
 type MercadoPagoPaymentResponse = {
+  id?: string | number;
   status?: string;
   status_detail?: string;
   external_reference?: string;
   payment_method_id?: string;
   transaction_amount?: number;
   transaction_amount_refunded?: number;
+  date_of_expiration?: string;
+  date_approved?: string;
+  transaction_details?: {
+    external_resource_url?: string;
+  };
+  point_of_interaction?: {
+    transaction_data?: {
+      qr_code?: string;
+      qr_code_base64?: string;
+      ticket_url?: string;
+    };
+  };
+  barcode?: {
+    content?: string;
+  };
+};
+
+type MercadoPagoCardTokenResponse = {
+  id?: string;
+  payment_method_id?: string;
+  issuer_id?: string | number;
 };
 
 type MercadoPagoRefundResponse = {
@@ -53,6 +75,254 @@ function mapOrderStatusFromPayment(paymentStatus: string, currentStatus: Persist
 
 function resolveApiBase(endpointUrl: string | null) {
   return (endpointUrl || "https://api.mercadopago.com").replace(/\/$/, "");
+}
+
+function splitCustomerName(name: string | null | undefined) {
+  const normalized = (name || "Cliente").trim();
+  const [firstName, ...rest] = normalized.split(/\s+/);
+
+  return {
+    firstName: firstName || "Cliente",
+    lastName: rest.join(" ") || "",
+  };
+}
+
+export type TransparentPaymentMethod = "PIX" | "CARD" | "BOLETO";
+
+export type MercadoPagoTransparentPaymentInput = {
+  orderId: string;
+  paymentMethod: TransparentPaymentMethod;
+  payer: {
+    name: string;
+    email: string;
+    document: string;
+    zipcode?: string | null;
+    street?: string | null;
+    number?: string | null;
+    district?: string | null;
+    city?: string | null;
+    state?: string | null;
+  };
+  card?: {
+    number: string;
+    expiry: string;
+    cvv: string;
+    holderName: string;
+    installments: number;
+  };
+};
+
+export type MercadoPagoPaymentDetails = {
+  paymentId: string | null;
+  paymentMethodId: string | null;
+  status: string;
+  statusDetail: string | null;
+  amount: number | null;
+  expirationDate: string | null;
+  approvedAt: string | null;
+  qrCode: string | null;
+  qrCodeBase64: string | null;
+  ticketUrl: string | null;
+  barcodeContent: string | null;
+};
+
+async function createMercadoPagoCardToken(
+  apiBase: string,
+  publicKey: string,
+  card: NonNullable<MercadoPagoTransparentPaymentInput["card"]>,
+  payer: MercadoPagoTransparentPaymentInput["payer"],
+) {
+  const [expirationMonth, expirationYear] = card.expiry.split("/");
+
+  const response = await fetch(`${apiBase}/v1/card_tokens?public_key=${encodeURIComponent(publicKey)}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      card_number: card.number.replace(/\s+/g, ""),
+      security_code: card.cvv,
+      expiration_month: expirationMonth,
+      expiration_year: expirationYear?.length === 2 ? `20${expirationYear}` : expirationYear,
+      cardholder: {
+        name: card.holderName,
+        identification: {
+          type: "CPF",
+          number: payer.document.replace(/\D/g, ""),
+        },
+      },
+    }),
+  });
+
+  if (!response.ok) {
+    const text = await response.text();
+    throw new Error(`Não foi possível tokenizar o cartão: ${text}`);
+  }
+
+  const payload = (await response.json()) as MercadoPagoCardTokenResponse;
+
+  if (!payload.id) {
+    throw new Error("O Mercado Pago não retornou o token do cartão.");
+  }
+
+  return payload;
+}
+
+function buildPaymentDetails(payload: MercadoPagoPaymentResponse): MercadoPagoPaymentDetails {
+  return {
+    paymentId: payload.id ? String(payload.id) : null,
+    paymentMethodId: payload.payment_method_id ?? null,
+    status: payload.status || "pending",
+    statusDetail: payload.status_detail ?? null,
+    amount: typeof payload.transaction_amount === "number" ? payload.transaction_amount : null,
+    expirationDate: payload.date_of_expiration ?? null,
+    approvedAt: payload.date_approved ?? null,
+    qrCode: payload.point_of_interaction?.transaction_data?.qr_code ?? null,
+    qrCodeBase64: payload.point_of_interaction?.transaction_data?.qr_code_base64 ?? null,
+    ticketUrl: payload.point_of_interaction?.transaction_data?.ticket_url ?? payload.transaction_details?.external_resource_url ?? null,
+    barcodeContent: payload.barcode?.content ?? null,
+  };
+}
+
+export async function getMercadoPagoPaymentDetails(paymentId: string): Promise<MercadoPagoPaymentDetails> {
+  const integration = await getIntegrationSettings("mercado_pago");
+
+  if (!integration?.isEnabled || !integration.secretKey) {
+    throw new Error("Mercado Pago não configurado.");
+  }
+
+  const apiBase = resolveApiBase(integration.endpointUrl);
+  const response = await fetch(`${apiBase}/v1/payments/${paymentId}`, {
+    headers: {
+      Authorization: `Bearer ${integration.secretKey}`,
+      "Content-Type": "application/json",
+    },
+    cache: "no-store",
+  });
+
+  if (!response.ok) {
+    const text = await response.text();
+    throw new Error(`Erro ao consultar detalhes do pagamento: ${text}`);
+  }
+
+  return buildPaymentDetails((await response.json()) as MercadoPagoPaymentResponse);
+}
+
+export async function createMercadoPagoTransparentPayment(input: MercadoPagoTransparentPaymentInput) {
+  const integration = await getIntegrationSettings("mercado_pago");
+
+  if (!integration?.isEnabled || !integration.secretKey) {
+    return null;
+  }
+
+  const order = await prisma.order.findUnique({
+    where: { id: input.orderId },
+    include: {
+      items: {
+        include: {
+          product: true,
+        },
+      },
+    },
+  });
+
+  if (!order) {
+    throw new Error("Pedido não encontrado para iniciar o pagamento.");
+  }
+
+  const siteUrl = getSiteUrl();
+  const apiBase = resolveApiBase(integration.endpointUrl);
+  const { firstName, lastName } = splitCustomerName(input.payer.name);
+  const cleanDocument = input.payer.document.replace(/\D/g, "");
+  const statementDescriptor = typeof integration.extraConfig.statementDescriptor === "string" ? integration.extraConfig.statementDescriptor : undefined;
+
+  let token: string | undefined;
+  let paymentMethodId: string;
+  let issuerId: string | number | undefined;
+
+  if (input.paymentMethod === "CARD") {
+    if (!integration.publicKey) {
+      throw new Error("A chave pública do Mercado Pago não está configurada para pagamentos com cartão.");
+    }
+
+    if (!input.card) {
+      throw new Error("Dados do cartão não informados.");
+    }
+
+    const cardToken = await createMercadoPagoCardToken(apiBase, integration.publicKey, input.card, input.payer);
+    token = cardToken.id;
+    paymentMethodId = cardToken.payment_method_id || "visa";
+    issuerId = cardToken.issuer_id;
+  } else if (input.paymentMethod === "PIX") {
+    paymentMethodId = "pix";
+  } else {
+    paymentMethodId = typeof integration.extraConfig.boletoPaymentMethodId === "string"
+      ? integration.extraConfig.boletoPaymentMethodId
+      : "bolbradesco";
+  }
+
+  const response = await fetch(`${apiBase}/v1/payments`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${integration.secretKey}`,
+      "Content-Type": "application/json",
+      "X-Idempotency-Key": order.checkoutToken || crypto.randomUUID(),
+    },
+    signal: AbortSignal.timeout(20000),
+    body: JSON.stringify({
+      transaction_amount: Number(order.total.toFixed(2)),
+      description: `Pedido Luxijóias #${order.id.slice(-8).toUpperCase()}`,
+      payment_method_id: paymentMethodId,
+      ...(token ? { token } : {}),
+      ...(issuerId ? { issuer_id: issuerId } : {}),
+      ...(input.paymentMethod === "CARD" && input.card ? { installments: Math.max(1, input.card.installments) } : {}),
+      payer: {
+        email: input.payer.email,
+        first_name: firstName,
+        last_name: lastName,
+        entity_type: "individual",
+        identification: {
+          type: "CPF",
+          number: cleanDocument,
+        },
+        address: input.payer.zipcode ? {
+          zip_code: input.payer.zipcode.replace(/\D/g, ""),
+          street_name: input.payer.street || undefined,
+          street_number: input.payer.number || undefined,
+          neighborhood: input.payer.district || undefined,
+          city: input.payer.city || undefined,
+          federal_unit: input.payer.state || undefined,
+        } : undefined,
+      },
+      date_of_expiration: order.paymentExpiresAt?.toISOString() ?? undefined,
+      notification_url: `${siteUrl}/api/webhooks/mercado-pago?source_news=webhooks`,
+      external_reference: order.id,
+      statement_descriptor: statementDescriptor,
+      metadata: {
+        orderId: order.id,
+        checkoutToken: order.checkoutToken,
+      },
+    }),
+  });
+
+  if (!response.ok) {
+    const text = await response.text();
+    throw new Error(`Erro ao criar pagamento transparente no Mercado Pago: ${text}`);
+  }
+
+  const payload = (await response.json()) as MercadoPagoPaymentResponse;
+  const details = buildPaymentDetails(payload);
+
+  await prisma.order.update({
+    where: { id: order.id },
+    data: {
+      paymentId: details.paymentId,
+      paymentStatus: details.status,
+      paymentMethod: input.paymentMethod,
+    },
+  });
+
+  return details;
 }
 
 export async function createMercadoPagoCheckout(orderId: string) {

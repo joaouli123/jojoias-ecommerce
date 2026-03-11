@@ -3,7 +3,9 @@ import { notFound } from "next/navigation";
 import { CheckCircle2, Package, ArrowRight, Mail, User, Clock3, AlertCircle, MapPin, Truck } from "lucide-react";
 import { auth } from "@/auth";
 import { PurchaseTracker } from "@/components/analytics/ecommerce-trackers";
+import { OrderPaymentStatusCard } from "@/components/checkout/order-payment-status-card";
 import { prisma } from "@/lib/prisma";
+import { getMercadoPagoPaymentDetails } from "@/lib/mercado-pago";
 import { formatCurrency } from "@/lib/utils";
 
 export default async function OrderSuccessPage({
@@ -40,6 +42,10 @@ export default async function OrderSuccessPage({
   if (!isOwner && !hasValidGuestToken) {
     notFound();
   }
+
+  const paymentDetails = order.paymentId
+    ? await getMercadoPagoPaymentDetails(order.paymentId).catch(() => null)
+    : null;
 
   const normalizedPaymentStatus = (order.paymentStatus || payment || "pending").toLowerCase();
   const paymentRefunded = ["refunded", "partially_refunded"].includes(normalizedPaymentStatus);
@@ -85,6 +91,17 @@ export default async function OrderSuccessPage({
           </div>
         </div>
       </section>
+
+      <div className="mb-8">
+        <OrderPaymentStatusCard
+          orderId={order.id}
+          checkoutToken={order.checkoutToken}
+          paymentMethod={order.paymentMethod}
+          paymentStatus={order.paymentStatus}
+          paymentExpiresAt={order.paymentExpiresAt?.toISOString() ?? null}
+          initialPaymentDetails={paymentDetails}
+        />
+      </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
         <section className="lg:col-span-8 rounded-[20px] border border-zinc-200 bg-white p-6">

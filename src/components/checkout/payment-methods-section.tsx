@@ -92,7 +92,7 @@ export function PaymentMethodsSection({ pixDiscountPercent }: PaymentMethodsSect
   return (
     <section className="rounded-[20px] border border-zinc-200 bg-white p-5 md:p-6" aria-labelledby="checkout-payment-heading" aria-describedby={paymentStatusId}>
       <h2 id="checkout-payment-heading" className="text-xl font-bold text-zinc-900 mb-4">Pagamento</h2>
-      <p className="mb-4 text-sm text-zinc-500">Se o Mercado Pago estiver ativo no painel, a finalização seguirá para o ambiente seguro do gateway após concluir o pedido.</p>
+      <p className="mb-4 text-sm text-zinc-500">O pagamento é finalizado no próprio site. Pix, cartão e boleto seguem sem redirecionar o cliente para fora da loja.</p>
       <p id={paymentStatusId} className="sr-only" aria-live="polite" aria-atomic="true">
         {pixSelected ? `Pix selecionado com ${pixDiscountPercent}% de desconto.` : cardSelected ? "Cartão de crédito selecionado." : "Boleto bancário selecionado."}
       </p>
@@ -118,7 +118,7 @@ export function PaymentMethodsSection({ pixDiscountPercent }: PaymentMethodsSect
           {pixSelected && (
             <div id="checkout-payment-pix-panel" className="mt-3 rounded-[20px] border border-[#32BCAD]/40 bg-white p-3 text-sm text-zinc-700">
               <p className="font-semibold text-zinc-900 flex items-center gap-2"><QrCode className="h-4 w-4 text-[#32BCAD]" /> QR Code na próxima tela</p>
-              <p className="mt-1 text-zinc-600">Após clicar em Finalizar compra, o QR Code Pix será gerado para pagamento imediato.</p>
+              <p className="mt-1 text-zinc-600">Após clicar em Finalizar compra, o QR Code Pix e o código copia e cola serão exibidos no próprio domínio com atualização automática do status.</p>
             </div>
           )}
         </label>
@@ -147,12 +147,14 @@ export function PaymentMethodsSection({ pixDiscountPercent }: PaymentMethodsSect
                 onChange={(event) => setCardNumber(formatCardNumber(event.target.value))}
                 placeholder="Número do cartão"
                 inputMode="numeric"
+                required={cardSelected}
                 autoComplete="cc-number"
                 aria-label="Número do cartão"
               />
               <InputWithIcon
                 icon={User}
                 name="cardHolder"
+                required={cardSelected}
                 placeholder="Nome impresso no cartão"
                 autoComplete="cc-name"
                 aria-label="Nome impresso no cartão"
@@ -165,6 +167,7 @@ export function PaymentMethodsSection({ pixDiscountPercent }: PaymentMethodsSect
                   onChange={(event) => setCardExpiry(formatExpiry(event.target.value))}
                   placeholder="Validade (MM/AA)"
                   inputMode="numeric"
+                  required={cardSelected}
                   autoComplete="cc-exp"
                   aria-label="Validade do cartão"
                 />
@@ -175,22 +178,24 @@ export function PaymentMethodsSection({ pixDiscountPercent }: PaymentMethodsSect
                   onChange={(event) => setCardCvv(onlyDigits(event.target.value).slice(0, 4))}
                   placeholder="CVV"
                   inputMode="numeric"
+                  required={cardSelected}
                   autoComplete="cc-csc"
                   aria-label="Código de segurança do cartão"
                 />
               </div>
               <select
                 name="cardInstallments"
+                defaultValue="1"
                 aria-label="Parcelamento do cartão"
                 className="h-11 w-full rounded-[20px] border border-zinc-200 bg-white px-3 text-sm text-zinc-900 outline-none focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37]"
               >
-                {installments.map((item) => (
-                  <option key={item} value={item}>
+                {installments.map((item, index) => (
+                  <option key={item} value={String(index === 0 ? 1 : index === 1 ? 2 : index === 2 ? 3 : index === 3 ? 6 : index === 4 ? 10 : 12)}>
                     {item}
                   </option>
                 ))}
               </select>
-              <p className="text-xs text-zinc-500 flex items-center gap-2"><ShieldCheck className="h-4 w-4" /> Dados protegidos por criptografia.</p>
+              <p className="text-xs text-zinc-500 flex items-center gap-2"><ShieldCheck className="h-4 w-4" /> A aprovação é consultada na hora e, se recusada, o cliente pode corrigir os dados e tentar novamente.</p>
             </div>
           )}
         </label>
@@ -212,8 +217,8 @@ export function PaymentMethodsSection({ pixDiscountPercent }: PaymentMethodsSect
 
           {boletoSelected && (
             <div id="checkout-payment-boleto-panel" className="mt-3 rounded-[20px] border border-zinc-200 bg-white p-3 text-sm text-zinc-700">
-              <p className="font-semibold text-zinc-900">Boleto gerado na próxima tela</p>
-              <p className="mt-1 text-zinc-600">Após finalizar a compra, o boleto será exibido para impressão e pagamento.</p>
+              <p className="font-semibold text-zinc-900">Boleto exibido no próprio site</p>
+              <p className="mt-1 text-zinc-600">Após finalizar a compra, o boleto será mostrado com instruções, visualização e opção de download.</p>
             </div>
           )}
         </label>

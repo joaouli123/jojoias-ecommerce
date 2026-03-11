@@ -149,7 +149,7 @@ export function ProductCard({ product }: ProductCardProps) {
           }}
           disabled={isPending}
           aria-label={canAddDirectly ? `Adicionar ${product.name} ao carrinho` : `Escolher opções de ${product.name}`}
-          className="relative z-10 inline-flex h-8 w-8 touch-manipulation items-center justify-center rounded-full border border-[#c93737] bg-[#c93737] text-white transition-colors hover:border-[#a92d2d] hover:bg-[#a92d2d] disabled:cursor-not-allowed disabled:opacity-60"
+          className="relative z-10 inline-flex h-8 w-8 touch-manipulation items-center justify-center rounded-full border border-[#D4AF37] bg-[#D4AF37] text-white transition-colors hover:border-[#b8921f] hover:bg-[#b8921f] disabled:cursor-not-allowed disabled:opacity-60"
         >
           <ShoppingCart className="h-4 w-4" />
         </button>
