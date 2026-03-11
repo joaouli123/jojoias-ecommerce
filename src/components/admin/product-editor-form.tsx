@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { ExternalLink, Sparkles, Plus, Trash2, UploadCloud } from "lucide-react";
 import { ProductMediaManager } from "@/components/admin/product-media-manager";
+import { buildProductSeoPreview, generateProductSlug } from "@/lib/product-seo";
 
 type CategoryOption = {
   id: string;
@@ -78,17 +79,6 @@ function makeDraftId() {
   return `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
 }
 
-function generateSlug(text: string) {
-  return text
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .toLowerCase()
-    .trim()
-    .replace(/[^a-z0-9\s-]/g, "")
-    .replace(/\s+/g, "-")
-    .replace(/-+/g, "-");
-}
-
 function formatCurrencyInput(value: string | number | null | undefined) {
   const raw = typeof value === "number" ? value : typeof value === "string" ? Number(value.replace(/\./g, "").replace(/,/g, ".").replace(/[^0-9.-]/g, "")) : Number.NaN;
   if (!Number.isFinite(raw)) return "";
@@ -152,12 +142,15 @@ export function ProductEditorForm(props: ProductEditorFormProps) {
   const [name, setName] = useState(initialValues?.name ?? "");
   const [slug, setSlug] = useState(initialValues?.slug ?? "");
   const [description, setDescription] = useState(initialValues?.description ?? "");
+  const [categoryId, setCategoryId] = useState(initialValues?.categoryId ?? "");
+  const [brandId, setBrandId] = useState(initialValues?.brandId ?? "");
   const [mainImage, setMainImage] = useState(initialValues?.image ?? "");
   const [galleryImages, setGalleryImages] = useState<string[]>(initialValues?.galleryImages ?? []);
   const [price, setPrice] = useState(formatCurrencyInput(initialValues?.price));
   const [comparePrice, setComparePrice] = useState(formatCurrencyInput(initialValues?.comparePrice ?? ""));
   const [aiLoading, setAiLoading] = useState(false);
   const [aiError, setAiError] = useState<string | null>(null);
+  const [aiFocusKeyword, setAiFocusKeyword] = useState<string | null>(null);
   const [mediaMessage, setMediaMessage] = useState<string | null>(null);
   const [slugTouched, setSlugTouched] = useState(Boolean(initialValues?.slug));
   const [quickVariantType, setQuickVariantType] = useState<string>("cor");
@@ -181,7 +174,7 @@ export function ProductEditorForm(props: ProductEditorFormProps) {
 
   useEffect(() => {
     if (slugTouched) return;
-    setSlug(generateSlug(name));
+    setSlug(generateProductSlug(name));
   }, [name, slugTouched]);
 
   const quickPresets = useMemo(() => {
@@ -189,6 +182,20 @@ export function ProductEditorForm(props: ProductEditorFormProps) {
   }, [quickVariantType]);
 
   const productImageOptions = useMemo(() => uniqueUrls([mainImage, ...galleryImages]), [galleryImages, mainImage]);
+  const selectedCategory = useMemo(() => categories.find((entry) => entry.id === categoryId)?.name ?? "", [categories, categoryId]);
+  const selectedBrand = useMemo(() => brands.find((entry) => entry.id === brandId)?.name ?? "", [brandId, brands]);
+  const priceValue = useMemo(() => parseCurrencyFromInput(price), [price]);
+  const comparePriceValue = useMemo(() => parseCurrencyFromInput(comparePrice), [comparePrice]);
+  const seoPreview = useMemo(() => buildProductSeoPreview({
+    name,
+    slug,
+    description,
+    brand: selectedBrand,
+    category: selectedCategory,
+    price: priceValue,
+    comparePrice: comparePriceValue,
+    siteName: "Luxijóias",
+  }), [comparePriceValue, description, name, priceValue, selectedBrand, selectedCategory, slug]);
 
   const variantsJson = JSON.stringify(
     variants
@@ -253,10 +260,23 @@ export function ProductEditorForm(props: ProductEditorFormProps) {
       const response = await fetch("/api/admin/products/assist", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, description }),
+        body: JSON.stringify({
+          name,
+          description,
+          category: selectedCategory,
+          brand: selectedBrand,
+          price: priceValue,
+          comparePrice: comparePriceValue,
+        }),
       });
 
-      const payload = (await response.json()) as { error?: string; title?: string; slug?: string; description?: string };
+      const payload = (await response.json()) as {
+        error?: string;
+        title?: string;
+        slug?: string;
+        description?: string;
+        focusKeyword?: string;
+      };
       if (!response.ok) {
         throw new Error(payload.error || "Não foi possível gerar o conteúdo com IA.");
       }
@@ -271,6 +291,7 @@ export function ProductEditorForm(props: ProductEditorFormProps) {
       if (payload.description) {
         setDescription(payload.description);
       }
+      setAiFocusKeyword(payload.focusKeyword || null);
     } catch (error) {
       setAiError(error instanceof Error ? error.message : "Não foi possível gerar o conteúdo com IA.");
     } finally {
@@ -286,7 +307,7 @@ export function ProductEditorForm(props: ProductEditorFormProps) {
         <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
           <div>
             <p className="text-sm font-semibold text-gray-900">Assistente de IA</p>
-            <p className="text-xs text-gray-500">Melhora nome, slug e descrição com base no que você já preencheu.</p>
+            <p className="text-xs text-gray-500">Age como especialista em SEO para melhorar nome, slug e descrição com base na categoria, marca e preço.</p>
           </div>
           <button
             type="button"
@@ -294,10 +315,41 @@ export function ProductEditorForm(props: ProductEditorFormProps) {
             disabled={aiLoading || !name.trim()}
             className="inline-flex items-center justify-center gap-2 rounded-xl bg-gray-900 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-60"
           >
-            <Sparkles className="h-4 w-4" /> {aiLoading ? "Gerando..." : "Melhorar com IA"}
+            <Sparkles className="h-4 w-4" /> {aiLoading ? "Gerando..." : "Gerar versão SEO"}
           </button>
         </div>
         {aiError ? <p className="mt-3 text-sm font-medium text-rose-600">{aiError}</p> : null}
+        {aiFocusKeyword ? <p className="mt-3 text-sm text-gray-600">Palavra-chave sugerida: <span className="font-semibold text-gray-900">{aiFocusKeyword}</span></p> : null}
+      </div>
+
+      <div className="rounded-2xl border border-emerald-100 bg-emerald-50/60 p-5">
+        <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+          <div>
+            <p className="text-sm font-semibold text-emerald-950">Prévia SEO da página do produto</p>
+            <p className="text-xs text-emerald-800/80">Essa mesma lógica será usada para montar o título e a descrição exibidos ao Google.</p>
+          </div>
+          <div className="text-xs font-medium text-emerald-900">
+            Título {seoPreview.title.length}/65 • Descrição {seoPreview.description.length}/160
+          </div>
+        </div>
+
+        <div className="mt-4 rounded-2xl border border-white/70 bg-white p-4 shadow-sm">
+          <p className="text-xs uppercase tracking-[0.2em] text-emerald-700">Prévia de busca</p>
+          <p className="mt-3 text-lg font-semibold leading-snug text-blue-700">{seoPreview.title}</p>
+          <p className="mt-1 break-all text-sm text-emerald-700">{`https://luxijoias.com.br/produto/${seoPreview.slug}`}</p>
+          <p className="mt-2 text-sm leading-6 text-gray-700">{seoPreview.description}</p>
+        </div>
+
+        <div className="mt-4 grid gap-3 md:grid-cols-2">
+          <div className="rounded-xl border border-white/70 bg-white px-4 py-3">
+            <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">Palavra-chave principal</p>
+            <p className="mt-1 text-sm font-medium text-gray-900">{aiFocusKeyword || seoPreview.focusKeyword || "Preencha nome, marca ou categoria para gerar a sugestão."}</p>
+          </div>
+          <div className="rounded-xl border border-white/70 bg-white px-4 py-3">
+            <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">Slug final</p>
+            <p className="mt-1 text-sm font-medium text-gray-900">/{seoPreview.slug}</p>
+          </div>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
@@ -308,7 +360,7 @@ export function ProductEditorForm(props: ProductEditorFormProps) {
 
         <div className="space-y-2">
           <label htmlFor="slug" className="text-sm font-medium text-gray-700">Slug URL *</label>
-          <input value={slug} onChange={(event) => { setSlug(event.target.value); setSlugTouched(true); }} type="text" id="slug" name="slug" required className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-zinc-900/20" placeholder="kit-colar-pulseira-elegance" />
+          <input value={slug} onChange={(event) => { setSlug(generateProductSlug(event.target.value)); setSlugTouched(true); }} type="text" id="slug" name="slug" required className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-zinc-900/20" placeholder="kit-colar-pulseira-elegance" />
         </div>
 
         <div className="space-y-2 md:col-span-2">
@@ -347,7 +399,7 @@ export function ProductEditorForm(props: ProductEditorFormProps) {
 
         <div className="space-y-2">
           <label htmlFor="categoryId" className="text-sm font-medium text-gray-700">Categoria *</label>
-          <select id="categoryId" name="categoryId" defaultValue={initialValues?.categoryId ?? ""} required className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-zinc-900/20">
+          <select id="categoryId" name="categoryId" value={categoryId} onChange={(event) => setCategoryId(event.target.value)} required className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-zinc-900/20">
             <option value="" disabled hidden>Selecione uma categoria</option>
             {categories.map((cat) => (
               <option key={cat.id} value={cat.id}>{cat.name}</option>
@@ -357,7 +409,7 @@ export function ProductEditorForm(props: ProductEditorFormProps) {
 
         <div className="space-y-2">
           <label htmlFor="brandId" className="text-sm font-medium text-gray-700">Marca</label>
-          <select id="brandId" name="brandId" defaultValue={initialValues?.brandId ?? ""} className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-zinc-900/20">
+          <select id="brandId" name="brandId" value={brandId} onChange={(event) => setBrandId(event.target.value)} className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-zinc-900/20">
             <option value="">Sem marca</option>
             {brands.map((brand) => (
               <option key={brand.id} value={brand.id}>{brand.name}</option>

@@ -151,13 +151,13 @@ export function AddToCartForm({ product, variants, totalAvailableQuantity, onVar
                   disabled={unavailable}
                   aria-label={`Selecionar ${variant.label}`}
                   title={variant.label}
-                  className={`group relative transition ${unavailable ? "cursor-not-allowed opacity-40" : ""}`}
+                  className={`group relative rounded-full transition focus:outline-none focus-visible:outline-none ${unavailable ? "cursor-not-allowed opacity-40" : ""}`}
                 >
                   {variant.type === "cor" ? (
                     <>
-                      <span className={`flex h-11 w-11 items-center justify-center rounded-full border bg-white shadow-sm transition ${selected ? "border-[#D4AF37] ring-2 ring-[#D4AF37]/20" : "border-zinc-200 hover:border-zinc-400"}`}>
+                      <span className={`flex h-11 w-11 items-center justify-center rounded-full border bg-white transition ${selected ? "border-[#E7C96A] bg-[#FFF9E8]" : "border-zinc-200 hover:border-zinc-300"}`}>
                         <span
-                          className={`h-6 w-6 rounded-full border ${selected ? "border-white shadow-[0_0_0_1px_rgba(212,175,55,0.2)]" : "border-zinc-200"}`}
+                          className={`h-6 w-6 rounded-full border ${selected ? "border-[#F4E5B1]" : "border-zinc-200"}`}
                           style={{ backgroundColor: swatchColor || "#ffffff" }}
                         />
                       </span>

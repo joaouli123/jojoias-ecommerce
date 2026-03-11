@@ -10,11 +10,13 @@ import { ProductPurchasePanel } from "@/components/product/product-purchase-pane
 import { ProductViewTracker } from "@/components/analytics/ecommerce-trackers"
 import { auth } from "@/auth"
 import { prisma } from "@/lib/prisma"
+import { buildProductMetaDescription, buildProductSeoTitle } from "@/lib/product-seo"
 import { getStoreSettings } from "@/lib/store-settings"
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://luxijoias.com.br"
 
 const getCachedProductBySlug = cache(async (slug: string) => getProductBySlugAction(slug))
+const getCachedProductReviews = cache(async (productId: string) => getProductReviewsAction(productId))
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params
@@ -27,22 +29,35 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     }
   }
 
-  const description =
-    product.description ||
-    "Produto premium Luxijóias com compra segura e entrega rápida para todo o Brasil."
+  const title = buildProductSeoTitle({
+    name: product.name,
+    brand: product.brand,
+    category: product.category,
+    siteName: "Luxijóias",
+  })
+  const description = buildProductMetaDescription({
+    name: product.name,
+    description: product.description,
+    brand: product.brand,
+    category: product.category,
+    price: product.price,
+    comparePrice: product.comparePrice,
+    siteName: "Luxijóias",
+  })
 
   return {
-    title: product.name,
+    title,
     description,
     alternates: {
       canonical: `/produto/${product.slug}`,
     },
     openGraph: {
-      title: product.name,
+      title,
       description,
       type: "website",
       url: `${siteUrl}/produto/${product.slug}`,
       locale: "pt_BR",
+      siteName: "Luxijóias",
       images: product.image
         ? [
             {
@@ -51,6 +66,12 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
             },
           ]
         : undefined,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: product.image ? [product.image] : undefined,
     },
   }
 }
@@ -63,6 +84,8 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
     notFound();
   }
 
+  const reviewSummary = await getCachedProductReviews(product.id)
+
   const hasDiscount = (product.comparePrice ?? 0) > product.price;
   const hasFreeShipping = product.price >= 199;
   const oldPrice = product.comparePrice ?? product.price * 1.15;
@@ -73,7 +96,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
   
   const description =
     product.description ||
-    "Este é um produto exclusivo de alta qualidade, desenhado para durar e impressionar. Perfeito para ocasiões especiais ou para presentear quem você ama. Fabricado com materiais premium e acabamento impecável.\n\nNossa equipe de designers trabalhou incansavelmente para criar uma peça que não apenas pareça deslumbrante, mas também seja confortável para uso diário. Cada detalhe foi cuidadosamente considerado, desde a seleção dos materiais até o polimento final.";
+    "Produto exclusivo Luxijóias com acabamento refinado, compra segura e envio para todo o Brasil.";
     
   const images = product.images.length
     ? product.images.map((image) => image.url)
@@ -83,6 +106,15 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
     ? variants.reduce((sum, variant) => sum + variant.quantity, 0)
     : product.quantity
   const productUrl = `${siteUrl}/produto/${product.slug}`
+  const seoDescription = buildProductMetaDescription({
+    name: product.name,
+    description,
+    brand: product.brand,
+    category: product.category,
+    price: product.price,
+    comparePrice: product.comparePrice,
+    siteName: "Luxijóias",
+  })
 
   const breadcrumbJsonLd = {
     "@context": "https://schema.org",
@@ -113,9 +145,10 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
     "@context": "https://schema.org",
     "@type": "Product",
     name: product.name,
-    image: product.image ? [product.image] : undefined,
-    description,
+    image: images,
+    description: seoDescription,
     sku,
+    category: product.category,
     brand: {
       "@type": "Brand",
       name: brand,
@@ -125,9 +158,33 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
       url: productUrl,
       priceCurrency: "BRL",
       price: product.price,
-      availability: product.quantity > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
+      availability: totalAvailableQuantity > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
       itemCondition: "https://schema.org/NewCondition",
+      seller: {
+        "@type": "Organization",
+        name: "Luxijóias",
+      },
     },
+    aggregateRating: reviewSummary.totalReviews > 0 ? {
+      "@type": "AggregateRating",
+      ratingValue: Number(reviewSummary.averageRating.toFixed(1)),
+      reviewCount: reviewSummary.totalReviews,
+    } : undefined,
+    review: reviewSummary.reviews.slice(0, 3).map((review) => ({
+      "@type": "Review",
+      reviewRating: {
+        "@type": "Rating",
+        ratingValue: review.rating,
+        bestRating: 5,
+      },
+      author: {
+        "@type": "Person",
+        name: review.userName || "Cliente verificado",
+      },
+      name: review.title || `Avaliação de ${product.name}`,
+      reviewBody: review.content,
+      datePublished: review.createdAt,
+    })),
   }
 
   return (
@@ -174,7 +231,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
           }}
           sku={sku}
           brandLabel={brand}
-          reviewCount={0}
+          reviewCount={reviewSummary.totalReviews}
           hasDiscount={hasDiscount}
           hasFreeShipping={hasFreeShipping}
           oldPrice={oldPrice}
@@ -230,7 +287,7 @@ async function ProductDetailsSection({
   quantity: number
 }) {
   const [reviewSummary, session] = await Promise.all([
-    getProductReviewsAction(productId),
+    getCachedProductReviews(productId),
     auth(),
   ])
 
