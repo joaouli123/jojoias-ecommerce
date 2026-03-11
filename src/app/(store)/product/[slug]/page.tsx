@@ -16,7 +16,7 @@ import { auth } from "@/auth"
 import { prisma } from "@/lib/prisma"
 import { getStoreSettings } from "@/lib/store-settings"
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://jojoias.com.br"
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://luxijoias.com.br"
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params

@@ -4,7 +4,7 @@ import { FileText } from "lucide-react";
 import { InstitutionalHero } from "@/components/store/institutional-hero";
 import { getPublishedPageBySlug } from "@/lib/cms-pages";
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://jojoias.com.br";
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://luxijoias.com.br";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;

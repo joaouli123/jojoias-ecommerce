@@ -3,7 +3,7 @@ import { getBrandsAction } from "@/actions/products"
 import { BrandGrid } from "@/components/catalog/brand-grid"
 import { Breadcrumbs } from "@/components/layout/breadcrumbs"
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://jojoias.com.br"
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://luxijoias.com.br"
 
 export const brandsListMetadata: Metadata = {
   title: "Marcas",

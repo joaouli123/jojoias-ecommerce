@@ -3,7 +3,7 @@ import { Gem, ShieldCheck, Truck } from "lucide-react";
 import { InstitutionalHero } from "@/components/store/institutional-hero";
 import { getStoreSettings } from "@/lib/store-settings";
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://jojoias.com.br";
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://luxijoias.com.br";
 
 export const metadata: Metadata = {
   title: "Quem Somos",

@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { getDefaultIntegrationHealthRecords } from "@/lib/integrations";
 
 export type HealthState = "healthy" | "degraded" | "down";
 
@@ -371,7 +372,12 @@ export async function getOperationalHealthSnapshot(): Promise<HealthSnapshot> {
     actionHref: "/admin/settings",
   });
 
-  checks.push(...buildIntegrationChecks(integrations));
+  const mergedIntegrations = new Map(getDefaultIntegrationHealthRecords().map((item) => [item.provider, item]));
+  for (const integration of integrations) {
+    mergedIntegrations.set(integration.provider, integration);
+  }
+
+  checks.push(...buildIntegrationChecks([...mergedIntegrations.values()]));
 
   return {
     status: resolveHealthStatus(checks.map((item) => item.status)),

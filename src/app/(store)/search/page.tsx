@@ -13,7 +13,7 @@ const PRICE_FILTERS = [
   { label: "Acima de R$ 500", value: "500-*", min: 500 },
 ] as const
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://jojoias.com.br"
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://luxijoias.com.br"
 
 const SORT_OPTIONS = [
   { value: "relevance", label: "Mais Relevantes" },

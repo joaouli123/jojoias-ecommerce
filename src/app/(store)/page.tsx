@@ -7,7 +7,7 @@ import { BannerCarousel, CategoriesCarousel, SecondaryBanners, BenefitsCarousel 
 import { BrandGrid } from "@/components/catalog/brand-grid";
 import { getStoreSettings } from "@/lib/store-settings";
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://jojoias.com.br";
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://luxijoias.com.br";
 
 export const metadata: Metadata = {
   title: "Loja Oficial de Semijoias",

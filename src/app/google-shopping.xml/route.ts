@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/prisma";
+import { hasDatabaseUrl, prisma } from "@/lib/prisma";
 import { getSiteUrl } from "@/lib/site-url";
 
 function escapeXml(value: string) {
@@ -12,6 +12,24 @@ function escapeXml(value: string) {
 
 export async function GET() {
   const siteUrl = getSiteUrl();
+  if (!hasDatabaseUrl()) {
+    const xml = `<?xml version="1.0" encoding="UTF-8" ?>
+  <rss version="2.0" xmlns:g="http://base.google.com/ns/1.0">
+    <channel>
+      <title>JoJoias</title>
+      <link>${siteUrl}</link>
+      <description>Feed de produtos JoJoias</description>
+    </channel>
+  </rss>`;
+
+    return new Response(xml, {
+      headers: {
+        "Content-Type": "application/xml; charset=utf-8",
+        "Cache-Control": "s-maxage=3600, stale-while-revalidate=86400",
+      },
+    });
+  }
+
   const products = await prisma.product.findMany({
     where: { status: "ACTIVE" },
     include: { category: true, brand: true },

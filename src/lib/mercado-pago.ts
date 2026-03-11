@@ -79,7 +79,6 @@ export async function createMercadoPagoCheckout(orderId: string) {
   }
 
   const siteUrl = getSiteUrl();
-  const secretParam = integration.webhookSecret ? `?secret=${encodeURIComponent(integration.webhookSecret)}` : "";
   const statusBase = `${siteUrl}/order/success/${order.id}?token=${encodeURIComponent(order.checkoutToken || "")}`;
   const apiBase = resolveApiBase(integration.endpointUrl);
 
@@ -126,7 +125,7 @@ export async function createMercadoPagoCheckout(orderId: string) {
         email: order.user?.email || order.guestEmail || undefined,
       },
       external_reference: order.id,
-      notification_url: `${siteUrl}/api/webhooks/mercado-pago${secretParam}`,
+      notification_url: `${siteUrl}/api/webhooks/mercado-pago?source_news=webhooks`,
       back_urls: {
         success: `${statusBase}&payment=success`,
         pending: `${statusBase}&payment=pending`,

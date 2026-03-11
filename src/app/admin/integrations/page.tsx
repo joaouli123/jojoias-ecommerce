@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { saveIntegrationSettings } from "@/actions/integrations";
 import { requireAdminPagePermission } from "@/lib/admin-auth";
 import { buildIntegrationChecks } from "@/lib/health";
+import { getDefaultIntegrationHealthRecords, getIntegrationFormState } from "@/lib/integrations";
 
 const statusClasses = {
   healthy: "border-emerald-200 bg-emerald-50 text-emerald-700",
@@ -164,7 +165,11 @@ export default async function AdminIntegrationsPage() {
   });
 
   const integrationMap = buildIntegrationMap(integrations);
-  const integrationChecks = buildIntegrationChecks(integrations);
+  const mergedIntegrations = new Map(getDefaultIntegrationHealthRecords().map((item) => [item.provider, item]));
+  for (const integration of integrations) {
+    mergedIntegrations.set(integration.provider, integration);
+  }
+  const integrationChecks = buildIntegrationChecks([...mergedIntegrations.values()]);
 
   return (
     <div className="space-y-8">
@@ -211,6 +216,7 @@ export default async function AdminIntegrationsPage() {
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
         {integrationDefinitions.map((definition) => {
           const saved = integrationMap.get(definition.provider);
+          const formState = getIntegrationFormState(definition.provider, saved);
           const saveAction = saveIntegrationSettings.bind(null, definition.provider);
 
           return (
@@ -237,7 +243,7 @@ export default async function AdminIntegrationsPage() {
                     <p className="text-xs text-gray-500">Habilite quando as credenciais estiverem prontas.</p>
                   </div>
                   <label className="inline-flex items-center gap-2 text-sm font-medium text-gray-700">
-                    <input type="checkbox" name="isEnabled" defaultChecked={saved?.isEnabled ?? false} className="h-4 w-4 rounded border-gray-300" />
+                    <input type="checkbox" name="isEnabled" defaultChecked={formState.isEnabled} className="h-4 w-4 rounded border-gray-300" />
                     Ativo
                   </label>
                 </div>
@@ -248,7 +254,7 @@ export default async function AdminIntegrationsPage() {
                     <select
                       id={`${definition.provider}-environment`}
                       name="environment"
-                      defaultValue={saved?.environment ?? definition.environmentOptions[0]?.value ?? "sandbox"}
+                      defaultValue={formState.environment ?? definition.environmentOptions[0]?.value ?? "sandbox"}
                       className="h-11 w-full rounded-lg border border-gray-300 bg-white px-3 text-sm text-gray-900 outline-none focus:border-gray-900 focus:ring-1 focus:ring-gray-900"
                     >
                       {definition.environmentOptions.map((option) => (
@@ -263,7 +269,7 @@ export default async function AdminIntegrationsPage() {
                       id={`${definition.provider}-endpoint`}
                       name="endpointUrl"
                       type="text"
-                      defaultValue={saved?.endpointUrl ?? ""}
+                      defaultValue={formState.endpointUrl}
                       placeholder="https://api.seu-servico.com"
                       className="h-11 w-full rounded-lg border border-gray-300 px-3 text-sm text-gray-900 outline-none focus:border-gray-900 focus:ring-1 focus:ring-gray-900"
                     />
@@ -277,7 +283,7 @@ export default async function AdminIntegrationsPage() {
                       id={`${definition.provider}-public`}
                       name="publicKey"
                       type="text"
-                      defaultValue={saved?.publicKey ?? ""}
+                      defaultValue={formState.publicKey}
                       placeholder="pk_live_xxx ou identificador"
                       className="h-11 w-full rounded-lg border border-gray-300 px-3 text-sm text-gray-900 outline-none focus:border-gray-900 focus:ring-1 focus:ring-gray-900"
                     />
@@ -289,7 +295,7 @@ export default async function AdminIntegrationsPage() {
                       id={`${definition.provider}-secret`}
                       name="secretKey"
                       type="password"
-                      defaultValue={saved?.secretKey ?? ""}
+                      defaultValue={formState.secretKey}
                       placeholder="sk_live_xxx"
                       className="h-11 w-full rounded-lg border border-gray-300 px-3 text-sm text-gray-900 outline-none focus:border-gray-900 focus:ring-1 focus:ring-gray-900"
                     />
@@ -302,7 +308,7 @@ export default async function AdminIntegrationsPage() {
                     id={`${definition.provider}-webhook`}
                     name="webhookSecret"
                     type="password"
-                    defaultValue={saved?.webhookSecret ?? ""}
+                    defaultValue={formState.webhookSecret}
                     placeholder="whsec_xxx"
                     className="h-11 w-full rounded-lg border border-gray-300 px-3 text-sm text-gray-900 outline-none focus:border-gray-900 focus:ring-1 focus:ring-gray-900"
                   />
@@ -314,7 +320,7 @@ export default async function AdminIntegrationsPage() {
                     id={`${definition.provider}-extra`}
                     name="extraConfig"
                     rows={4}
-                    defaultValue={saved?.extraConfig ?? ""}
+                    defaultValue={formState.extraConfigRaw}
                     placeholder='JSON simples, observações técnicas ou parâmetros adicionais.'
                     className="w-full rounded-lg border border-gray-300 px-3 py-3 text-sm text-gray-900 outline-none focus:border-gray-900 focus:ring-1 focus:ring-gray-900"
                   />
@@ -322,7 +328,7 @@ export default async function AdminIntegrationsPage() {
 
                 <div className="flex items-center justify-between border-t border-gray-100 pt-4">
                   <div className="text-xs text-gray-500">
-                    Última atualização: {saved ? new Intl.DateTimeFormat("pt-BR", { dateStyle: "short", timeStyle: "short" }).format(saved.updatedAt) : "ainda não configurado"}
+                    Última atualização: {formState.updatedAt ? new Intl.DateTimeFormat("pt-BR", { dateStyle: "short", timeStyle: "short" }).format(formState.updatedAt) : "pré-configurado por padrão"}
                   </div>
 
                   <button type="submit" className="inline-flex items-center justify-center rounded-lg bg-gray-900 px-4 py-2 text-sm font-semibold text-white hover:bg-gray-800 transition-colors">

@@ -8,7 +8,7 @@ import { MobileFilters } from "@/components/catalog/mobile-filters"
 import { prisma } from "@/lib/prisma"
 import { getStoreSettings } from "@/lib/store-settings"
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://jojoias.com.br"
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://luxijoias.com.br"
 
 const PRICE_FILTERS = [
   { label: "Até R$ 100", value: "0-100", min: 0, max: 100 },

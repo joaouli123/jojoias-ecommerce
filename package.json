@@ -13,6 +13,7 @@
     "db:push": "prisma db push",
     "admin:ensure": "tsx scripts/ensure-admin.ts",
     "coupon:ensure": "tsx scripts/ensure-default-coupon.ts",
+    "ga4:ensure": "tsx scripts/ensure-ga4.ts",
     "seed:demo": "tsx scripts/seed-demo-catalog.ts"
   },
   "dependencies": {

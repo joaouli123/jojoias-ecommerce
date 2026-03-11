@@ -1,5 +1,20 @@
-const CACHE_NAME = 'jojoias-v1';
+const CACHE_NAME = 'luxijoias-v2';
 const OFFLINE_URLS = ['/', '/brands', '/rastreio', '/manifest.webmanifest'];
+
+function isCacheableRequest(requestUrl) {
+  if (!requestUrl) return false;
+
+  const protocol = requestUrl.protocol.toLowerCase();
+  if (protocol !== 'http:' && protocol !== 'https:') {
+    return false;
+  }
+
+  if (requestUrl.origin !== self.location.origin) {
+    return false;
+  }
+
+  return true;
+}
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
@@ -16,6 +31,11 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
 
+  const requestUrl = new URL(event.request.url);
+  if (!isCacheableRequest(requestUrl)) {
+    return;
+  }
+
   event.respondWith(
     caches.match(event.request).then((cached) => {
       if (cached) return cached;
@@ -27,7 +47,7 @@ self.addEventListener('fetch', (event) => {
           }
 
           const copy = response.clone();
-          caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy));
+          caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy)).catch(() => undefined);
           return response;
         })
         .catch(() => caches.match('/'));

@@ -3,7 +3,7 @@ import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { InstitutionalHero } from "@/components/store/institutional-hero";
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://jojoias.com.br";
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://luxijoias.com.br";
 
 export const metadata: Metadata = {
   title: "FAQ",

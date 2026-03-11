@@ -4,7 +4,7 @@ import { Search, Truck, ExternalLink } from "lucide-react";
 import { findTrackableOrder } from "@/lib/public-order-tracking";
 import { formatCurrency } from "@/lib/utils";
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://jojoias.com.br";
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://luxijoias.com.br";
 
 export const metadata: Metadata = {
   title: "Rastreio",

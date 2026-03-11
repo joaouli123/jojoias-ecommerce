@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
-import { prisma } from "@/lib/prisma";
+import { hasDatabaseUrl, prisma } from "@/lib/prisma";
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://jojoias.com.br";
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://luxijoias.com.br";
 
 const staticRoutes = [
   "",
@@ -20,6 +20,17 @@ const staticRoutes = [
 ];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const staticEntries: MetadataRoute.Sitemap = staticRoutes.map((path) => ({
+    url: `${siteUrl}${path}`,
+    lastModified: new Date(),
+    changeFrequency: "weekly",
+    priority: path === "" ? 1 : 0.7,
+  }));
+
+  if (!hasDatabaseUrl()) {
+    return staticEntries;
+  }
+
   const [products, categories, brands, pages, posts] = await Promise.all([
     prisma.product.findMany({
       where: { status: "ACTIVE" },
@@ -45,13 +56,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       orderBy: [{ publishedAt: "desc" }, { updatedAt: "desc" }],
     }),
   ]);
-
-  const staticEntries: MetadataRoute.Sitemap = staticRoutes.map((path) => ({
-    url: `${siteUrl}${path}`,
-    lastModified: new Date(),
-    changeFrequency: "weekly",
-    priority: path === "" ? 1 : 0.7,
-  }));
 
   const productEntries: MetadataRoute.Sitemap = products.map((product) => ({
     url: `${siteUrl}/produto/${product.slug}`,

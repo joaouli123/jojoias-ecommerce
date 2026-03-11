@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/prisma";
+import { hasDatabaseUrl, prisma } from "@/lib/prisma";
 
 type StoreSettingsPayload = {
   storeName?: string;
@@ -39,7 +39,7 @@ export const defaultStoreSettings: StoreSettings = {
   announcementSecondaryText: "Pix com condição especial e parcelamento sem juros nas coleções premium.",
   announcementLinkLabel: "Rastrear pedido",
   announcementLinkHref: "/rastreio",
-  supportEmail: "contato@jojoias.com.br",
+  supportEmail: "contato@luxijoias.com.br",
   supportPhone: "(81) 98818-5372",
   whatsappPhone: "(81) 98818-5372",
   whatsappUrl: "https://wa.me/5581988185372",
@@ -75,6 +75,10 @@ function safeParseSettings(value: string | null): StoreSettingsPayload {
 }
 
 export async function getStoreSettings(): Promise<StoreSettings> {
+  if (!hasDatabaseUrl()) {
+    return defaultStoreSettings;
+  }
+
   const saved = await prisma.integrationSetting.findUnique({
     where: { provider: "store_settings" },
     select: { extraConfig: true },

@@ -176,4 +176,5 @@ export async function saveIntegrationSettings(provider: string, formData: FormDa
   });
 
   revalidatePath("/admin/integrations");
+  revalidatePath("/", "layout");
 }

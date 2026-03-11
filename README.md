@@ -38,6 +38,7 @@ Ecommerce completo em Next.js com storefront, checkout, backoffice, CMS, SEO té
 ### Variáveis mínimas obrigatórias
 
 - `DATABASE_URL`
+- `NEXT_PUBLIC_SITE_URL`
 - `AUTH_SECRET` e/ou `NEXTAUTH_SECRET`
 - `ADMIN_EMAIL`
 - `ADMIN_PASSWORD`
@@ -126,12 +127,20 @@ Exemplo:
 ### Checklist de produção
 
 - `DATABASE_URL` apontando para o banco configurado para o ambiente atual
+- `DIRECT_URL` configurada se você for rodar migrations em PostgreSQL gerenciado
 - `AUTH_SECRET` / `NEXTAUTH_SECRET` definidos com segredo forte
-- `NEXTAUTH_URL` / `AUTH_URL` com domínio final
+- `NEXTAUTH_URL` / `AUTH_URL` / `NEXT_PUBLIC_APP_URL` / `NEXT_PUBLIC_SITE_URL` com `https://luxijoias.com.br`
 - chaves de pagamento e webhooks configuradas
 - política de backup do banco definida
 - CI verde em [.github/workflows/ci.yml](.github/workflows/ci.yml)
 - `ADMIN_PASSWORD` removido do ambiente após bootstrap inicial ou rotacionado em segredo seguro
+
+### Railway
+
+- Defina o domínio principal como `luxijoias.com.br` e, se usar `www`, faça redirecionamento canônico para um único host.
+- Configure no Railway as variáveis do arquivo [railway.env.json](railway.env.json).
+- Em banco PostgreSQL com pooler, use `DATABASE_URL` para runtime e `DIRECT_URL` para migrations.
+- Depois do primeiro deploy, rode `npm run db:generate`, `npx prisma db push` e `npm run admin:ensure` no ambiente alvo.
 
 ### Operação diária
 

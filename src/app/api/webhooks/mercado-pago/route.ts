@@ -1,8 +1,50 @@
+import { createHmac, timingSafeEqual } from "node:crypto";
 import { NextResponse } from "next/server";
 import { getIntegrationSettings } from "@/lib/integrations";
 import { syncMercadoPagoPayment } from "@/lib/mercado-pago";
 import { sendOrderPaymentUpdateFromOrder } from "@/lib/email";
 import { recordSystemEvent } from "@/lib/system-events";
+
+function parseSignatureHeader(signatureHeader: string | null) {
+  if (!signatureHeader) return null;
+
+  const parts = signatureHeader.split(",");
+  let ts = "";
+  let v1 = "";
+
+  for (const part of parts) {
+    const [key, value] = part.split("=", 2).map((item) => item.trim());
+    if (key === "ts") ts = value || "";
+    if (key === "v1") v1 = value || "";
+  }
+
+  if (!ts || !v1) return null;
+
+  return { ts, v1 };
+}
+
+function verifyMercadoPagoSignature(request: Request, secret: string) {
+  const url = new URL(request.url);
+  const signatureHeader = request.headers.get("x-signature");
+  const requestId = request.headers.get("x-request-id") || "";
+  const signature = parseSignatureHeader(signatureHeader);
+  const dataId = (url.searchParams.get("data.id") || url.searchParams.get("id") || "").toLowerCase();
+
+  if (!signature || !requestId || !dataId) {
+    return false;
+  }
+
+  const manifest = `id:${dataId};request-id:${requestId};ts:${signature.ts};`;
+  const expected = createHmac("sha256", secret).update(manifest).digest("hex");
+  const expectedBuffer = Buffer.from(expected, "utf8");
+  const providedBuffer = Buffer.from(signature.v1, "utf8");
+
+  if (expectedBuffer.length !== providedBuffer.length) {
+    return false;
+  }
+
+  return timingSafeEqual(expectedBuffer, providedBuffer);
+}
 
 export async function POST(request: Request) {
   try {
@@ -10,13 +52,13 @@ export async function POST(request: Request) {
     const integration = await getIntegrationSettings("mercado_pago");
 
     if (integration?.webhookSecret) {
-      const secret = url.searchParams.get("secret");
-      if (secret !== integration.webhookSecret) {
+      const isValidSignature = verifyMercadoPagoSignature(request, integration.webhookSecret);
+      if (!isValidSignature) {
         await recordSystemEvent({
           level: "warning",
           source: "mercado_pago_webhook",
           eventCode: "WEBHOOK_UNAUTHORIZED",
-          message: "Tentativa de webhook com segredo inválido.",
+          message: "Tentativa de webhook com assinatura inválida.",
           payload: {
             topic: url.searchParams.get("type") || url.searchParams.get("topic"),
             id: url.searchParams.get("id") || url.searchParams.get("data.id"),
