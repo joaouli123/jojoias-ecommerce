@@ -6,6 +6,7 @@ import { executeOrderRefund, updateOrderNotes, updateOrderPostSale, updateOrderS
 import { hasAdminPermission } from "@/lib/admin-permissions";
 import { requireAdminPagePermission } from "@/lib/admin-auth";
 import { OrderTimeline } from "@/components/orders/order-timeline";
+import { formatAdminDateParts, formatOrderCode, getOrderStatusLabel, getOrderStatusTone, getPaymentStatusLabel, normalizeDisplayText } from "@/lib/admin-display";
 
 export default async function OrderDetailsPage({
   params,
@@ -39,6 +40,7 @@ export default async function OrderDetailsPage({
   const updatePostSaleAction = updateOrderPostSale.bind(null, id);
   const executeRefundAction = executeOrderRefund.bind(null, id);
   const normalizedPaymentStatus = (order.paymentStatus || "").toLowerCase();
+  const createdAt = formatAdminDateParts(order.createdAt);
   const hasRefundWorkflowStarted = ["REQUESTED", "APPROVED", "REFUNDED"].includes(order.refundStatus || "");
   const canExecuteRefund = hasAdminPermission(session.user.role, "orders:manage")
     && Boolean(order.paymentId)
@@ -56,8 +58,9 @@ export default async function OrderDetailsPage({
           <ArrowLeft className="w-5 h-5" />
         </Link>
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-gray-900">Pedido #{id.slice(-6).toUpperCase()}</h1>
-          <p className="text-sm text-gray-500 font-mono mt-1">{id}</p>
+          <h1 className="text-3xl font-bold tracking-tight text-gray-900">Pedido #{formatOrderCode(id)}</h1>
+          <p className="mt-1 text-sm text-gray-500">Criado em {createdAt.date} às {createdAt.time}</p>
+          <p className="text-xs text-gray-400 font-mono mt-1">{id}</p>
         </div>
       </div>
 
@@ -99,7 +102,7 @@ export default async function OrderDetailsPage({
                       <td className="py-3">
                         <p className="font-medium text-gray-900">{item.product.name}</p>
                         <p className="text-xs text-gray-500 mt-0.5">SKU: {item.variant?.sku || item.product.sku || "N/A"}</p>
-                        {item.variant ? <p className="text-xs text-gray-500 mt-0.5">Variação: {item.variant.name}</p> : null}
+                        {item.variant ? <p className="text-xs text-gray-500 mt-0.5">Variação: {normalizeDisplayText(item.variant.name)}</p> : null}
                       </td>
                       <td className="py-3 text-center text-gray-700">{item.quantity}x</td>
                       <td className="py-3 text-right text-gray-700">
@@ -161,12 +164,12 @@ export default async function OrderDetailsPage({
               </div>
               <div className="p-4 text-sm text-gray-700 space-y-2">
                 <p><span className="text-gray-500">Método:</span> <span className="font-medium text-gray-900">{order.paymentMethod || "Não informado"}</span></p>
-                <p><span className="text-gray-500">Status:</span> <span className="font-medium text-gray-900">{order.paymentStatus || "Pendente"}</span></p>
+                <p><span className="text-gray-500">Status:</span> <span className="font-medium text-gray-900">{getPaymentStatusLabel(order.paymentStatus)}</span></p>
                 <p><span className="text-gray-500">Payment ID:</span> <span className="font-medium text-gray-900 break-all">{order.paymentId || "—"}</span></p>
-                <p><span className="text-gray-500">Serviço:</span> <span className="font-medium text-gray-900">{order.shippingService || "A definir"}</span></p>
+                <p><span className="text-gray-500">Serviço:</span> <span className="font-medium text-gray-900">{normalizeDisplayText(order.shippingService || "A definir") || "A definir"}</span></p>
                 <p><span className="text-gray-500">Prazo:</span> <span className="font-medium text-gray-900">{order.shippingEstimatedDays ? `${order.shippingEstimatedDays} dia(s) úteis` : "A definir"}</span></p>
-                <p><span className="text-gray-500">Região:</span> <span className="font-medium text-gray-900">{order.shippingRegion || "—"}</span></p>
-                <p><span className="text-gray-500">Documento:</span> <span className="font-medium text-gray-900">{order.customerDocument || "Não informado"}</span></p>
+                <p><span className="text-gray-500">Região:</span> <span className="font-medium text-gray-900">{normalizeDisplayText(order.shippingRegion || "—") || "—"}</span></p>
+                <p><span className="text-gray-500">Documento:</span> <span className="font-medium text-gray-900">{normalizeDisplayText(order.customerDocument || "Não informado") || "Não informado"}</span></p>
               </div>
             </div>
           </div>
@@ -184,8 +187,8 @@ export default async function OrderDetailsPage({
             <div className="p-4 space-y-4">
               <div className="text-sm">
                 <p className="text-gray-500 mb-1">Status Atual</p>
-                <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-gray-100 text-gray-800">
-                  {order.status}
+                <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold ${getOrderStatusTone(order.status)}`}>
+                  {getOrderStatusLabel(order.status)}
                 </span>
               </div>
               {hasAdminPermission(session.user.role, "orders:manage") ? (
@@ -245,7 +248,7 @@ export default async function OrderDetailsPage({
                 </form>
               ) : order.trackingCode ? (
                 <div className="pt-3 border-t border-gray-100 text-sm text-gray-600">
-                  Código de rastreio: <span className="font-semibold text-gray-900">{order.trackingCode}</span>
+                  Código de rastreio: <span className="font-semibold text-gray-900">{normalizeDisplayText(order.trackingCode)}</span>
                 </div>
               ) : null}
             </div>
@@ -335,7 +338,7 @@ export default async function OrderDetailsPage({
                 <div className="space-y-2 text-sm text-gray-600">
                   <p>Status: <span className="font-medium text-gray-900">{order.refundStatus || "Sem solicitação"}</span></p>
                   <p>Valor reembolsado: <span className="font-medium text-gray-900">{order.refundAmount != null ? new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(order.refundAmount) : "—"}</span></p>
-                  <p>Motivo: <span className="font-medium text-gray-900">{order.returnReason || "—"}</span></p>
+                  <p>Motivo: <span className="font-medium text-gray-900">{normalizeDisplayText(order.returnReason || "—") || "—"}</span></p>
                 </div>
               )}
 
@@ -377,11 +380,11 @@ export default async function OrderDetailsPage({
             <div className="p-4 text-sm space-y-3">
               <div>
                 <p className="text-gray-500 mb-0.5">Nome</p>
-                <p className="font-medium text-gray-900">{order.user?.name || order.guestName}</p>
+                <p className="font-medium text-gray-900">{normalizeDisplayText(order.user?.name || order.guestName || "Visitante")}</p>
               </div>
               <div>
                 <p className="text-gray-500 mb-0.5">Email</p>
-                <p className="font-medium text-gray-900">{order.user?.email || order.guestEmail || "Não informado"}</p>
+                <p className="font-medium text-gray-900">{normalizeDisplayText(order.user?.email || order.guestEmail || "Não informado")}</p>
               </div>
               <div>
                 <p className="text-gray-500 mb-0.5">Tipo</p>
@@ -389,19 +392,19 @@ export default async function OrderDetailsPage({
               </div>
               <div>
                 <p className="text-gray-500 mb-0.5">Pagamento</p>
-                <p className="font-medium text-gray-800">{order.paymentMethod || "Não informado"}</p>
+                <p className="font-medium text-gray-800">{normalizeDisplayText(order.paymentMethod || "Não informado") || "Não informado"}</p>
               </div>
               <div>
                 <p className="text-gray-500 mb-0.5">Status do pagamento</p>
-                <p className="font-medium text-gray-800">{order.paymentStatus || "Pendente"}</p>
+                <p className="font-medium text-gray-800">{getPaymentStatusLabel(order.paymentStatus)}</p>
               </div>
               <div>
                 <p className="text-gray-500 mb-0.5">Status de pós-venda</p>
-                <p className="font-medium text-gray-800">{order.refundStatus || "Sem solicitação"}</p>
+                <p className="font-medium text-gray-800">{normalizeDisplayText(order.refundStatus || "Sem solicitação") || "Sem solicitação"}</p>
               </div>
               <div>
                 <p className="text-gray-500 mb-0.5">Cupom</p>
-                <p className="font-medium text-gray-800">{order.couponCode || "Sem cupom"}</p>
+                <p className="font-medium text-gray-800">{normalizeDisplayText(order.couponCode || "Sem cupom") || "Sem cupom"}</p>
               </div>
             </div>
           </div>

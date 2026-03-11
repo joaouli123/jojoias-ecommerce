@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { CheckCircle2, Package, ArrowRight, Mail, User, Clock3, AlertCircle, MapPin, Truck } from "lucide-react";
 import { auth } from "@/auth";
+import { PurchaseTracker } from "@/components/analytics/ecommerce-trackers";
 import { prisma } from "@/lib/prisma";
 import { formatCurrency } from "@/lib/utils";
 
@@ -61,6 +62,19 @@ export default async function OrderSuccessPage({
 
   return (
     <div className="w-full max-w-[1060px] mx-auto px-4 sm:px-6 lg:px-8 py-10 md:py-16">
+      <PurchaseTracker
+        orderId={order.id}
+        items={order.items.map((item) => ({
+          item_id: item.variantId ? `${item.productId}:${item.variantId}` : item.productId,
+          item_name: item.product.name,
+          item_variant: item.variant?.name ?? undefined,
+          price: item.price,
+          quantity: item.quantity,
+        }))}
+        value={order.total}
+        shipping={order.shipping}
+        coupon={order.couponCode}
+      />
       <section className="rounded-[20px] border border-zinc-200 bg-white p-6 md:p-8 mb-8">
         <div className="flex items-start gap-4">
           <HeaderIcon className={`h-10 w-10 shrink-0 ${headerColor}`} />

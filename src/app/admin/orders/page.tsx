@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { Download, Eye } from "lucide-react";
 import { requireAdminPagePermission } from "@/lib/admin-auth";
+import { formatAdminDateParts, formatOrderCode, getOrderStatusLabel, getOrderStatusTone, normalizeDisplayText } from "@/lib/admin-display";
 
 export default async function AdminOrdersPage() {
   await requireAdminPagePermission("orders:view");
@@ -47,55 +48,45 @@ export default async function AdminOrdersPage() {
                 </td>
               </tr>
             ) : (
-              orders.map((order) => (
-                <tr key={order.id} className="hover:bg-gray-50/50">
-                  <td className="p-4 font-mono text-xs text-gray-500">{order.id}</td>
-                  <td className="p-4 font-medium text-gray-900">
-                    {order.user?.name || order.guestName || "Visitante"}
-                    {order.user?.email && <p className="text-xs text-gray-500 font-normal">{order.user.email}</p>}
-                  </td>
-                  <td className="p-4 text-gray-600">
-                    {new Date(order.createdAt).toLocaleDateString("pt-BR", {
-                      day: "2-digit",
-                      month: "short",
-                      year: "numeric",
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })}
-                  </td>
-                  <td className="p-4">
-                    <span
-                      className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold ${
-                        order.status === "PENDING"
-                          ? "bg-yellow-100 text-yellow-800"
-                          : order.status === "PROCESSING"
-                          ? "bg-blue-100 text-blue-800"
-                          : order.status === "SHIPPED"
-                          ? "bg-purple-100 text-purple-800"
-                          : order.status === "DELIVERED"
-                          ? "bg-green-100 text-green-800"
-                          : "bg-red-100 text-red-800"
-                      }`}
-                    >
-                      {order.status}
-                    </span>
-                    <p className="mt-1 text-xs text-gray-500">{order.paymentStatus || "Pendente"}</p>
-                  </td>
-                  <td className="p-4 text-gray-600">{order.shippingService || "—"}</td>
-                  <td className="p-4 font-medium text-gray-900">
-                    {new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(order.total)}
-                  </td>
-                  <td className="p-4 text-right">
-                    <Link
-                      href={`/admin/orders/${order.id}`}
-                      className="inline-flex p-2 text-gray-500 hover:text-primary-600 hover:bg-gray-100 rounded transition-colors"
-                      title="Ver Detalhes"
-                    >
-                      <Eye className="w-4 h-4" />
-                    </Link>
-                  </td>
-                </tr>
-              ))
+              orders.map((order) => {
+                const customerName = normalizeDisplayText(order.user?.name || order.guestName || "Visitante");
+                const { date, time } = formatAdminDateParts(order.createdAt);
+
+                return (
+                  <tr key={order.id} className="hover:bg-gray-50/50">
+                    <td className="p-4">
+                      <p className="font-mono text-sm font-semibold text-gray-900">#{formatOrderCode(order.id)}</p>
+                      <p className="mt-1 text-xs text-gray-400">{order.id.slice(0, 8)}...</p>
+                    </td>
+                    <td className="p-4 font-medium text-gray-900">
+                      {customerName}
+                      <p className="text-xs text-gray-500 font-normal">{order.user?.email || order.guestEmail || "Cliente sem email informado"}</p>
+                    </td>
+                    <td className="p-4 text-gray-600">
+                      <p className="font-medium text-gray-900">{date}</p>
+                      <p className="text-xs text-gray-500">{time}</p>
+                    </td>
+                    <td className="p-4">
+                      <span className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold ${getOrderStatusTone(order.status)}`}>
+                        {getOrderStatusLabel(order.status)}
+                      </span>
+                    </td>
+                    <td className="p-4 text-gray-600">{normalizeDisplayText(order.shippingService || "A definir") || "A definir"}</td>
+                    <td className="p-4 font-medium text-gray-900">
+                      {new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(order.total)}
+                    </td>
+                    <td className="p-4 text-right">
+                      <Link
+                        href={`/admin/orders/${order.id}`}
+                        className="inline-flex p-2 text-gray-500 hover:text-primary-600 hover:bg-gray-100 rounded transition-colors"
+                        title="Ver Detalhes"
+                      >
+                        <Eye className="w-4 h-4" />
+                      </Link>
+                    </td>
+                  </tr>
+                );
+              })
             )}
           </tbody>
         </table>

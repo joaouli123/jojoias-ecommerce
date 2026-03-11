@@ -5,6 +5,7 @@ import { compare } from "bcryptjs";
 import { prisma } from "@/lib/prisma";
 import { syncConfiguredAdmin } from "@/lib/configured-admin";
 import { loginSchema } from "@/lib/validators";
+import { verifyRecaptchaToken } from "@/lib/recaptcha";
 
 const nextAuth = NextAuth({
   adapter: PrismaAdapter(prisma),
@@ -18,8 +19,23 @@ const nextAuth = NextAuth({
       credentials: {
         email: { label: "E-mail", type: "email" },
         password: { label: "Senha", type: "password" },
+        recaptchaToken: { label: "reCAPTCHA Token", type: "text" },
+        recaptchaAction: { label: "reCAPTCHA Action", type: "text" },
       },
       async authorize(credentials) {
+        const values = credentials as Record<string, unknown> | undefined;
+        const recaptchaToken = typeof values?.recaptchaToken === "string" ? values.recaptchaToken : "";
+        const recaptchaAction = typeof values?.recaptchaAction === "string" ? values.recaptchaAction : "";
+
+        const recaptchaCheck = await verifyRecaptchaToken({
+          token: recaptchaToken,
+          action: "login_submit",
+        });
+
+        if (!recaptchaCheck.ok || recaptchaAction !== "login_submit") {
+          return null;
+        }
+
         const parsed = loginSchema.safeParse(credentials);
         if (!parsed.success) return null;
 

@@ -1,11 +1,22 @@
 ﻿import { NextResponse } from "next/server";
 import { hash } from "bcryptjs";
 import { prisma } from "@/lib/prisma";
+import { assertRecaptchaToken, readRecaptchaIp } from "@/lib/recaptcha";
 import { registerSchema } from "@/lib/validators";
 
 export async function POST(request: Request) {
   try {
     const body = await request.json();
+    await assertRecaptchaToken({
+      token: typeof body.recaptchaToken === "string" ? body.recaptchaToken : "",
+      action: "register_submit",
+      remoteIp: readRecaptchaIp(request.headers),
+    });
+
+    if (body.recaptchaAction !== "register_submit") {
+      return NextResponse.json({ error: "Ação do reCAPTCHA inválida." }, { status: 400 });
+    }
+
     const parsed = registerSchema.safeParse(body);
 
     if (!parsed.success) {

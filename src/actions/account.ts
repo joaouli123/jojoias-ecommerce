@@ -8,6 +8,7 @@ import { prisma } from "@/lib/prisma";
 import { forgotPasswordSchema, profileSchema, resetPasswordSchema } from "@/lib/validators";
 import { getSiteUrl } from "@/lib/site-url";
 import { getIntegrationSettings } from "@/lib/integrations";
+import { assertRecaptchaToken } from "@/lib/recaptcha";
 
 function readField(formData: FormData, key: string) {
   const value = formData.get(key);
@@ -93,6 +94,15 @@ export async function updateProfileAction(formData: FormData) {
 }
 
 export async function requestPasswordResetAction(formData: FormData) {
+  await assertRecaptchaToken({
+    token: readField(formData, "recaptchaToken"),
+    action: "forgot_password_submit",
+  });
+
+  if (readField(formData, "recaptchaAction") !== "forgot_password_submit") {
+    throw new Error("A validação de segurança do formulário falhou.");
+  }
+
   const parsed = forgotPasswordSchema.safeParse({
     email: readField(formData, "email"),
   });
@@ -127,6 +137,15 @@ export async function requestPasswordResetAction(formData: FormData) {
 }
 
 export async function resetPasswordAction(formData: FormData) {
+  await assertRecaptchaToken({
+    token: readField(formData, "recaptchaToken"),
+    action: "reset_password_submit",
+  });
+
+  if (readField(formData, "recaptchaAction") !== "reset_password_submit") {
+    throw new Error("A validação de segurança do formulário falhou.");
+  }
+
   const parsed = resetPasswordSchema.safeParse({
     token: readField(formData, "token"),
     password: readField(formData, "password"),

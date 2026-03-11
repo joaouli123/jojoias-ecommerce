@@ -14,6 +14,7 @@ import { createMercadoPagoCheckout } from "@/lib/mercado-pago";
 import { getIntegrationSettings } from "@/lib/integrations";
 import { sendOrderCreatedEmail } from "@/lib/email";
 import { recordSystemEvent } from "@/lib/system-events";
+import { assertRecaptchaToken } from "@/lib/recaptcha";
 
 function formatCustomerPostSaleReason(previousReason: string | null, nextReason: string) {
   const customerEntry = `[Cliente ${new Date().toLocaleString("pt-BR")}] ${nextReason}`;
@@ -75,6 +76,16 @@ function resolvePaymentExpiry(paymentMethod: "PIX" | "CARD" | "BOLETO") {
 }
 
 export async function createOrderAction(formData: FormData) {
+  await assertRecaptchaToken({
+    token: readField(formData, "recaptchaToken"),
+    action: "checkout_submit",
+    minScore: 0.4,
+  });
+
+  if (readField(formData, "recaptchaAction") !== "checkout_submit") {
+    throw new Error("A validação de segurança do checkout falhou.");
+  }
+
   const parsed = checkoutSubmissionSchema.safeParse({
     checkoutToken: readField(formData, "checkoutToken"),
     name: readField(formData, "name"),

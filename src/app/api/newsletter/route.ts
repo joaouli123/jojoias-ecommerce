@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { requireAdminPermission, unauthorizedJson } from "@/lib/admin-auth";
 import { prisma } from "@/lib/prisma";
 import { subscribeToNewsletter } from "@/lib/newsletter";
+import { assertRecaptchaToken, readRecaptchaIp } from "@/lib/recaptcha";
 
 export async function GET() {
   try {
@@ -19,7 +20,18 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
-    const body = (await request.json()) as { email?: string; name?: string; source?: string };
+    const body = (await request.json()) as { email?: string; name?: string; source?: string; recaptchaToken?: string; recaptchaAction?: string };
+
+    await assertRecaptchaToken({
+      token: body.recaptchaToken || "",
+      action: "newsletter_subscribe",
+      remoteIp: readRecaptchaIp(request.headers),
+    });
+
+    if (body.recaptchaAction !== "newsletter_subscribe") {
+      return NextResponse.json({ error: "Ação do reCAPTCHA inválida." }, { status: 400 });
+    }
+
     const subscriber = await subscribeToNewsletter({
       email: body.email || "",
       name: body.name,

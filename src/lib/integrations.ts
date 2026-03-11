@@ -10,6 +10,14 @@ export interface IntegrationExtraConfigObject {
 
 export type IntegrationExtraConfig = IntegrationExtraConfigObject;
 
+type IntegrationProfiledFields = {
+  publicKey?: string | null;
+  secretKey?: string | null;
+  webhookSecret?: string | null;
+  endpointUrl?: string | null;
+  extraConfig?: IntegrationExtraConfig;
+};
+
 export type RuntimeIntegration = {
   provider: string;
   name: string;
@@ -60,19 +68,76 @@ const DEFAULT_INTEGRATION_PRESETS: Record<string, IntegrationPreset> = {
       measurementId: "G-JX0K9554KQ",
     },
   },
+  resend: {
+    provider: "resend",
+    name: "Resend",
+    isEnabled: Boolean(process.env.RESEND_API_KEY),
+    environment: "production",
+    publicKey: null,
+    secretKey: process.env.RESEND_API_KEY ?? null,
+    webhookSecret: null,
+    endpointUrl: "https://api.resend.com",
+    extraConfig: {},
+  },
+  upstash: {
+    provider: "upstash",
+    name: "Upstash Redis",
+    isEnabled: Boolean(process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN),
+    environment: "production",
+    publicKey: process.env.UPSTASH_REDIS_REST_URL ?? null,
+    secretKey: process.env.UPSTASH_REDIS_REST_TOKEN ?? null,
+    webhookSecret: null,
+    endpointUrl: process.env.UPSTASH_REDIS_REST_URL ?? null,
+    extraConfig: {},
+  },
 };
 
-function parseExtraConfig(raw: string | null): IntegrationExtraConfig {
+function isIntegrationExtraConfigObject(value: unknown): value is IntegrationExtraConfigObject {
+  return Boolean(value) && typeof value === "object" && !Array.isArray(value);
+}
+
+export function parseIntegrationExtraConfig(raw: string | null): IntegrationExtraConfig {
   if (!raw) return {};
 
   try {
     const parsed = JSON.parse(raw) as unknown;
-    return parsed && typeof parsed === "object" && !Array.isArray(parsed)
-      ? (parsed as IntegrationExtraConfig)
+    return isIntegrationExtraConfigObject(parsed)
+      ? parsed
       : {};
   } catch {
     return {};
   }
+}
+
+function readProfiledFields(extraConfig: IntegrationExtraConfig, environment: string): IntegrationProfiledFields | null {
+  const profiles = extraConfig.profiles;
+
+  if (!isIntegrationExtraConfigObject(profiles)) {
+    return null;
+  }
+
+  const selectedProfile = profiles[environment];
+  if (!isIntegrationExtraConfigObject(selectedProfile)) {
+    return null;
+  }
+
+  const extra = isIntegrationExtraConfigObject(selectedProfile.extraConfig)
+    ? selectedProfile.extraConfig
+    : undefined;
+
+  return {
+    publicKey: typeof selectedProfile.publicKey === "string" ? selectedProfile.publicKey : null,
+    secretKey: typeof selectedProfile.secretKey === "string" ? selectedProfile.secretKey : null,
+    webhookSecret: typeof selectedProfile.webhookSecret === "string" ? selectedProfile.webhookSecret : null,
+    endpointUrl: typeof selectedProfile.endpointUrl === "string" ? selectedProfile.endpointUrl : null,
+    extraConfig: extra,
+  };
+}
+
+function stripProfilesFromExtraConfig(extraConfig: IntegrationExtraConfig) {
+  const rest = { ...extraConfig };
+  delete rest.profiles;
+  return rest;
 }
 
 function serializeExtraConfig(extraConfig: IntegrationExtraConfig) {
@@ -133,20 +198,23 @@ export const getIntegrationSettings = cache(async (provider: string): Promise<Ru
 
   if (!setting) return preset;
 
-  const parsedExtraConfig = parseExtraConfig(setting.extraConfig);
+  const parsedExtraConfig = parseIntegrationExtraConfig(setting.extraConfig);
+  const baseExtraConfig = stripProfilesFromExtraConfig(parsedExtraConfig);
+  const profiledFields = readProfiledFields(parsedExtraConfig, setting.environment || preset?.environment || "sandbox");
 
   return {
     provider: setting.provider,
     name: setting.name || preset?.name || setting.provider,
     isEnabled: setting.isEnabled,
     environment: setting.environment || preset?.environment || "sandbox",
-    publicKey: setting.publicKey ?? preset?.publicKey ?? null,
-    secretKey: setting.secretKey ?? preset?.secretKey ?? null,
-    webhookSecret: setting.webhookSecret ?? preset?.webhookSecret ?? null,
-    endpointUrl: setting.endpointUrl ?? preset?.endpointUrl ?? null,
+    publicKey: profiledFields?.publicKey ?? setting.publicKey ?? preset?.publicKey ?? null,
+    secretKey: profiledFields?.secretKey ?? setting.secretKey ?? preset?.secretKey ?? null,
+    webhookSecret: profiledFields?.webhookSecret ?? setting.webhookSecret ?? preset?.webhookSecret ?? null,
+    endpointUrl: profiledFields?.endpointUrl ?? setting.endpointUrl ?? preset?.endpointUrl ?? null,
     extraConfig: {
       ...(preset?.extraConfig ?? {}),
-      ...parsedExtraConfig,
+      ...baseExtraConfig,
+      ...(profiledFields?.extraConfig ?? {}),
     },
   };
 });

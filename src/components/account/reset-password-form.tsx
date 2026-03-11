@@ -3,6 +3,7 @@
 import { useState, useTransition } from "react";
 import Link from "next/link";
 import { resetPasswordAction } from "@/actions/account";
+import { useRecaptchaV3 } from "@/components/recaptcha/use-recaptcha-v3";
 
 type ResetPasswordFormProps = {
   token: string;
@@ -12,6 +13,7 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
+  const { execute } = useRecaptchaV3();
 
   function onSubmit(formData: FormData) {
     setMessage(null);
@@ -19,6 +21,9 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
 
     startTransition(async () => {
       try {
+        const recaptchaToken = await execute("reset_password_submit");
+        formData.set("recaptchaToken", recaptchaToken);
+        formData.set("recaptchaAction", "reset_password_submit");
         await resetPasswordAction(formData);
         setMessage("Senha redefinida com sucesso. Agora você já pode entrar.");
       } catch (submitError) {

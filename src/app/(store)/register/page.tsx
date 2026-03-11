@@ -5,6 +5,7 @@ import Link from "next/link";
 import { signIn } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useRecaptchaV3 } from "@/components/recaptcha/use-recaptcha-v3";
 
 type RegisterResponse = {
   error?: string;
@@ -17,16 +18,27 @@ export default function RegisterPage() {
   const [phone, setPhone] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const { execute } = useRecaptchaV3();
 
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setError(null);
     setIsLoading(true);
 
+    let recaptchaToken = "";
+
+    try {
+      recaptchaToken = await execute("register_submit");
+    } catch (submitError) {
+      setError(submitError instanceof Error ? submitError.message : "Não foi possível validar a segurança do cadastro.");
+      setIsLoading(false);
+      return;
+    }
+
     const response = await fetch("/api/auth/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, email, password, phone }),
+      body: JSON.stringify({ name, email, password, phone, recaptchaToken, recaptchaAction: "register_submit" }),
     });
 
     if (!response.ok) {

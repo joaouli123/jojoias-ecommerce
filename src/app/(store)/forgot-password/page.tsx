@@ -3,11 +3,13 @@
 import { useState, useTransition } from "react";
 import Link from "next/link";
 import { requestPasswordResetAction } from "@/actions/account";
+import { useRecaptchaV3 } from "@/components/recaptcha/use-recaptcha-v3";
 
 export default function ForgotPasswordPage() {
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
+  const { execute } = useRecaptchaV3();
 
   function onSubmit(formData: FormData) {
     setMessage(null);
@@ -15,6 +17,9 @@ export default function ForgotPasswordPage() {
 
     startTransition(async () => {
       try {
+        const recaptchaToken = await execute("forgot_password_submit");
+        formData.set("recaptchaToken", recaptchaToken);
+        formData.set("recaptchaAction", "forgot_password_submit");
         await requestPasswordResetAction(formData);
         setMessage("Se o e-mail existir na base, você receberá um link de recuperação.");
       } catch (submitError) {

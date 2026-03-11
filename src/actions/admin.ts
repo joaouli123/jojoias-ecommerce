@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { Prisma } from "@prisma/client";
 import { generateSlug } from "@/lib/utils";
+import { normalizeInputText, parseCurrencyInput } from "@/lib/admin-display";
 import { bannerSchema, pageSchema, productSchema, productVariantSchema } from "@/lib/validators";
 import { ORDER_STATUS_TRANSITIONS, type OrderStatusKey } from "@/lib/constants";
 import type { AdminPermission } from "@/lib/admin-permissions";
@@ -21,8 +22,47 @@ async function getAdminActor(permission: AdminPermission = "dashboard:view") {
 function readOptionalString(formData: FormData, key: string) {
   const value = formData.get(key);
   if (typeof value !== "string") return undefined;
-  const trimmed = value.trim();
+  const trimmed = normalizeInputText(value);
   return trimmed ? trimmed : undefined;
+}
+
+function parseVariantsJson(formData: FormData) {
+  const raw = readOptionalString(formData, "variantsJson");
+  if (!raw) return null;
+
+  let parsed: unknown;
+
+  try {
+    parsed = JSON.parse(raw);
+  } catch {
+    throw new Error("Estrutura de variações inválida.");
+  }
+
+  if (!Array.isArray(parsed)) {
+    throw new Error("Estrutura de variações inválida.");
+  }
+
+  return parsed.map((item) => {
+    if (!item || typeof item !== "object") {
+      throw new Error("Estrutura de variações inválida.");
+    }
+
+    const record = item as Record<string, unknown>;
+    const parsedVariant = productVariantSchema.safeParse({
+      name: normalizeInputText(typeof record.name === "string" ? record.name : ""),
+      price: typeof record.price === "number" ? record.price : Number(record.price),
+      quantity: typeof record.quantity === "number" ? record.quantity : Number(record.quantity),
+      sku: normalizeInputText(typeof record.sku === "string" ? record.sku : "") || undefined,
+      image: normalizeInputText(typeof record.image === "string" ? record.image : ""),
+      isActive: typeof record.isActive === "boolean" ? record.isActive : true,
+    });
+
+    if (!parsedVariant.success) {
+      throw new Error(parsedVariant.error.issues[0]?.message || "Dados de variação inválidos.");
+    }
+
+    return parsedVariant.data;
+  });
 }
 
 function parseProductFormData(formData: FormData) {
@@ -31,7 +71,7 @@ function parseProductFormData(formData: FormData) {
     .map((item) => item.trim())
     .filter(Boolean);
 
-  const variants = (readOptionalString(formData, "variants") ?? "")
+  const variants = parseVariantsJson(formData) ?? (readOptionalString(formData, "variants") ?? "")
     .split(/\r?\n/)
     .map((item) => item.trim())
     .filter(Boolean)
@@ -39,11 +79,11 @@ function parseProductFormData(formData: FormData) {
       const [name = "", price = "", quantity = "", sku = "", image = ""] = line.split("|").map((part) => part.trim());
 
       const parsedVariant = productVariantSchema.safeParse({
-        name,
-        price: Number(price),
+        name: normalizeInputText(name),
+        price: parseCurrencyInput(price),
         quantity: Number(quantity),
-        sku: sku || undefined,
-        image: image || "",
+        sku: normalizeInputText(sku) || undefined,
+        image: normalizeInputText(image) || "",
         isActive: true,
       });
 
@@ -60,8 +100,8 @@ function parseProductFormData(formData: FormData) {
     description: readOptionalString(formData, "description"),
     image: readOptionalString(formData, "image") ?? "",
     galleryImages,
-    price: Number(formData.get("price")),
-    comparePrice: readOptionalString(formData, "comparePrice") ? Number(formData.get("comparePrice")) : undefined,
+    price: parseCurrencyInput(formData.get("price")),
+    comparePrice: readOptionalString(formData, "comparePrice") ? parseCurrencyInput(formData.get("comparePrice")) : undefined,
     sku: readOptionalString(formData, "sku"),
     quantity: Number(formData.get("quantity")),
     categoryId: readOptionalString(formData, "categoryId") ?? "",

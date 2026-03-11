@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { ArrowRight, CheckCircle2 } from "lucide-react";
+import { useRecaptchaV3 } from "@/components/recaptcha/use-recaptcha-v3";
 
 type MessageState = {
   text: string;
@@ -14,6 +15,7 @@ export function NewsletterSubscribeForm() {
   const [showNameField, setShowNameField] = useState(false);
   const [message, setMessage] = useState<MessageState | null>(null);
   const [isPending, startTransition] = useTransition();
+  const { execute } = useRecaptchaV3();
 
   return (
     <form
@@ -39,10 +41,19 @@ export function NewsletterSubscribeForm() {
         }
 
         startTransition(async () => {
+          let recaptchaToken = "";
+
+          try {
+            recaptchaToken = await execute("newsletter_subscribe");
+          } catch (submitError) {
+            setMessage({ text: submitError instanceof Error ? submitError.message : "Não foi possível validar a segurança da inscrição.", tone: "error" });
+            return;
+          }
+
           const response = await fetch("/api/newsletter", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email, name, source: "footer" }),
+            body: JSON.stringify({ email, name, source: "footer", recaptchaToken, recaptchaAction: "newsletter_subscribe" }),
           });
 
           const payload = (await response.json().catch(() => ({}))) as { message?: string; error?: string };

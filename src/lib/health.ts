@@ -231,15 +231,21 @@ export function buildIntegrationChecks(integrations: IntegrationRecord[]): Healt
       key: "search-console",
       label: "Search Console / Webmaster",
       status:
+        (!googleSearchConsole?.isEnabled && !bingWebmaster?.isEnabled)
+          ? "healthy"
+          :
         (googleSearchConsole?.isEnabled && isConfiguredSecret(googleSearchConsole.publicKey)) ||
         (bingWebmaster?.isEnabled && isConfiguredSecret(bingWebmaster.publicKey))
           ? "healthy"
           : "degraded",
       message:
+        (!googleSearchConsole?.isEnabled && !bingWebmaster?.isEnabled)
+          ? "Verificações por meta tag são opcionais. Se o domínio já foi validado por DNS ou fora do site, nenhum token é necessário aqui."
+          :
         (googleSearchConsole?.isEnabled && isConfiguredSecret(googleSearchConsole.publicKey)) ||
         (bingWebmaster?.isEnabled && isConfiguredSecret(bingWebmaster.publicKey))
           ? "Tokens de verificação prontos para indexação e validação de domínio."
-          : "Cadastre os tokens do Google Search Console e/ou Bing Webmaster no painel quando for a hora.",
+          : "Cadastre tokens só se você quiser validar por meta tag. Se a validação já foi feita por DNS ou externamente, pode manter vazio.",
       details: {
         googleEnabled: Boolean(googleSearchConsole?.isEnabled),
         googleVerified: isConfiguredSecret(googleSearchConsole?.publicKey),

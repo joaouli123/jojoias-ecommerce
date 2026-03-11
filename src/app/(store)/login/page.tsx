@@ -5,6 +5,7 @@ import Link from "next/link";
 import { getSession, signIn } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useRecaptchaV3 } from "@/components/recaptcha/use-recaptcha-v3";
 
 const STAFF_ROLES = new Set(["SUPER_ADMIN", "ADMIN", "MANAGER", "EDITOR", "SUPPORT"]);
 
@@ -13,20 +14,33 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const { execute } = useRecaptchaV3();
 
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setError(null);
     setIsLoading(true);
 
+    let recaptchaToken = "";
+
+    try {
+      recaptchaToken = await execute("login_submit");
+    } catch (submitError) {
+      setError(submitError instanceof Error ? submitError.message : "Não foi possível validar a segurança do login.");
+      setIsLoading(false);
+      return;
+    }
+
     const result = await signIn("credentials", {
       email,
       password,
+      recaptchaToken,
+      recaptchaAction: "login_submit",
       redirect: false,
     });
 
     if (result?.error) {
-      setError("Credenciais inválidas. Verifique e tente novamente.");
+      setError("Credenciais inválidas ou validação de segurança recusada. Verifique e tente novamente.");
       setIsLoading(false);
       return;
     }

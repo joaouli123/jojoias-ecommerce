@@ -2,6 +2,7 @@
 import { Minus, Plus, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { getCartAction, removeFromCartAction, updateCartItemAction } from "@/actions/cart";
+import { CartViewTracker } from "@/components/analytics/ecommerce-trackers";
 import { Breadcrumbs } from "@/components/layout/breadcrumbs";
 import { CartSummary } from "@/components/cart/cart-summary";
 
@@ -11,6 +12,16 @@ export default async function CartPage() {
 
   return (
     <div className="flex flex-col w-full max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 gap-8 pb-16">
+      <CartViewTracker
+        items={items.map((item) => ({
+          item_id: item.variantId ? `${item.productId}:${item.variantId}` : item.productId,
+          item_name: item.name,
+          item_variant: item.variantName ?? undefined,
+          price: item.unitPrice,
+          quantity: item.quantity,
+        }))}
+        value={subtotal}
+      />
       <div className="flex flex-col gap-2 md:gap-3">
         <Breadcrumbs items={[{ label: "Início", href: "/" }, { label: "Carrinho" }]} />
         <h1 className="text-3xl sm:text-4xl font-black text-zinc-950 tracking-tight">Carrinho de Compras</h1>

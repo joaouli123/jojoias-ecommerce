@@ -48,10 +48,22 @@ async function sendEmail({ to, subject, html }: { to: string; subject: string; h
   }
 
   const endpoint = (resend.endpointUrl || "https://api.resend.com").replace(/\/$/, "");
-  const from = typeof resend.extraConfig.fromEmail === "string" && resend.extraConfig.fromEmail
+  const configuredFrom = typeof resend.extraConfig.fromEmail === "string" && resend.extraConfig.fromEmail
     ? resend.extraConfig.fromEmail
-    : "JoJoias <onboarding@resend.dev>";
+    : "";
+  const from = configuredFrom || "JoJoias <onboarding@resend.dev>";
   const replyTo = typeof resend.extraConfig.replyTo === "string" ? resend.extraConfig.replyTo : undefined;
+
+  if (process.env.NODE_ENV === "production" && (!configuredFrom || configuredFrom.includes("onboarding@resend.dev"))) {
+    await recordSystemEvent({
+      level: "error",
+      source: "email",
+      eventCode: "RESEND_FROM_EMAIL_INVALID",
+      message: "Remetente do Resend nao configurado com dominio validado para producao.",
+      payload: { to, subject },
+    });
+    throw new Error("Configure um remetente valido do Resend antes de enviar emails em producao.");
+  }
 
   const response = await fetch(`${endpoint}/emails`, {
     method: "POST",

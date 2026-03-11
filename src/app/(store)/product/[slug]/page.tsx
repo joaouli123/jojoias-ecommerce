@@ -1,17 +1,17 @@
 import type { Metadata } from "next"
 import { formatCurrency } from "@/lib/utils"
-import { Star, Truck, ShieldCheck, ShoppingCart } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import { Star, Truck, ShieldCheck } from "lucide-react"
 import Link from "next/link"
-import { notFound, redirect } from "next/navigation"
+import { notFound } from "next/navigation"
 import { getProductBySlugAction, getProductReviewsAction, getRelatedProductsAction } from "@/actions/products"
-import { addToCartAction } from "@/actions/cart"
 import { PixIcon } from "@/components/ui/icons"
 import { FavoriteButton } from "@/components/product/favorite-button"
 import { ProductShippingEstimator } from "@/components/product/product-shipping-estimator"
 import { Breadcrumbs } from "@/components/layout/breadcrumbs"
 import { ProductDetailsTabs } from "@/components/product/product-details-tabs"
 import { ProductCard } from "@/components/product/product-card"
+import { AddToCartForm } from "@/components/product/add-to-cart-form"
+import { ProductViewTracker } from "@/components/analytics/ecommerce-trackers"
 import { auth } from "@/auth"
 import { prisma } from "@/lib/prisma"
 import { getStoreSettings } from "@/lib/store-settings"
@@ -155,6 +155,15 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
 
   return (
     <div className="flex flex-col pb-16 md:pb-24 bg-white max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 w-full">
+      <ProductViewTracker
+        item={{
+          item_id: product.id,
+          item_name: product.name,
+          item_brand: product.brand ?? undefined,
+          item_category: product.category,
+          price: product.price,
+        }}
+      />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
@@ -268,53 +277,22 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
             
           {/* Actions */}
           <div className="flex flex-col gap-3 mb-6">
-            <form
-              action={async (formData) => {
-                "use server";
-                const rawQuantity = Number(formData.get("quantity") ?? 1);
-                const quantity = Number.isFinite(rawQuantity) && rawQuantity > 0 ? Math.floor(rawQuantity) : 1;
-                const variantId = typeof formData.get("variantId") === "string" ? String(formData.get("variantId")) : undefined;
-                await addToCartAction(product.id, quantity, variantId || undefined);
-                redirect("/checkout");
+            <AddToCartForm
+              product={{
+                id: product.id,
+                name: product.name,
+                price: product.price,
+                brand: product.brand,
+                category: product.category,
               }}
-              className="flex flex-col gap-3"
-            >
-              {variants.length ? (
-                <div className="space-y-2">
-                  <label htmlFor="variantId" className="text-sm font-semibold text-zinc-900">Escolha a variação</label>
-                  <select
-                    id="variantId"
-                    name="variantId"
-                    required
-                    className="h-[50px] w-full rounded-[10px] border border-zinc-300 bg-white px-4 text-sm font-medium text-zinc-900 outline-none focus:border-[#D4AF37]"
-                    defaultValue={variants[0]?.id}
-                  >
-                    {variants.map((variant) => (
-                      <option key={variant.id} value={variant.id} disabled={variant.quantity <= 0}>
-                        {variant.name} — {formatCurrency(variant.price)} {variant.quantity > 0 ? `(${variant.quantity} disponíveis)` : "(indisponível)"}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              ) : null}
-
-              <div className="flex flex-row items-center gap-2">
-                <div className="h-[50px] w-[110px] rounded-[10px] border border-zinc-300 bg-zinc-50 flex items-center justify-center px-3 shrink-0">
-                  <input
-                    type="number"
-                    name="quantity"
-                    min={1}
-                    max={Math.max(totalAvailableQuantity, 1)}
-                    defaultValue={1}
-                    className="w-full text-center text-[20px] font-semibold text-zinc-900 bg-transparent outline-none"
-                  />
-                </div>
-
-                <Button type="submit" className="flex-1 h-[50px] text-[16px] font-bold tracking-tight bg-[#111827] hover:bg-[#111827]/90 text-white shadow-none rounded-[10px] transition-colors uppercase">
-                  <ShoppingCart className="mr-2 h-5 w-5" /> Comprar Agora
-                </Button>
-              </div>
-            </form>
+              variants={variants.map((variant) => ({
+                id: variant.id,
+                name: variant.name,
+                price: variant.price,
+                quantity: variant.quantity,
+              }))}
+              totalAvailableQuantity={totalAvailableQuantity}
+            />
 
             {variants.length ? (
               <div className="rounded-xl border border-zinc-200 bg-zinc-50 p-4 text-sm text-zinc-700">

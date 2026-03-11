@@ -39,6 +39,7 @@ const nextConfig: NextConfig = {
 export default withSentryConfig(nextConfig, {
   org: "venda-elast",
   project: "javascript-nextjs",
+  authToken: process.env.SENTRY_AUTH_TOKEN,
   silent: !process.env.CI,
   tunnelRoute: "/monitoring",
 });

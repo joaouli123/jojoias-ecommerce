@@ -2,6 +2,7 @@
 import { prisma } from "@/lib/prisma";
 import { formatCurrency } from "@/lib/utils";
 import { requireAdminPagePermission } from "@/lib/admin-auth";
+import { formatAdminDateParts, formatOrderCode, getOrderStatusLabel, getOrderStatusTone, normalizeDisplayText } from "@/lib/admin-display";
 
 export default async function AdminDashboardPage() {
   await requireAdminPagePermission("dashboard:view");
@@ -189,24 +190,37 @@ export default async function AdminDashboardPage() {
                   </td>
                 </tr>
               ) : (
-                recentOrders.map((order) => (
-                  <tr key={order.id} className="hover:bg-gray-50/50">
-                    <td className="p-4 font-mono text-xs">{order.id}</td>
-                    <td className="p-4">{order.user?.name || order.guestName || "Visitante"}</td>
-                    <td className="p-4">{new Date(order.createdAt).toLocaleDateString("pt-BR")}</td>
-                    <td className="p-4">
-                      <span className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-700">
-                        {order.status}
-                      </span>
-                    </td>
-                    <td className="p-4 font-medium">
-                      {new Intl.NumberFormat("pt-BR", {
-                        style: "currency",
-                        currency: "BRL",
-                      }).format(order.total)}
-                    </td>
-                  </tr>
-                ))
+                recentOrders.map((order) => {
+                  const { date, time } = formatAdminDateParts(order.createdAt);
+
+                  return (
+                    <tr key={order.id} className="hover:bg-gray-50/50">
+                      <td className="p-4">
+                        <p className="font-mono text-sm font-semibold text-gray-900">#{formatOrderCode(order.id)}</p>
+                        <p className="text-xs text-gray-400">{order.id.slice(0, 8)}...</p>
+                      </td>
+                      <td className="p-4">
+                        <p className="font-medium text-gray-900">{normalizeDisplayText(order.user?.name || order.guestName || "Visitante")}</p>
+                        <p className="text-xs text-gray-500">{order.user?.email || order.guestEmail || "Sem email"}</p>
+                      </td>
+                      <td className="p-4">
+                        <p className="font-medium text-gray-900">{date}</p>
+                        <p className="text-xs text-gray-500">{time}</p>
+                      </td>
+                      <td className="p-4">
+                        <span className={`inline-flex px-2.5 py-1 text-xs font-semibold rounded-full ${getOrderStatusTone(order.status)}`}>
+                          {getOrderStatusLabel(order.status)}
+                        </span>
+                      </td>
+                      <td className="p-4 font-medium">
+                        {new Intl.NumberFormat("pt-BR", {
+                          style: "currency",
+                          currency: "BRL",
+                        }).format(order.total)}
+                      </td>
+                    </tr>
+                  );
+                })
               )}
             </tbody>
           </table>

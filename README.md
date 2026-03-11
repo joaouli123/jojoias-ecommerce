@@ -6,7 +6,7 @@ Ecommerce completo em Next.js com storefront, checkout, backoffice, CMS, SEO té
 
 - Next.js 16 + App Router
 - React 19 + TypeScript
-- Prisma + SQLite local preparado para migração para PostgreSQL
+- Prisma + PostgreSQL/Neon
 - Auth.js / NextAuth
 - Tailwind CSS 4
 
@@ -29,7 +29,7 @@ Ecommerce completo em Next.js com storefront, checkout, backoffice, CMS, SEO té
 
 5. Sincronize o banco local:
 
-	`npx prisma db push`
+	`npm run db:push`
 
 6. Garanta um admin inicial:
 
@@ -43,13 +43,13 @@ Ecommerce completo em Next.js com storefront, checkout, backoffice, CMS, SEO té
 - `ADMIN_EMAIL`
 - `ADMIN_PASSWORD`
 
-Observação: hoje o setup local padrão usa SQLite via `file:./prisma/dev.db`. A migração para PostgreSQL continua como próximo passo de infra/produção.
+Observação: o setup atual já está alinhado com PostgreSQL/Neon. Use `DATABASE_URL` para runtime e `DIRECT_URL` para operações de schema em banco gerenciado.
 
 ### Preparação de infra
 
-- O schema Prisma agora lê `DATABASE_URL` do ambiente.
-- Em desenvolvimento local, o valor padrão pode continuar em SQLite.
-- Para produção, a troca recomendada é configurar `DATABASE_URL` para PostgreSQL e validar o fluxo com `prisma db push` ou migrations dedicadas.
+- O schema Prisma lê `DATABASE_URL` e `DIRECT_URL` do ambiente.
+- Em produção, use PostgreSQL/Neon com pooler em `DATABASE_URL` e host direto em `DIRECT_URL`.
+- Valide o schema com `npm run db:push` no ambiente alvo antes do go-live.
 
 ## Rodando o projeto no Windows
 
@@ -65,6 +65,7 @@ Use uma destas opções:
 ## Scripts úteis
 
 - `npm run dev` — desenvolvimento
+- `npm run dev:raw` — desenvolvimento com `next dev --webpack`
 - `npm run build` — build de produção
 - `npm run start` — servidor de produção
 - `npm run lint` — lint
@@ -130,6 +131,8 @@ Exemplo:
 - `DIRECT_URL` configurada se você for rodar migrations em PostgreSQL gerenciado
 - `AUTH_SECRET` / `NEXTAUTH_SECRET` definidos com segredo forte
 - `NEXTAUTH_URL` / `AUTH_URL` / `NEXT_PUBLIC_APP_URL` / `NEXT_PUBLIC_SITE_URL` com `https://luxijoias.com.br`
+- `SENTRY_AUTH_TOKEN` configurado no build para upload de sourcemaps
+- `fromEmail` do Resend configurado com dominio validado em produção
 - chaves de pagamento e webhooks configuradas
 - política de backup do banco definida
 - CI verde em [.github/workflows/ci.yml](.github/workflows/ci.yml)
@@ -140,7 +143,9 @@ Exemplo:
 - Defina o domínio principal como `luxijoias.com.br` e, se usar `www`, faça redirecionamento canônico para um único host.
 - Configure no Railway as variáveis do arquivo [railway.env.json](railway.env.json).
 - Em banco PostgreSQL com pooler, use `DATABASE_URL` para runtime e `DIRECT_URL` para migrations.
-- Depois do primeiro deploy, rode `npm run db:generate`, `npx prisma db push` e `npm run admin:ensure` no ambiente alvo.
+- Depois do primeiro deploy, rode `npm run db:generate`, `npm run db:push` e `npm run admin:ensure` no ambiente alvo.
+- Se GTM e GA4 estiverem habilitados juntos, o frontend prioriza GTM para evitar duplicação de pageview e eventos.
+- Os scripts de analytics e Clarity só carregam após consentimento explícito.
 
 ### Operação diária
 
@@ -215,3 +220,4 @@ Após qualquer alteração importante:
 2. `npm.cmd run test`
 3. `npm.cmd run build`
 4. testar pedido, admin e busca
+5. revisar [docs/status-planejamento.md](docs/status-planejamento.md) e [docs/homologacao-lancamento.md](docs/homologacao-lancamento.md) antes do deploy

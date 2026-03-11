@@ -13,7 +13,9 @@ import { CheckoutCouponField } from "@/components/checkout/checkout-coupon-field
 import { CheckoutMobileSummary } from "@/components/checkout/checkout-mobile-summary";
 import { CheckoutTotalsSummary } from "@/components/checkout/checkout-totals-summary";
 import { PaymentMethodsSection } from "@/components/checkout/payment-methods-section";
+import { CheckoutTracker } from "@/components/analytics/ecommerce-trackers";
 import { Breadcrumbs } from "@/components/layout/breadcrumbs";
+import { CheckoutProtectedForm } from "@/components/checkout/checkout-protected-form";
 
 export default async function CheckoutPage() {
   const cart = await getCartAction();
@@ -60,6 +62,17 @@ export default async function CheckoutPage() {
 
   return (
     <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+      <CheckoutTracker
+        checkoutToken={checkoutToken}
+        items={cart.items.map((item) => ({
+          item_id: item.variantId ? `${item.productId}:${item.variantId}` : item.productId,
+          item_name: item.name,
+          item_variant: item.variantName ?? undefined,
+          price: item.unitPrice,
+          quantity: item.quantity,
+        }))}
+        value={cart.subtotal}
+      />
       <div className="mb-8 md:mb-10">
         <Breadcrumbs items={[{ label: "Início", href: "/" }, { label: "Carrinho", href: "/cart" }, { label: "Checkout" }]} />
         <h1 className="text-3xl sm:text-4xl font-black text-zinc-950 tracking-tight">Checkout Seguro</h1>
@@ -68,8 +81,7 @@ export default async function CheckoutPage() {
           Voltar ao carrinho
         </Link>
       </div>
-      <form action={createOrderAction} className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
-        <input type="hidden" name="checkoutToken" value={checkoutToken} />
+      <CheckoutProtectedForm action={createOrderAction} checkoutToken={checkoutToken}>
         <div className="lg:col-span-8 space-y-6">
           <CheckoutMobileSummary items={cart.items} subtotal={cart.subtotal} pixDiscountPercent={pixDiscountPercent} />
 
@@ -153,7 +165,7 @@ export default async function CheckoutPage() {
             </div>
           </div>
         </aside>
-      </form>
+      </CheckoutProtectedForm>
     </div>
   );
 }

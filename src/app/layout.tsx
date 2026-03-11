@@ -3,6 +3,7 @@ import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { ThirdPartyScripts } from "@/components/integrations/third-party-scripts";
 import { RegisterServiceWorker } from "@/components/pwa/register-sw";
+import { RecaptchaScript } from "@/components/recaptcha/recaptcha-script";
 import { getIntegrationSettings } from "@/lib/integrations";
 
 const inter = Inter({
@@ -91,6 +92,7 @@ export default async function RootLayout({
         {bingVerification ? <meta name="msvalidate.01" content={bingVerification} /> : null}
       </head>
       <body suppressHydrationWarning className={`${inter.variable} ${jetbrainsMono.variable} font-sans antialiased`}>
+        <RecaptchaScript />
         <ThirdPartyScripts />
         <RegisterServiceWorker />
         {children}
