@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { FileText } from "lucide-react";
 import { InstitutionalHero } from "@/components/store/institutional-hero";
 import { getPublishedPageBySlug } from "@/lib/cms-pages";
 
@@ -50,15 +49,10 @@ export default async function CmsPage({ params }: { params: Promise<{ slug: stri
         description={page.metaDescription || "Conteúdo editorial publicado pela equipe da JoJoias."}
       />
 
-      <section className="mx-auto max-w-4xl px-6 py-16 sm:px-8 lg:px-10 lg:py-20">
-        <div className="rounded-[20px] border border-zinc-200 bg-white p-8 shadow-sm sm:p-10">
-          <div className="flex items-center gap-3 text-sm font-medium uppercase tracking-[0.2em] text-zinc-400">
-            <FileText className="h-4 w-4" /> Conteúdo CMS
-          </div>
-          <div className="mt-6 whitespace-pre-line text-base leading-8 text-zinc-700">
-            {page.content}
-          </div>
-        </div>
+      <section className="mx-auto max-w-4xl px-6 py-14 sm:px-8 lg:px-10 lg:py-16">
+        <article className="whitespace-pre-line text-[15px] leading-8 text-zinc-700 sm:text-base">
+          {page.content}
+        </article>
       </section>
     </div>
   );

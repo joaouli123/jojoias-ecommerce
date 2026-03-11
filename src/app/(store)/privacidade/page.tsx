@@ -30,10 +30,10 @@ export default async function PrivacyPage() {
         description="Tratamos suas informações com responsabilidade para garantir uma jornada segura, transparente e confiável."
       />
 
-      <section className="mx-auto max-w-5xl px-6 py-16 sm:px-8 lg:px-10 lg:py-20">
-        <div className="rounded-3xl border border-zinc-200 bg-white p-8 shadow-sm">
-          <p className="whitespace-pre-line text-base leading-8 text-zinc-600">{settings.privacyContent}</p>
-        </div>
+      <section className="mx-auto max-w-4xl px-6 py-14 sm:px-8 lg:px-10 lg:py-16">
+        <article className="whitespace-pre-line text-[15px] leading-8 text-zinc-700 sm:text-base">
+          {settings.privacyContent}
+        </article>
       </section>
     </div>
   );

@@ -36,14 +36,14 @@ export default async function ExchangesPage() {
         description="Nosso objetivo é resolver qualquer necessidade com transparência e praticidade para você comprar com confiança."
       />
 
-      <section className="mx-auto max-w-5xl px-6 py-16 sm:px-8 lg:px-10 lg:py-20">
-        <div className="grid gap-6 lg:grid-cols-[1fr_0.8fr]">
-          <div className="rounded-[20px] border border-zinc-200 bg-white p-8 shadow-sm">
+      <section className="mx-auto max-w-5xl px-6 py-14 sm:px-8 lg:px-10 lg:py-16">
+        <div className="grid gap-10 lg:grid-cols-[1fr_0.82fr]">
+          <article>
             <h2 className="text-2xl font-bold text-zinc-950">Política de trocas</h2>
-            <p className="mt-5 whitespace-pre-line text-base leading-8 text-zinc-600">{settings.exchangesContent}</p>
-          </div>
+            <p className="mt-5 whitespace-pre-line text-base leading-8 text-zinc-700">{settings.exchangesContent}</p>
+          </article>
 
-          <div className="rounded-[20px] border border-zinc-200 bg-zinc-50 p-8">
+          <aside className="rounded-[24px] bg-zinc-50/80 p-8">
             <h2 className="text-2xl font-bold text-zinc-950">Fluxo de atendimento</h2>
             <ol className="mt-6 space-y-4">
               {steps.map((step, index) => (
@@ -55,7 +55,7 @@ export default async function ExchangesPage() {
                 </li>
               ))}
             </ol>
-          </div>
+          </aside>
         </div>
       </section>
     </div>
