@@ -1,10 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ShoppingCart } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { formatCurrency } from "@/lib/utils";
 import { trackAddToCart } from "@/lib/analytics";
 
 type ProductVariantOption = {
@@ -25,6 +24,7 @@ type AddToCartFormProps = {
   };
   variants: ProductVariantOption[];
   totalAvailableQuantity: number;
+  onVariantChange?: (variant: ProductVariantOption | null) => void;
 };
 
 const colorMap: Record<string, string> = {
@@ -61,7 +61,7 @@ function colorForLabel(label: string) {
   return colorMap[normalized] ?? colorMap[normalized.split(" ")[0]] ?? null;
 }
 
-export function AddToCartForm({ product, variants, totalAvailableQuantity }: AddToCartFormProps) {
+export function AddToCartForm({ product, variants, totalAvailableQuantity, onVariantChange }: AddToCartFormProps) {
   const router = useRouter();
   const [quantity, setQuantity] = useState(1);
   const [variantId, setVariantId] = useState(variants[0]?.id ?? "");
@@ -76,6 +76,11 @@ export function AddToCartForm({ product, variants, totalAvailableQuantity }: Add
       ? normalizedVariants[0]?.type
       : "opção"
     : null;
+
+  useEffect(() => {
+    if (!onVariantChange) return;
+    onVariantChange(selectedVariant ?? null);
+  }, [onVariantChange, selectedVariant]);
 
   return (
     <form
@@ -132,7 +137,7 @@ export function AddToCartForm({ product, variants, totalAvailableQuantity }: Add
           <label className="text-sm font-semibold text-zinc-900">
             {sharedType === "cor" ? "Escolha a cor" : sharedType === "tamanho" ? "Escolha o tamanho" : "Escolha a variação"}
           </label>
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-2.5">
             {normalizedVariants.map((variant) => {
               const selected = variant.id === variantId;
               const unavailable = variant.quantity <= 0;
@@ -144,23 +149,34 @@ export function AddToCartForm({ product, variants, totalAvailableQuantity }: Add
                   type="button"
                   onClick={() => setVariantId(variant.id)}
                   disabled={unavailable}
-                  className={`inline-flex min-h-11 items-center gap-2 rounded-xl border px-3 py-2 text-sm font-medium transition ${variant.type === "tamanho" ? "min-w-[72px] justify-center" : ""} ${selected ? "border-zinc-900 bg-zinc-900 text-white" : "border-zinc-300 bg-white text-zinc-900 hover:border-zinc-500"} ${unavailable ? "cursor-not-allowed opacity-40" : ""}`}
-                  title={`${variant.name} — ${formatCurrency(variant.price)}`}
+                  aria-label={`Selecionar ${variant.label}`}
+                  title={variant.label}
+                  className={`group relative transition ${unavailable ? "cursor-not-allowed opacity-40" : ""}`}
                 >
                   {variant.type === "cor" ? (
-                    <span
-                      className={`h-5 w-5 rounded-full border ${selected ? "border-white/70" : "border-zinc-300"}`}
-                      style={{ backgroundColor: swatchColor || "#ffffff" }}
-                    />
-                  ) : null}
-                  <span>{variant.label}</span>
+                    <>
+                      <span className={`flex h-11 w-11 items-center justify-center rounded-full border bg-white shadow-sm transition ${selected ? "border-zinc-900 ring-2 ring-zinc-900/15" : "border-zinc-200 hover:border-zinc-400"}`}>
+                        <span
+                          className={`h-6 w-6 rounded-full border ${selected ? "border-white shadow-[0_0_0_1px_rgba(24,24,27,0.08)]" : "border-zinc-200"}`}
+                          style={{ backgroundColor: swatchColor || "#ffffff" }}
+                        />
+                      </span>
+                      <span className="pointer-events-none absolute left-1/2 top-full z-10 mt-2 hidden -translate-x-1/2 whitespace-nowrap rounded-full bg-zinc-950 px-2.5 py-1 text-[11px] font-medium text-white shadow-lg group-hover:block">
+                        {variant.label}
+                      </span>
+                    </>
+                  ) : (
+                    <span className={`inline-flex min-h-11 min-w-[72px] items-center justify-center rounded-full border px-3 py-2 text-sm font-medium transition ${selected ? "border-zinc-900 bg-zinc-900 text-white" : "border-zinc-300 bg-white text-zinc-900 hover:border-zinc-500"}`}>
+                      {variant.label}
+                    </span>
+                  )}
                 </button>
               );
             })}
           </div>
           {selectedVariant ? (
             <p className="text-sm text-zinc-600">
-              {formatCurrency(selectedVariant.price)} {selectedVariant.quantity > 0 ? `· ${selectedVariant.quantity} disponíveis` : "· indisponível"}
+              Selecionado: <span className="font-semibold text-zinc-900">{selectedVariant.label}</span>
             </p>
           ) : null}
           <input type="hidden" name="variantId" value={variantId} />
