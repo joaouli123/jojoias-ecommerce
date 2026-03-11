@@ -70,7 +70,7 @@ export function FavoriteButton({
         isFavorite
           ? "border-[#D4AF37] bg-[#D4AF37] text-white"
           : "border-zinc-200 bg-white text-zinc-600 hover:text-[#D4AF37] hover:border-[#D4AF37]"
-      } disabled:opacity-60 ${className}`}
+      } touch-manipulation disabled:opacity-60 ${className}`}
     >
       <Heart className={`h-4 w-4 ${isFavorite ? "fill-current" : ""}`} />
     </button>

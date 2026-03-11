@@ -116,32 +116,41 @@ export function ProductCard({ product }: ProductCardProps) {
         </div>
       ) : null}
 
-      <div className="absolute right-2 top-2 z-30 flex flex-col gap-2">
+      <div className="pointer-events-auto absolute right-2 top-2 z-50 flex flex-col gap-2">
         <FavoriteButton productId={product.id} className="w-8 h-8" />
         <Link
           href={whatsappHref}
           target="_blank"
           rel="noreferrer"
           aria-label={`Comprar ${product.name} pelo WhatsApp`}
-          className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-zinc-200 bg-white text-zinc-600 transition-colors hover:border-[#25D366] hover:text-[#25D366]"
+          className="relative z-10 inline-flex h-8 w-8 touch-manipulation items-center justify-center rounded-full border border-zinc-200 bg-white text-zinc-600 transition-colors hover:border-[#25D366] hover:text-[#25D366]"
         >
           <WhatsAppIcon className="h-4 w-4" />
         </Link>
         {product.requiresSelection ? (
-          <Link
-            href={`/produto/${product.slug}`}
+          <button
+            type="button"
+            onClick={(event) => {
+              event.preventDefault();
+              event.stopPropagation();
+              router.push(`/produto/${product.slug}`);
+            }}
             aria-label={`Escolher opções de ${product.name}`}
-            className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-zinc-200 bg-white text-zinc-600 transition-colors hover:border-[#D4AF37] hover:text-[#D4AF37]"
+            className="relative z-10 inline-flex h-8 w-8 touch-manipulation items-center justify-center rounded-full border border-zinc-200 bg-white text-zinc-600 transition-colors hover:border-[#D4AF37] hover:text-[#D4AF37]"
           >
             <ShoppingCart className="h-4 w-4" />
-          </Link>
+          </button>
         ) : (
           <button
             type="button"
-            onClick={handleAddToCart}
+            onClick={(event) => {
+              event.preventDefault();
+              event.stopPropagation();
+              void handleAddToCart();
+            }}
             disabled={isPending}
             aria-label={`Adicionar ${product.name} ao carrinho`}
-            className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-zinc-200 bg-white text-zinc-600 transition-colors hover:border-[#D4AF37] hover:text-[#D4AF37] disabled:cursor-not-allowed disabled:opacity-60"
+            className="relative z-10 inline-flex h-8 w-8 touch-manipulation items-center justify-center rounded-full border border-zinc-200 bg-white text-zinc-600 transition-colors hover:border-[#D4AF37] hover:text-[#D4AF37] disabled:cursor-not-allowed disabled:opacity-60"
           >
             <ShoppingCart className="h-4 w-4" />
           </button>

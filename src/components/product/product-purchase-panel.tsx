@@ -56,6 +56,10 @@ export function ProductPurchasePanel({
   whatsappHref,
 }: ProductPurchasePanelProps) {
   const [activeImage, setActiveImage] = useState(images[0]);
+  const initialVariantId = useMemo(
+    () => variants.find((variant) => variant.isActive && variant.quantity > 0)?.id ?? null,
+    [variants],
+  );
 
   const galleryImages = useMemo(() => {
     const orderedImages = [activeImage, ...images.filter((image) => image !== activeImage)];
@@ -170,6 +174,7 @@ export function ProductPurchasePanel({
             product={product}
             variants={variants}
             totalAvailableQuantity={totalAvailableQuantity}
+            initialVariantId={initialVariantId}
             onVariantChange={(variant) => {
               setActiveImage(variant?.image || images[0]);
             }}

@@ -25,6 +25,7 @@ type AddToCartFormProps = {
   };
   variants: ProductVariantOption[];
   totalAvailableQuantity: number;
+  initialVariantId?: string | null;
   onVariantChange?: (variant: ProductVariantOption | null) => void;
 };
 
@@ -65,10 +66,16 @@ function colorForLabel(label: string) {
   return colorMap[normalized] ?? colorMap[normalized.split(" ")[0]] ?? null;
 }
 
-export function AddToCartForm({ product, variants, totalAvailableQuantity, onVariantChange }: AddToCartFormProps) {
+export function AddToCartForm({
+  product,
+  variants,
+  totalAvailableQuantity,
+  initialVariantId,
+  onVariantChange,
+}: AddToCartFormProps) {
   const router = useRouter();
   const [quantity, setQuantity] = useState(1);
-  const [variantId, setVariantId] = useState("");
+  const [variantId, setVariantId] = useState(initialVariantId ?? "");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -81,6 +88,10 @@ export function AddToCartForm({ product, variants, totalAvailableQuantity, onVar
     () => normalizedVariants.find((variant) => variant.id === variantId) ?? null,
     [normalizedVariants, variantId],
   );
+
+  useEffect(() => {
+    setVariantId(initialVariantId ?? "");
+  }, [initialVariantId]);
 
   useEffect(() => {
     if (!normalizedVariants.length) {
@@ -227,9 +238,9 @@ export function AddToCartForm({ product, variants, totalAvailableQuantity, onVar
             <p className="text-sm text-zinc-600">
               Selecionado: <span className="font-semibold text-zinc-900">{selectedVariant.label}</span>
             </p>
-          ) : (
+          ) : !hasAvailableVariant ? (
             <p className="text-sm text-amber-700">Nenhuma variação disponível no momento.</p>
-          )}
+          ) : null}
           <input type="hidden" name="variantId" value={variantId} />
         </div>
       ) : null}
