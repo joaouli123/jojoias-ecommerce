@@ -8,13 +8,12 @@ import { ProductDetailsTabs } from "@/components/product/product-details-tabs"
 import { ProductCard } from "@/components/product/product-card"
 import { ProductPurchasePanel } from "@/components/product/product-purchase-panel"
 import { ProductViewTracker } from "@/components/analytics/ecommerce-trackers"
-import { auth } from "@/auth"
-import { prisma } from "@/lib/prisma"
 import { buildProductMetaDescription, buildProductSeoTitle } from "@/lib/product-seo"
 import { getStoreSettings } from "@/lib/store-settings"
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://luxijoias.com.br"
 const productTabKeys = ["description", "specs", "reviews"] as const
+export const revalidate = 300
 
 type ProductTabKey = (typeof productTabKeys)[number]
 
@@ -100,22 +99,10 @@ export default async function ProductPage({
     notFound();
   }
 
-  const [reviewSummary, relatedProducts, session] = await Promise.all([
+  const [reviewSummary, relatedProducts] = await Promise.all([
     getCachedProductReviews(product.id),
     getRelatedProductsAction(product.id, product.categorySlug, 4),
-    auth(),
   ])
-
-  const canReview = session?.user?.id
-    ? Boolean(await prisma.order.findFirst({
-        where: {
-          userId: session.user.id,
-          status: { in: ["PROCESSING", "SHIPPED", "DELIVERED"] },
-          items: { some: { productId: product.id } },
-        },
-        select: { id: true },
-      }))
-    : false
 
   const hasDiscount = (product.comparePrice ?? 0) > product.price;
   const hasFreeShipping = product.price >= 199;
@@ -321,8 +308,6 @@ export default async function ProductPage({
         averageRating={reviewSummary.averageRating}
         reviews={reviewSummary.reviews}
         productId={product.id}
-        canReview={canReview}
-        isAuthenticated={Boolean(session?.user?.id)}
         initialTab={initialTab}
       />
 
@@ -372,7 +357,7 @@ function RelatedProductsSection({
               comparePrice: relatedProduct.comparePrice,
               image: relatedProduct.image || "",
               category: relatedProduct.category,
-              variantId: relatedProduct.variants.length === 1 ? relatedProduct.variants[0]?.id ?? null : null,
+              variantId: relatedProduct.variants.find((variant) => variant.quantity > 0)?.id ?? relatedProduct.variants[0]?.id ?? null,
               requiresSelection: relatedProduct.variants.length > 1,
               whatsappBaseUrl: whatsappUrl,
             }}

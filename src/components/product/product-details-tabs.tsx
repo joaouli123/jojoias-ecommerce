@@ -15,8 +15,6 @@ type ProductDetailsTabsProps = {
   averageRating: number;
   reviews: ProductReview[];
   productId: string;
-  canReview: boolean;
-  isAuthenticated: boolean;
   initialTab?: TabKey;
 };
 
@@ -38,15 +36,42 @@ export function ProductDetailsTabs({
   averageRating,
   reviews,
   productId,
-  canReview,
-  isAuthenticated,
   initialTab = "description",
 }: ProductDetailsTabsProps) {
   const [activeTab, setActiveTab] = useState<TabKey>(initialTab);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [canReview, setCanReview] = useState(false);
 
   useEffect(() => {
     setActiveTab(initialTab);
   }, [initialTab]);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    async function loadReviewAccess() {
+      try {
+        const response = await fetch(`/api/products/${productId}/review-access`, { cache: "no-store" });
+        if (!response.ok) return;
+
+        const payload = (await response.json()) as { isAuthenticated?: boolean; canReview?: boolean };
+        if (!isMounted) return;
+
+        setIsAuthenticated(Boolean(payload.isAuthenticated));
+        setCanReview(Boolean(payload.canReview));
+      } catch {
+        if (!isMounted) return;
+        setIsAuthenticated(false);
+        setCanReview(false);
+      }
+    }
+
+    void loadReviewAccess();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [productId]);
 
   const descriptionParagraphs = useMemo(
     () => description.split("\n\n").filter(Boolean),

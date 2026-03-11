@@ -8,7 +8,7 @@ import { BrandGrid } from "@/components/catalog/brand-grid";
 import { getStoreSettings } from "@/lib/store-settings";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://luxijoias.com.br";
-export const dynamic = "force-dynamic";
+export const revalidate = 300;
 
 export const metadata: Metadata = {
   title: "Loja Oficial de Semijoias",
@@ -104,7 +104,7 @@ export default async function Home() {
                 comparePrice: product.comparePrice,
                 image: product.image || "",
                 category: product.category,
-                variantId: product.variants.length === 1 ? product.variants[0]?.id ?? null : null,
+                variantId: product.variants.find((variant) => variant.quantity > 0)?.id ?? product.variants[0]?.id ?? null,
                 requiresSelection: product.variants.length > 1,
                 whatsappBaseUrl: settings.whatsappUrl,
               }}

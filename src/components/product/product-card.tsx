@@ -6,6 +6,7 @@ import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { AlertCircle, CheckCircle2, ShoppingCart } from "lucide-react"
 import { formatCurrency } from "@/lib/utils"
+import { dispatchCartUpdated, type CartStatePayload } from "@/lib/cart-sync"
 import { PixIcon, WhatsAppIcon } from "@/components/ui/icons"
 import { FavoriteButton } from "@/components/product/favorite-button"
 
@@ -29,6 +30,7 @@ export function ProductCard({ product }: ProductCardProps) {
   const [isPending, setIsPending] = useState(false);
   const [showCartNotice, setShowCartNotice] = useState(false);
   const [cartError, setCartError] = useState<string | null>(null);
+  const canAddDirectly = !product.requiresSelection || Boolean(product.variantId);
   const hasDiscount = typeof product.comparePrice === "number" && product.comparePrice > product.price;
   const oldPrice = hasDiscount ? (product.comparePrice as number) : product.price * 1.15;
   const parcelas = 6;
@@ -54,6 +56,11 @@ export function ProductCard({ product }: ProductCardProps) {
   }, [cartError]);
 
   async function handleAddToCart() {
+    if (product.requiresSelection && !product.variantId) {
+      router.push(`/produto/${product.slug}`);
+      return;
+    }
+
     setCartError(null);
     setIsPending(true);
 
@@ -70,18 +77,24 @@ export function ProductCard({ product }: ProductCardProps) {
         }),
       });
 
+      const payload = (await response.json().catch(() => null)) as CartStatePayload | { error?: string } | null;
+
       if (!response.ok) {
-        const payload = (await response.json().catch(() => null)) as { error?: string } | null;
-        throw new Error(payload?.error || "Não foi possível adicionar ao carrinho.");
+        throw new Error((payload as { error?: string } | null)?.error || "Não foi possível adicionar ao carrinho.");
       }
 
+      dispatchCartUpdated(payload as CartStatePayload);
       setShowCartNotice(true);
-      router.refresh();
     } catch (error) {
       setCartError(error instanceof Error ? error.message : "Não foi possível adicionar ao carrinho.");
     } finally {
       setIsPending(false);
     }
+  }
+
+  function stopCardAction(event: React.SyntheticEvent) {
+    event.preventDefault();
+    event.stopPropagation();
   }
 
   return (
@@ -127,34 +140,19 @@ export function ProductCard({ product }: ProductCardProps) {
         >
           <WhatsAppIcon className="h-4 w-4" />
         </Link>
-        {product.requiresSelection ? (
-          <button
-            type="button"
-            onClick={(event) => {
-              event.preventDefault();
-              event.stopPropagation();
-              router.push(`/produto/${product.slug}`);
-            }}
-            aria-label={`Escolher opções de ${product.name}`}
-            className="relative z-10 inline-flex h-8 w-8 touch-manipulation items-center justify-center rounded-full border border-zinc-200 bg-white text-zinc-600 transition-colors hover:border-[#D4AF37] hover:text-[#D4AF37]"
-          >
-            <ShoppingCart className="h-4 w-4" />
-          </button>
-        ) : (
-          <button
-            type="button"
-            onClick={(event) => {
-              event.preventDefault();
-              event.stopPropagation();
-              void handleAddToCart();
-            }}
-            disabled={isPending}
-            aria-label={`Adicionar ${product.name} ao carrinho`}
-            className="relative z-10 inline-flex h-8 w-8 touch-manipulation items-center justify-center rounded-full border border-zinc-200 bg-white text-zinc-600 transition-colors hover:border-[#D4AF37] hover:text-[#D4AF37] disabled:cursor-not-allowed disabled:opacity-60"
-          >
-            <ShoppingCart className="h-4 w-4" />
-          </button>
-        )}
+        <button
+          type="button"
+          onPointerDown={stopCardAction}
+          onClick={(event) => {
+            stopCardAction(event);
+            void handleAddToCart();
+          }}
+          disabled={isPending}
+          aria-label={canAddDirectly ? `Adicionar ${product.name} ao carrinho` : `Escolher opções de ${product.name}`}
+          className="relative z-10 inline-flex h-8 w-8 touch-manipulation items-center justify-center rounded-full border border-[#c93737] bg-[#c93737] text-white transition-colors hover:border-[#a92d2d] hover:bg-[#a92d2d] disabled:cursor-not-allowed disabled:opacity-60"
+        >
+          <ShoppingCart className="h-4 w-4" />
+        </button>
       </div>
       
       {/* Badges de Destaque */}

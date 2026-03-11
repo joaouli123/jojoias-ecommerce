@@ -4,34 +4,16 @@ import { useCallback, useEffect, useMemo, useState } from "react"
 import { ShoppingCart, X, Trash2, ArrowRight, Minus, Plus } from "lucide-react"
 import { formatCurrency } from "@/lib/utils"
 import Link from "next/link"
-
-type CartItem = {
-  productId: string
-  variantId: string | null
-  slug: string
-  name: string
-  image: string | null
-  unitPrice: number
-  quantity: number
-  lineTotal: number
-  variantName: string | null
-}
-
-type CartPayload = {
-  items: CartItem[]
-  subtotal: number
-  shipping: number
-  total: number
-}
+import { CART_UPDATED_EVENT, dispatchCartUpdated, type CartStatePayload } from "@/lib/cart-sync"
 
 type CartDrawerProps = {
-  initialCart?: CartPayload
+  initialCart?: CartStatePayload
 }
 
 export function CartDrawer({ initialCart = { items: [], subtotal: 0, shipping: 0, total: 0 } }: CartDrawerProps) {
   const [isOpen, setIsOpen] = useState(false)
   const [isHoverOpen, setIsHoverOpen] = useState(false)
-  const [cart, setCart] = useState<CartPayload>(initialCart)
+  const [cart, setCart] = useState<CartStatePayload>(initialCart)
   const [isLoading, setIsLoading] = useState(false)
 
   const itemCount = useMemo(
@@ -44,7 +26,7 @@ export function CartDrawer({ initialCart = { items: [], subtotal: 0, shipping: 0
     try {
       const response = await fetch("/api/cart", { method: "GET", cache: "no-store" })
       if (!response.ok) return
-      const payload = (await response.json()) as CartPayload
+      const payload = (await response.json()) as CartStatePayload
       setCart(payload)
     } finally {
       setIsLoading(false)
@@ -61,8 +43,9 @@ export function CartDrawer({ initialCart = { items: [], subtotal: 0, shipping: 0
       })
 
       if (!response.ok) return
-      const payload = (await response.json()) as CartPayload
+      const payload = (await response.json()) as CartStatePayload
       setCart(payload)
+      dispatchCartUpdated(payload)
     } finally {
       setIsLoading(false)
     }
@@ -81,8 +64,9 @@ export function CartDrawer({ initialCart = { items: [], subtotal: 0, shipping: 0
       })
 
       if (!response.ok) return
-      const payload = (await response.json()) as CartPayload
+      const payload = (await response.json()) as CartStatePayload
       setCart(payload)
+      dispatchCartUpdated(payload)
     } finally {
       setIsLoading(false)
     }
@@ -101,6 +85,17 @@ export function CartDrawer({ initialCart = { items: [], subtotal: 0, shipping: 0
     if (!isHoverOpen) return
     void syncCart()
   }, [isHoverOpen, syncCart])
+
+  useEffect(() => {
+    const handleCartUpdated = (event: Event) => {
+      const payload = (event as CustomEvent<CartStatePayload>).detail
+      if (!payload) return
+      setCart(payload)
+    }
+
+    window.addEventListener(CART_UPDATED_EVENT, handleCartUpdated)
+    return () => window.removeEventListener(CART_UPDATED_EVENT, handleCartUpdated)
+  }, [])
 
   return (
     <>

@@ -68,11 +68,11 @@ export function FavoriteButton({
       aria-label={isFavorite ? "Remover dos favoritos" : "Adicionar aos favoritos"}
       className={`inline-flex items-center justify-center rounded-full border transition-colors ${
         isFavorite
-          ? "border-[#D4AF37] bg-[#D4AF37] text-white"
-          : "border-zinc-200 bg-white text-zinc-600 hover:text-[#D4AF37] hover:border-[#D4AF37]"
+          ? "border-[#c93737] bg-[#c93737] text-white"
+          : "border-[#c93737]/35 bg-white text-[#c93737] hover:border-[#c93737] hover:bg-[#c93737] hover:text-white"
       } touch-manipulation disabled:opacity-60 ${className}`}
     >
-      <Heart className={`h-4 w-4 ${isFavorite ? "fill-current" : ""}`} />
+      <Heart className={`relative -translate-y-px h-4 w-4 ${isFavorite ? "fill-current" : ""}`} />
     </button>
   );
 }

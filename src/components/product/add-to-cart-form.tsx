@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ShoppingCart, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { dispatchCartUpdated, type CartStatePayload } from "@/lib/cart-sync";
 import { trackAddToCart } from "@/lib/analytics";
 
 type ProductVariantOption = {
@@ -148,11 +149,13 @@ export function AddToCartForm({
             }),
           });
 
+          const payload = (await response.json().catch(() => null)) as CartStatePayload | { error?: string } | null;
+
           if (!response.ok) {
-            const payload = (await response.json().catch(() => null)) as { error?: string } | null;
-            throw new Error(payload?.error || "Não foi possível adicionar ao carrinho.");
+            throw new Error((payload as { error?: string } | null)?.error || "Não foi possível adicionar ao carrinho.");
           }
 
+          dispatchCartUpdated(payload as CartStatePayload);
           trackAddToCart({
             item_id: selectedVariant ? `${product.id}:${selectedVariant.id}` : product.id,
             item_name: product.name,

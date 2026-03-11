@@ -7,6 +7,7 @@ import { getStoreSettings } from "@/lib/store-settings"
 import { buildBreadcrumbJsonLd, buildPageJsonLd, buildPageMetadata, toAbsoluteUrl } from "@/lib/site-seo"
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://luxijoias.com.br"
+export const revalidate = 300
 
 const PRICE_FILTERS = [
   { label: "Até R$ 100", value: "0-100", min: 0, max: 100 },
@@ -325,7 +326,7 @@ export default async function CategoryPage({
                     comparePrice: product.comparePrice,
                     image: product.image || "/mock",
                     category: product.category,
-                    variantId: product.variants.length === 1 ? product.variants[0]?.id ?? null : null,
+                    variantId: product.variants.find((variant) => variant.quantity > 0)?.id ?? product.variants[0]?.id ?? null,
                     requiresSelection: product.variants.length > 1,
                     whatsappBaseUrl: settings.whatsappUrl,
                   }}

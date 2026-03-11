@@ -6,7 +6,6 @@ import { PixIcon } from "@/components/ui/icons"
 import { MobileNavDrawer } from "@/components/layout/mobile-nav-drawer"
 import { SearchBar } from "@/components/layout/search-bar"
 import { getStoreSettings } from "@/lib/store-settings"
-import { getCartAction } from "@/actions/cart"
 
 const navigationItems = [
   { label: "Marcas", href: "/marcas", icon: Gem },
@@ -19,7 +18,7 @@ const navigationItems = [
 ];
 
 export async function Header() {
-  const [settings, cart] = await Promise.all([getStoreSettings(), getCartAction()])
+  const settings = await getStoreSettings()
   const announcementMessages = [settings.announcementText, settings.announcementSecondaryText].filter(Boolean)
 
   return (
@@ -85,7 +84,7 @@ export async function Header() {
           </Link>
 
           <div className="flex lg:hidden items-center text-zinc-900">
-            <CartDrawer initialCart={cart} />
+            <CartDrawer />
           </div>
         </div>
 
@@ -186,7 +185,7 @@ export async function Header() {
           </div>
 
           <div className="pb-8 -mb-8">
-            <CartDrawer initialCart={cart} />
+            <CartDrawer />
           </div>
         </div>
       </div>
