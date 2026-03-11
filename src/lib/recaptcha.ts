@@ -17,12 +17,31 @@ type VerifyRecaptchaResponse = {
 
 const DEFAULT_MIN_SCORE = Number(process.env.RECAPTCHA_MIN_SCORE ?? "0.5");
 
-function getExpectedHostname() {
+function normalizeHostname(hostname: string) {
+  return hostname.trim().toLowerCase();
+}
+
+function getAllowedHostnames() {
+  const hostnames = new Set<string>();
+
   try {
-    return new URL(getSiteUrl()).hostname;
+    const configuredHostname = normalizeHostname(new URL(getSiteUrl()).hostname);
+    hostnames.add(configuredHostname);
+
+    if (configuredHostname.startsWith("www.")) {
+      hostnames.add(configuredHostname.slice(4));
+    } else if (configuredHostname !== "localhost" && configuredHostname !== "127.0.0.1") {
+      hostnames.add(`www.${configuredHostname}`);
+    }
   } catch {
-    return null;
   }
+
+  if (process.env.NODE_ENV !== "production") {
+    hostnames.add("localhost");
+    hostnames.add("127.0.0.1");
+  }
+
+  return hostnames;
 }
 
 export function isRecaptchaEnabled() {
@@ -80,8 +99,10 @@ export async function verifyRecaptchaToken(input: VerifyRecaptchaInput) {
     return { ok: false, reason: "Ação do reCAPTCHA inválida." };
   }
 
-  const expectedHostname = getExpectedHostname();
-  if (expectedHostname && payload.hostname && payload.hostname !== expectedHostname) {
+  const allowedHostnames = getAllowedHostnames();
+  const responseHostname = payload.hostname ? normalizeHostname(payload.hostname) : null;
+
+  if (responseHostname && allowedHostnames.size > 0 && !allowedHostnames.has(responseHostname)) {
     return { ok: false, reason: "Hostname do reCAPTCHA inválido." };
   }
 
