@@ -2,7 +2,7 @@ import { createHmac, timingSafeEqual } from "node:crypto";
 import { NextResponse } from "next/server";
 import { getIntegrationSettings } from "@/lib/integrations";
 import { syncMercadoPagoPayment } from "@/lib/mercado-pago";
-import { sendOrderPaymentUpdateFromOrder } from "@/lib/email";
+import { sendOrderPaymentUpdateFromOrder, sendOrderRefundUpdateFromOrder } from "@/lib/email";
 import { recordSystemEvent } from "@/lib/system-events";
 
 function parseSignatureHeader(signatureHeader: string | null) {
@@ -85,7 +85,13 @@ export async function POST(request: Request) {
     const result = await syncMercadoPagoPayment(String(dataId));
 
     if (result.statusChanged) {
-      await sendOrderPaymentUpdateFromOrder(result.orderId);
+      const normalizedStatus = result.paymentStatus.toLowerCase();
+
+      if (["refunded", "partially_refunded", "charged_back"].includes(normalizedStatus)) {
+        await sendOrderRefundUpdateFromOrder(result.orderId);
+      } else {
+        await sendOrderPaymentUpdateFromOrder(result.orderId);
+      }
     }
 
     return NextResponse.json({

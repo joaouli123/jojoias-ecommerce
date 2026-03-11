@@ -3,6 +3,7 @@ import { hash } from "bcryptjs";
 import { prisma } from "@/lib/prisma";
 import { assertRecaptchaToken, readRecaptchaIp } from "@/lib/recaptcha";
 import { registerSchema } from "@/lib/validators";
+import { sendWelcomeEmail } from "@/lib/email";
 
 export async function POST(request: Request) {
   try {
@@ -47,6 +48,11 @@ export async function POST(request: Request) {
         name: true,
         email: true,
       },
+    });
+
+    void sendWelcomeEmail({
+      customerEmail: user.email,
+      customerName: user.name,
     });
 
     return NextResponse.json({ user }, { status: 201 });

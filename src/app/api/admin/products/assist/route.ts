@@ -27,6 +27,7 @@ export async function POST(request: NextRequest) {
   await requireAdminPermission("products:manage");
 
   const apiKey = process.env.GEMINI_API_KEY;
+  const model = process.env.GEMINI_MODEL || "gemini-2.5-pro";
   if (!apiKey) {
     return NextResponse.json({ error: "GEMINI_API_KEY não configurada no ambiente." }, { status: 500 });
   }
@@ -49,7 +50,7 @@ export async function POST(request: NextRequest) {
     `Descrição atual: ${description || "sem descrição"}`,
   ].join("\n");
 
-  const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`, {
+  const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${apiKey}`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

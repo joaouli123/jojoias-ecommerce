@@ -12,7 +12,11 @@ import type { AdminPermission } from "@/lib/admin-permissions";
 import { requireAdminPermission } from "@/lib/admin-auth";
 import { logAdminAudit } from "@/lib/audit-log";
 import { issueMercadoPagoRefund } from "@/lib/mercado-pago";
-import { sendOrderPaymentUpdateFromOrder } from "@/lib/email";
+import {
+  sendOrderRefundUpdateFromOrder,
+  sendOrderStatusUpdateFromOrder,
+  sendOrderTrackingUpdateFromOrder,
+} from "@/lib/email";
 import { recordSystemEvent } from "@/lib/system-events";
 
 async function getAdminActor(permission: AdminPermission = "dashboard:view") {
@@ -289,8 +293,10 @@ export async function updateOrderStatus(id: string, formData: FormData) {
     throw new Error("Status de pedido inválido.");
   }
   
+  let shouldNotifyStatusChange = false;
+
   try {
-    await prisma.$transaction(async (tx) => {
+    const result = await prisma.$transaction(async (tx) => {
       const order = await tx.order.findUnique({
         where: { id },
         select: {
@@ -313,6 +319,8 @@ export async function updateOrderStatus(id: string, formData: FormData) {
       if (!canTransitionOrderStatus(currentStatus, status)) {
         throw new Error(`Transição inválida: ${currentStatus} → ${status}.`);
       }
+
+      const statusChanged = currentStatus !== status;
 
       await tx.order.update({
         where: { id },
@@ -343,7 +351,11 @@ export async function updateOrderStatus(id: string, formData: FormData) {
           });
         }
       }
+
+      return { statusChanged };
     });
+
+    shouldNotifyStatusChange = result.statusChanged;
   } catch (error) {
     console.error("Error updating order status:", error);
     throw new Error(error instanceof Error ? error.message : "Erro ao atualizar status do pedido.");
@@ -357,6 +369,10 @@ export async function updateOrderStatus(id: string, formData: FormData) {
     summary: `Status do pedido atualizado para ${status}.`,
     metadata: { status },
   });
+
+  if (shouldNotifyStatusChange) {
+    await sendOrderStatusUpdateFromOrder(id);
+  }
 
   revalidatePath(`/admin/orders/${id}`);
   revalidatePath("/admin/orders");
@@ -393,6 +409,8 @@ export async function updateOrderPostSale(id: string, formData: FormData) {
     throw new Error("Pedido não encontrado.");
   }
 
+  const refundStatusChanged = (current.refundStatus || "NONE") !== refundStatus;
+
   if (refundAmount !== null && refundAmount > current.total) {
     throw new Error("O reembolso não pode ser maior que o total do pedido.");
   }
@@ -425,6 +443,10 @@ export async function updateOrderPostSale(id: string, formData: FormData) {
     },
   });
 
+  if (refundStatusChanged && refundStatus !== "NONE") {
+    await sendOrderRefundUpdateFromOrder(id);
+  }
+
   revalidatePath(`/admin/orders/${id}`);
   revalidatePath("/admin/orders");
 }
@@ -454,7 +476,7 @@ export async function executeOrderRefund(id: string, formData: FormData) {
       },
     });
 
-    await sendOrderPaymentUpdateFromOrder(id);
+    await sendOrderRefundUpdateFromOrder(id);
   } catch (error) {
     await recordSystemEvent({
       level: "error",
@@ -750,6 +772,16 @@ export async function updateOrderTracking(id: string, formData: FormData) {
   const trackingCode = readOptionalString(formData, "trackingCode") ?? null;
   const trackingUrl = readOptionalString(formData, "trackingUrl") ?? null;
 
+  const existing = await prisma.order.findUnique({
+    where: { id },
+    select: {
+      trackingCode: true,
+      trackingUrl: true,
+    },
+  });
+
+  const trackingChanged = existing?.trackingCode !== trackingCode || existing?.trackingUrl !== trackingUrl;
+
   await prisma.order.update({
     where: { id },
     data: {
@@ -766,6 +798,10 @@ export async function updateOrderTracking(id: string, formData: FormData) {
     summary: "Rastreamento do pedido atualizado.",
     metadata: { trackingCode, trackingUrl },
   });
+
+  if (trackingChanged && (trackingCode || trackingUrl)) {
+    await sendOrderTrackingUpdateFromOrder(id);
+  }
 
   revalidatePath(`/admin/orders/${id}`);
   revalidatePath("/admin/orders");

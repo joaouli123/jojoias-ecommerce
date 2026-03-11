@@ -6,50 +6,12 @@ import { revalidatePath } from "next/cache";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { forgotPasswordSchema, profileSchema, resetPasswordSchema } from "@/lib/validators";
-import { getSiteUrl } from "@/lib/site-url";
-import { getIntegrationSettings } from "@/lib/integrations";
 import { assertRecaptchaToken } from "@/lib/recaptcha";
+import { sendPasswordResetEmail } from "@/lib/email";
 
 function readField(formData: FormData, key: string) {
   const value = formData.get(key);
   return typeof value === "string" ? value.trim() : "";
-}
-
-async function sendResetPasswordEmail(email: string, name: string, token: string) {
-  const resend = await getIntegrationSettings("resend");
-
-  if (!resend?.isEnabled || !resend.secretKey) {
-    return;
-  }
-
-  const endpoint = (resend.endpointUrl || "https://api.resend.com").replace(/\/$/, "");
-  const from = typeof resend.extraConfig.fromEmail === "string" && resend.extraConfig.fromEmail
-    ? resend.extraConfig.fromEmail
-    : "JoJoias <onboarding@resend.dev>";
-  const link = `${getSiteUrl()}/reset-password?token=${encodeURIComponent(token)}`;
-
-  await fetch(`${endpoint}/emails`, {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${resend.secretKey}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      from,
-      to: [email],
-      subject: "Recuperação de senha - JoJoias",
-      html: `
-        <div style="font-family:Arial,sans-serif;line-height:1.6;color:#111827">
-          <h1>Olá, ${name}!</h1>
-          <p>Recebemos uma solicitação para redefinir sua senha.</p>
-          <p><a href="${link}" style="display:inline-block;background:#111111;color:#ffffff;padding:12px 18px;border-radius:10px;text-decoration:none;font-weight:bold;">Redefinir senha</a></p>
-          <p>Se você não solicitou, basta ignorar este e-mail.</p>
-        </div>
-      `,
-    }),
-  }).catch((error) => {
-    console.error("Erro ao enviar e-mail de recuperação:", error);
-  });
 }
 
 export async function updateProfileAction(formData: FormData) {
@@ -131,7 +93,11 @@ export async function requestPasswordResetAction(formData: FormData) {
     },
   });
 
-  await sendResetPasswordEmail(user.email, user.name, token);
+  await sendPasswordResetEmail({
+    customerEmail: user.email,
+    customerName: user.name,
+    token,
+  });
 
   return { success: true };
 }
