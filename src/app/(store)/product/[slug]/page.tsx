@@ -14,9 +14,16 @@ import { buildProductMetaDescription, buildProductSeoTitle } from "@/lib/product
 import { getStoreSettings } from "@/lib/store-settings"
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://luxijoias.com.br"
+const productTabKeys = ["description", "specs", "reviews"] as const
+
+type ProductTabKey = (typeof productTabKeys)[number]
 
 const getCachedProductBySlug = cache(async (slug: string) => getProductBySlugAction(slug))
 const getCachedProductReviews = cache(async (productId: string) => getProductReviewsAction(productId))
+
+function getInitialProductTab(tab?: string): ProductTabKey {
+  return productTabKeys.includes(tab as ProductTabKey) ? (tab as ProductTabKey) : "description"
+}
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params
@@ -78,15 +85,37 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   }
 }
 
-export default async function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
+export default async function ProductPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ slug: string }>
+  searchParams: Promise<{ tab?: string }>
+}) {
   const { slug } = await params;
+  const { tab } = await searchParams;
   const [product, settings] = await Promise.all([getCachedProductBySlug(slug), getStoreSettings()]);
 
   if (!product) {
     notFound();
   }
 
-  const reviewSummary = await getCachedProductReviews(product.id)
+  const [reviewSummary, relatedProducts, session] = await Promise.all([
+    getCachedProductReviews(product.id),
+    getRelatedProductsAction(product.id, product.categorySlug, 4),
+    auth(),
+  ])
+
+  const canReview = session?.user?.id
+    ? Boolean(await prisma.order.findFirst({
+        where: {
+          userId: session.user.id,
+          status: { in: ["PROCESSING", "SHIPPED", "DELIVERED"] },
+          items: { some: { productId: product.id } },
+        },
+        select: { id: true },
+      }))
+    : false
 
   const hasDiscount = (product.comparePrice ?? 0) > product.price;
   const hasFreeShipping = product.price >= 199;
@@ -103,11 +132,12 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
   const images = product.images.length
     ? product.images.map((image) => image.url)
     : [product.image || "https://images.unsplash.com/photo-1611095567219-79caa80c5980?q=80&w=800"];
-  const variants = product.variants.filter((variant) => variant.isActive)
+  const variants = product.variants
   const totalAvailableQuantity = variants.length
-    ? variants.reduce((sum, variant) => sum + variant.quantity, 0)
+    ? variants.reduce((sum, variant) => sum + (variant.isActive ? variant.quantity : 0), 0)
     : product.quantity
   const productUrl = `${siteUrl}/produto/${product.slug}`
+  const initialTab = getInitialProductTab(tab)
   const seoDescription = buildProductMetaDescription({
     name: product.name,
     description,
@@ -245,6 +275,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
             name: variant.name,
             price: variant.price,
             quantity: variant.quantity,
+            isActive: variant.isActive,
             image: variant.image ?? null,
           }))}
           totalAvailableQuantity={totalAvailableQuantity}
@@ -252,87 +283,39 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
         />
       </div>
 
-      <Suspense fallback={<ProductDetailsTabsSkeleton />}>
-        <ProductDetailsSection
-          productId={product.id}
-          description={description}
-          sku={sku}
-          brand={brand}
-          category={product.category}
-          quantity={product.quantity}
-        />
-      </Suspense>
+      <ProductDetailsTabs
+        description={description}
+        sku={sku}
+        brand={brand}
+        category={product.category}
+        quantity={product.quantity}
+        reviewsCount={reviewSummary.totalReviews}
+        averageRating={reviewSummary.averageRating}
+        reviews={reviewSummary.reviews}
+        productId={product.id}
+        canReview={canReview}
+        isAuthenticated={Boolean(session?.user?.id)}
+        initialTab={initialTab}
+      />
 
-      <Suspense fallback={<RelatedProductsSkeleton />}>
-        <RelatedProductsSection
-          productId={product.id}
-          categorySlug={product.categorySlug}
-          whatsappUrl={settings.whatsappUrl}
-        />
-      </Suspense>
+      <RelatedProductsSection
+        relatedProducts={relatedProducts}
+        categorySlug={product.categorySlug}
+        whatsappUrl={settings.whatsappUrl}
+      />
     </div>
   )
 }
 
-async function ProductDetailsSection({
-  productId,
-  description,
-  sku,
-  brand,
-  category,
-  quantity,
-}: {
-  productId: string
-  description: string
-  sku: string
-  brand: string
-  category: string
-  quantity: number
-}) {
-  const [reviewSummary, session] = await Promise.all([
-    getCachedProductReviews(productId),
-    auth(),
-  ])
-
-  const canReview = session?.user?.id
-    ? Boolean(await prisma.order.findFirst({
-        where: {
-          userId: session.user.id,
-          status: { in: ["PROCESSING", "SHIPPED", "DELIVERED"] },
-          items: { some: { productId } },
-        },
-        select: { id: true },
-      }))
-    : false
-
-  return (
-    <ProductDetailsTabs
-      description={description}
-      sku={sku}
-      brand={brand}
-      category={category}
-      quantity={quantity}
-      reviewsCount={reviewSummary.totalReviews}
-      averageRating={reviewSummary.averageRating}
-      reviews={reviewSummary.reviews}
-      productId={productId}
-      canReview={canReview}
-      isAuthenticated={Boolean(session?.user?.id)}
-    />
-  )
-}
-
-async function RelatedProductsSection({
-  productId,
+function RelatedProductsSection({
+  relatedProducts,
   categorySlug,
   whatsappUrl,
 }: {
-  productId: string
+  relatedProducts: Awaited<ReturnType<typeof getRelatedProductsAction>>
   categorySlug: string
   whatsappUrl: string
 }) {
-  const relatedProducts = await getRelatedProductsAction(productId, categorySlug, 4)
-
   if (!relatedProducts.length) {
     return null
   }
@@ -369,19 +352,6 @@ async function RelatedProductsSection({
         ))}
       </div>
     </section>
-  )
-}
-
-function ProductDetailsTabsSkeleton() {
-  return (
-    <div className="w-full border-t border-zinc-200 pt-8 md:pt-10 animate-pulse">
-      <div className="mb-6 h-6 w-56 rounded bg-zinc-200 md:mb-8" />
-      <div className="space-y-4">
-        <div className="h-4 w-full rounded bg-zinc-100" />
-        <div className="h-4 w-[92%] rounded bg-zinc-100" />
-        <div className="h-4 w-[88%] rounded bg-zinc-100" />
-      </div>
-    </div>
   )
 }
 

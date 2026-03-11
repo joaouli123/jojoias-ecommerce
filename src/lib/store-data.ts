@@ -338,7 +338,7 @@ function mapProduct(product: {
     category: product.category.name,
     categorySlug: product.category.slug,
     status: product.status,
-    variants: (product.variants ?? []).filter((variant) => variant.isActive),
+    variants: product.variants ?? [],
   };
 }
 

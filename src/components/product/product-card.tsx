@@ -2,13 +2,12 @@
 
 import Image from "next/image"
 import Link from "next/link"
-import { useEffect, useState, useTransition } from "react"
+import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
-import { CheckCircle2, ShoppingCart } from "lucide-react"
+import { AlertCircle, CheckCircle2, ShoppingCart } from "lucide-react"
 import { formatCurrency } from "@/lib/utils"
 import { PixIcon, WhatsAppIcon } from "@/components/ui/icons"
 import { FavoriteButton } from "@/components/product/favorite-button"
-import { addToCartAction } from "@/actions/cart"
 
 interface ProductCardProps {
   product: {
@@ -27,8 +26,9 @@ interface ProductCardProps {
 
 export function ProductCard({ product }: ProductCardProps) {
   const router = useRouter();
-  const [isPending, startTransition] = useTransition();
+  const [isPending, setIsPending] = useState(false);
   const [showCartNotice, setShowCartNotice] = useState(false);
+  const [cartError, setCartError] = useState<string | null>(null);
   const hasDiscount = typeof product.comparePrice === "number" && product.comparePrice > product.price;
   const oldPrice = hasDiscount ? (product.comparePrice as number) : product.price * 1.15;
   const parcelas = 6;
@@ -46,12 +46,42 @@ export function ProductCard({ product }: ProductCardProps) {
     return () => window.clearTimeout(timeout);
   }, [showCartNotice]);
 
-  function handleAddToCart() {
-    startTransition(async () => {
-      await addToCartAction(product.id, 1, product.variantId || undefined);
+  useEffect(() => {
+    if (!cartError) return;
+
+    const timeout = window.setTimeout(() => setCartError(null), 3500);
+    return () => window.clearTimeout(timeout);
+  }, [cartError]);
+
+  async function handleAddToCart() {
+    setCartError(null);
+    setIsPending(true);
+
+    try {
+      const response = await fetch("/api/cart", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          productId: product.id,
+          quantity: 1,
+          variantId: product.variantId || undefined,
+        }),
+      });
+
+      if (!response.ok) {
+        const payload = (await response.json().catch(() => null)) as { error?: string } | null;
+        throw new Error(payload?.error || "Não foi possível adicionar ao carrinho.");
+      }
+
       setShowCartNotice(true);
       router.refresh();
-    });
+    } catch (error) {
+      setCartError(error instanceof Error ? error.message : "Não foi possível adicionar ao carrinho.");
+    } finally {
+      setIsPending(false);
+    }
   }
 
   return (
@@ -69,6 +99,18 @@ export function ProductCard({ product }: ProductCardProps) {
               >
                 Ver carrinho
               </Link>
+            </div>
+          </div>
+        </div>
+      ) : null}
+
+      {cartError ? (
+        <div className="absolute inset-x-2 bottom-2 z-40 rounded-[20px] border border-rose-200 bg-white/95 p-3 shadow-lg backdrop-blur">
+          <div className="flex items-start gap-2">
+            <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-rose-600" />
+            <div className="min-w-0 flex-1">
+              <p className="text-sm font-semibold text-rose-700">Não foi possível adicionar</p>
+              <p className="mt-1 text-xs text-zinc-500">{cartError}</p>
             </div>
           </div>
         </div>
@@ -105,7 +147,6 @@ export function ProductCard({ product }: ProductCardProps) {
           </button>
         )}
       </div>
-      <Link href={`/produto/${product.slug}`} aria-label={`Ver detalhes de ${product.name}`} className="absolute inset-0 z-10 rounded-[20px]" />
       
       {/* Badges de Destaque */}
       {hasDiscount && (
@@ -117,7 +158,11 @@ export function ProductCard({ product }: ProductCardProps) {
       )}
 
       {/* Imagem Container */}
-      <div className="relative aspect-[4/3] w-full overflow-hidden mb-4 rounded-[20px]">
+      <Link
+        href={`/produto/${product.slug}`}
+        aria-label={`Ver detalhes de ${product.name}`}
+        className="relative mb-4 block aspect-[4/3] w-full overflow-hidden rounded-[20px]"
+      >
         <Image
           src={product.image || "/demo-products/kit-elegance.svg"}
           alt={product.name}
@@ -125,12 +170,14 @@ export function ProductCard({ product }: ProductCardProps) {
           sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
           className="object-cover transition-transform duration-700 group-hover:scale-110"
         />
-      </div>
+      </Link>
 
       <div className="flex flex-col flex-1 px-2 text-center">
-        <h3 className="text-base font-semibold text-zinc-800 line-clamp-2 leading-snug mb-3 min-h-[44px]">
-          {product.name}
-        </h3>
+        <Link href={`/produto/${product.slug}`} className="mb-3 block">
+          <h3 className="min-h-[44px] text-base font-semibold leading-snug text-zinc-800 line-clamp-2">
+            {product.name}
+          </h3>
+        </Link>
         
         <div className="flex flex-col items-center justify-end mt-auto space-y-1">
           {hasDiscount && (

@@ -1,7 +1,7 @@
 ﻿"use client";
 
 import Image from "next/image";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { ShieldCheck, Truck, CreditCard, Map } from "lucide-react";
@@ -19,16 +19,7 @@ function resolveBannerImageUrl(imageUrl: string | null | undefined, fallbackUrl:
 
 export function BenefitsCarousel() {
   const scrollRef = useRef<HTMLDivElement>(null);
-
-  const scroll = (direction: "left" | "right") => {
-    if (scrollRef.current) {
-      const firstCard = scrollRef.current.firstElementChild as HTMLElement | null;
-      const cardWidth = firstCard?.clientWidth ?? scrollRef.current.clientWidth * 0.85;
-      const gap = 16;
-      const scrollAmount = direction === "left" ? -(cardWidth + gap) : cardWidth + gap;
-      scrollRef.current.scrollBy({ left: scrollAmount, behavior: "smooth" });
-    }
-  };
+  const [activeIndex, setActiveIndex] = useState(0);
 
   const benefits = [
     { icon: ShieldCheck, title: "Loja 100% segura", subtitle: "selo de segurança" },
@@ -37,53 +28,82 @@ export function BenefitsCarousel() {
     { icon: Truck, title: "Frete grátis", subtitle: "para SP" },
   ];
 
+  useEffect(() => {
+    const container = scrollRef.current;
+    const child = container?.children[activeIndex] as HTMLElement | undefined;
+    if (!container || !child) return;
+    container.scrollTo({ left: child.offsetLeft, behavior: "smooth" });
+  }, [activeIndex]);
+
+  const scroll = (direction: "left" | "right") => {
+    setActiveIndex((current) => {
+      const nextIndex = direction === "right" ? current + 1 : current - 1;
+      return (nextIndex + benefits.length) % benefits.length;
+    });
+  };
+
   return (
-    <section className="bg-white pt-8 md:pt-12 relative group max-w-[1440px] w-full mx-auto px-4 sm:px-6 lg:px-8">
-      <div 
-        ref={scrollRef}
-        className="flex overflow-x-auto snap-x snap-mandatory gap-4 no-scrollbar pb-2 md:grid md:grid-cols-4 md:gap-4 md:overflow-visible md:pb-0"
-      >
+    <section className="bg-white pt-8 md:pt-12 relative max-w-[1440px] w-full mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="md:hidden relative">
+        <div 
+          ref={scrollRef}
+          className="flex overflow-x-auto snap-x snap-mandatory gap-4 no-scrollbar pb-2"
+        >
+          {benefits.map((benefit, i) => (
+            <div key={i} className="min-w-[85vw] snap-center rounded-2xl border border-zinc-200 bg-white p-6">
+              <div className="flex items-center gap-4">
+                <benefit.icon className="w-8 h-8 stroke-[1.5] text-zinc-900 shrink-0" />
+                <div className="flex flex-col text-left">
+                  <strong className="block text-sm font-bold text-zinc-950 leading-tight">{benefit.title}</strong>
+                  <span className="text-xs text-zinc-600">{benefit.subtitle}</span>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+        <button 
+          type="button"
+          onClick={() => scroll("left")}
+          aria-label="Ver benefícios anteriores"
+          className="absolute left-2 top-1/2 -translate-y-1/2 flex h-11 w-11 items-center justify-center rounded-full bg-white shadow-md z-20 text-zinc-900"
+        >
+          <ChevronLeft className="w-6 h-6" />
+        </button>
+        <button 
+          type="button"
+          onClick={() => scroll("right")}
+          aria-label="Ver próximos benefícios"
+          className="absolute right-2 top-1/2 -translate-y-1/2 flex h-11 w-11 items-center justify-center rounded-full bg-white shadow-md z-20 text-zinc-900"
+        >
+          <ChevronRight className="w-6 h-6" />
+        </button>
+      </div>
+
+      <div className="hidden md:grid md:grid-cols-4 md:overflow-hidden md:rounded-[26px] md:border md:border-zinc-200 md:bg-white">
         {benefits.map((benefit, i) => (
-          <div key={i} className="min-w-[85vw] md:min-w-0 snap-center rounded-2xl border border-zinc-200 bg-zinc-50/60 p-6 shadow-sm">
+          <div key={i} className="p-6 lg:p-7 border-r border-zinc-200 last:border-r-0">
             <div className="flex items-center gap-4">
               <benefit.icon className="w-8 h-8 stroke-[1.5] text-zinc-900 shrink-0" />
               <div className="flex flex-col text-left">
-                <strong className="block text-sm md:text-[15px] font-bold text-zinc-950 leading-tight">{benefit.title}</strong>
-                <span className="text-xs md:text-[13px] text-zinc-600">{benefit.subtitle}</span>
+                <strong className="block text-[15px] font-bold text-zinc-950 leading-tight">{benefit.title}</strong>
+                <span className="text-[13px] text-zinc-600">{benefit.subtitle}</span>
               </div>
             </div>
-        </div>
+          </div>
         ))}
       </div>
-      <button 
-        type="button"
-        onClick={() => scroll("left")}
-        aria-label="Ver benefícios anteriores"
-        className="absolute left-2 top-1/2 -translate-y-1/2 w-11 h-11 items-center justify-center bg-white/95 rounded-full shadow-lg z-20 text-zinc-900 md:hidden flex"
-      >
-        <ChevronLeft className="w-6 h-6" />
-      </button>
-      <button 
-        type="button"
-        onClick={() => scroll("right")}
-        aria-label="Ver próximos benefícios"
-        className="absolute right-2 top-1/2 -translate-y-1/2 w-11 h-11 items-center justify-center bg-white/95 rounded-full shadow-lg z-20 text-zinc-900 md:hidden flex"
-      >
-        <ChevronRight className="w-6 h-6" />
-      </button>
     </section>
   );
 }
 
 export function BannerCarousel({ banners = [] }: { banners?: StoreBanner[] }) {
-  const scrollRef = useRef<HTMLDivElement>(null);
+  const [activeIndex, setActiveIndex] = useState(0);
 
   const scroll = (direction: "left" | "right") => {
-    if (scrollRef.current) {
-      const slideWidth = scrollRef.current.clientWidth;
-      const scrollAmount = direction === "left" ? -slideWidth : slideWidth;
-      scrollRef.current.scrollBy({ left: scrollAmount, behavior: "smooth" });
-    }
+    setActiveIndex((current) => {
+      const nextIndex = direction === "right" ? current + 1 : current - 1;
+      return (nextIndex + items.length) % items.length;
+    });
   };
 
   const fallbackBanners: StoreBanner[] = [
@@ -101,10 +121,7 @@ export function BannerCarousel({ banners = [] }: { banners?: StoreBanner[] }) {
   return (
     <section className="w-full max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 mt-4 md:mt-6 relative group">
       <div className="relative rounded-2xl md:rounded-3xl overflow-hidden shadow-sm">
-        <div 
-          ref={scrollRef}
-          className="flex overflow-x-auto snap-x snap-mandatory no-scrollbar"
-        >
+        <div className="flex transition-transform duration-500 ease-out" style={{ transform: `translateX(-${activeIndex * 100}%)` }}>
           {items.map((banner) => {
             const isFirstBanner = banner.id === items[0]?.id;
             const desktopImage = resolveBannerImageUrl(
@@ -145,14 +162,12 @@ export function BannerCarousel({ banners = [] }: { banners?: StoreBanner[] }) {
               </>
             );
 
-            return banner.href ? (
-              <Link key={banner.id} href={banner.href} className="relative min-w-full h-[50vh] md:h-[480px] snap-center block">
+            const href = banner.href || "/";
+
+            return (
+              <Link key={banner.id} href={href} className="relative min-w-full h-[50vh] md:h-[480px] block">
                 {content}
               </Link>
-            ) : (
-              <div key={banner.id} className="min-w-full h-[50vh] md:h-[480px] snap-center relative">
-                {content}
-              </div>
             );
           })}
         </div>
@@ -180,15 +195,13 @@ export function BannerCarousel({ banners = [] }: { banners?: StoreBanner[] }) {
 
 export function SecondaryBanners({ banners = [] }: { banners?: StoreBanner[] }) {
   const scrollRef = useRef<HTMLDivElement>(null);
+  const [activeIndex, setActiveIndex] = useState(0);
 
   const scroll = (direction: "left" | "right") => {
-    if (scrollRef.current) {
-      const firstCard = scrollRef.current.firstElementChild as HTMLElement | null;
-      const cardWidth = firstCard?.clientWidth ?? scrollRef.current.clientWidth * 0.85;
-      const gap = 16;
-      const scrollAmount = direction === "left" ? -(cardWidth + gap) : cardWidth + gap;
-      scrollRef.current.scrollBy({ left: scrollAmount, behavior: "smooth" });
-    }
+    setActiveIndex((current) => {
+      const nextIndex = direction === "right" ? current + 1 : current - 1;
+      return (nextIndex + items.length) % items.length;
+    });
   };
 
   const fallbackBanners: StoreBanner[] = [
@@ -204,6 +217,13 @@ export function SecondaryBanners({ banners = [] }: { banners?: StoreBanner[] }) 
     "/demo-products/brinco-gota.svg",
   ];
 
+  useEffect(() => {
+    const container = scrollRef.current;
+    const child = container?.children[activeIndex] as HTMLElement | undefined;
+    if (!container || !child) return;
+    container.scrollTo({ left: child.offsetLeft, behavior: "smooth" });
+  }, [activeIndex]);
+
   return (
     <section className="max-w-[1440px] w-full mx-auto px-4 sm:px-6 lg:px-8 pb-8 md:pb-12 relative group">
       <div 
@@ -214,19 +234,14 @@ export function SecondaryBanners({ banners = [] }: { banners?: StoreBanner[] }) 
           const imageUrl = resolveBannerImageUrl(banner.imageUrl, fallbackImages[index] || fallbackImages[0]);
 
           return (
-          <Link key={banner.id} href={banner.href || "/"} className="min-w-[85vw] md:min-w-0 h-[220px] md:h-[250px] snap-center rounded-xl overflow-hidden relative block group/banner border border-zinc-200 bg-white">
+          <Link key={banner.id} href={banner.href || "/"} className="min-w-[85vw] md:min-w-0 h-[220px] md:h-[250px] snap-center rounded-xl overflow-hidden relative block bg-white">
             <Image
               src={imageUrl}
               alt=""
               fill
               sizes="(max-width: 768px) 85vw, 33vw"
-              className="object-cover transform group-hover/banner:scale-105 transition-transform duration-500"
+              className="object-cover transition-transform duration-500 hover:scale-[1.02]"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/10 to-transparent" />
-            <div className="absolute inset-x-0 bottom-0 z-10 p-5 text-white">
-              <h3 className="text-lg font-bold tracking-tight">{banner.title}</h3>
-              {banner.subtitle ? <p className="mt-1 text-sm text-white/90">{banner.subtitle}</p> : null}
-            </div>
           </Link>
           );
         })}
@@ -254,12 +269,13 @@ export function SecondaryBanners({ banners = [] }: { banners?: StoreBanner[] }) 
 
 export function CategoriesCarousel({ categories = [] }: { categories?: StoreCategory[] }) {
   const scrollRef = useRef<HTMLDivElement>(null);
+  const [activeIndex, setActiveIndex] = useState(0);
 
   const scroll = (direction: "left" | "right") => {
-    if (scrollRef.current) {
-      const scrollAmount = direction === "left" ? -300 : 300;
-      scrollRef.current.scrollBy({ left: scrollAmount, behavior: "smooth" });
-    }
+    setActiveIndex((current) => {
+      const nextIndex = direction === "right" ? current + 1 : current - 1;
+      return (nextIndex + items.length) % items.length;
+    });
   };
 
   const fallbackCategories = [
@@ -281,6 +297,13 @@ export function CategoriesCarousel({ categories = [] }: { categories?: StoreCate
   ];
 
   const items = (categories.length ? categories : fallbackCategories).slice(0, 8);
+
+  useEffect(() => {
+    const container = scrollRef.current;
+    const child = container?.children[activeIndex] as HTMLElement | undefined;
+    if (!container || !child) return;
+    container.scrollTo({ left: child.offsetLeft - 12, behavior: "smooth" });
+  }, [activeIndex]);
 
   return (
     <section className="max-w-[1440px] mx-auto w-full px-4 sm:px-6 lg:px-8 py-8 md:py-10 relative">

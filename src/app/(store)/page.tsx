@@ -1,13 +1,14 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import Script from "next/script";
-import { HomeProductCard } from "@/components/product/home-product-card";
+import { ProductCard } from "@/components/product/product-card";
 import { getBrandsAction, getCategoriesAction, getFeaturedProductsAction, getStoreBannersAction } from "@/actions/products";
 import { BannerCarousel, BenefitsCarousel, CategoriesCarousel, SecondaryBanners } from "@/components/home/carousels";
 import { BrandGrid } from "@/components/catalog/brand-grid";
 import { getStoreSettings } from "@/lib/store-settings";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://luxijoias.com.br";
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Loja Oficial de Semijoias",
@@ -93,14 +94,19 @@ export default async function Home() {
 
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8">
           {featuredProducts.map((product) => (
-            <HomeProductCard
+            <ProductCard
               key={product.id}
               product={{
+                id: product.id,
                 name: product.name,
                 slug: product.slug,
                 price: product.price,
                 comparePrice: product.comparePrice,
                 image: product.image || "",
+                category: product.category,
+                variantId: product.variants.length === 1 ? product.variants[0]?.id ?? null : null,
+                requiresSelection: product.variants.length > 1,
+                whatsappBaseUrl: settings.whatsappUrl,
               }}
             />
           ))}

@@ -10,6 +10,7 @@ import { bannerSchema, pageSchema, productSchema, productVariantSchema } from "@
 import { ORDER_STATUS_TRANSITIONS, type OrderStatusKey } from "@/lib/constants";
 import type { AdminPermission } from "@/lib/admin-permissions";
 import { requireAdminPermission } from "@/lib/admin-auth";
+import { generateProductSeoWithAi } from "@/lib/product-seo-ai";
 import { logAdminAudit } from "@/lib/audit-log";
 import { issueMercadoPagoRefund } from "@/lib/mercado-pago";
 import {
@@ -133,6 +134,20 @@ export async function createProduct(formData: FormData) {
   const actor = await getAdminActor("products:manage");
 
   const { name, slug, description, metaTitle, metaDescription, image, galleryImages, price, comparePrice, sku, quantity, categoryId, brandId, status, variants } = parseProductFormData(formData);
+  const [category, brand] = await Promise.all([
+    prisma.category.findUnique({ where: { id: categoryId }, select: { name: true } }),
+    brandId ? prisma.brand.findUnique({ where: { id: brandId }, select: { name: true } }) : Promise.resolve(null),
+  ]);
+  const generatedSeo = (!metaTitle || !metaDescription)
+    ? await generateProductSeoWithAi({
+        name,
+        description,
+        category: category?.name,
+        brand: brand?.name,
+        price,
+        comparePrice,
+      })
+    : null;
 
   let createdProductId: string | null = null;
 
@@ -142,8 +157,8 @@ export async function createProduct(formData: FormData) {
         name,
         slug,
         description,
-        metaTitle,
-        metaDescription,
+        metaTitle: metaTitle || generatedSeo?.seoTitle || null,
+        metaDescription: metaDescription || generatedSeo?.metaDescription || null,
         image: image || null,
         price,
         comparePrice,
@@ -235,6 +250,21 @@ export async function updateProduct(id: string, formData: FormData) {
   const actor = await getAdminActor("products:manage");
 
   const { name, slug, description, metaTitle, metaDescription, image, galleryImages, price, comparePrice, sku, quantity, categoryId, brandId, status, variants } = parseProductFormData(formData);
+  const [category, brand] = await Promise.all([
+    prisma.category.findUnique({ where: { id: categoryId }, select: { name: true } }),
+    brandId ? prisma.brand.findUnique({ where: { id: brandId }, select: { name: true } }) : Promise.resolve(null),
+  ]);
+  const generatedSeo = (!metaTitle || !metaDescription)
+    ? await generateProductSeoWithAi({
+        name,
+        description,
+        category: category?.name,
+        brand: brand?.name,
+        price,
+        comparePrice,
+      })
+    : null
+;
 
   try {
     await prisma.product.update({
@@ -243,8 +273,8 @@ export async function updateProduct(id: string, formData: FormData) {
         name,
         slug,
         description,
-        metaTitle,
-        metaDescription,
+        metaTitle: metaTitle || generatedSeo?.seoTitle || null,
+        metaDescription: metaDescription || generatedSeo?.metaDescription || null,
         image: image || null,
         price,
         comparePrice,
@@ -565,6 +595,7 @@ export async function createBanner(formData: FormData) {
 
   revalidatePath("/admin/banners");
   revalidatePath("/");
+  revalidateTag("store:products", "max");
   redirect("/admin/banners");
 }
 
@@ -599,6 +630,7 @@ export async function updateBanner(id: string, formData: FormData) {
 
   revalidatePath("/admin/banners");
   revalidatePath("/");
+  revalidateTag("store:products", "max");
   redirect("/admin/banners");
 }
 
@@ -624,6 +656,7 @@ export async function deleteBanner(formData: FormData) {
 
   revalidatePath("/admin/banners");
   revalidatePath("/");
+  revalidateTag("store:products", "max");
 }
 
 export async function reorderBanners(formData: FormData) {
@@ -655,6 +688,7 @@ export async function reorderBanners(formData: FormData) {
 
   revalidatePath("/admin/banners");
   revalidatePath("/");
+  revalidateTag("store:products", "max");
 }
 
 function parsePageFormData(formData: FormData) {
