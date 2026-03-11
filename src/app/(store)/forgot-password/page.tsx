@@ -2,8 +2,11 @@
 
 import { useState, useTransition } from "react";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { requestPasswordResetAction } from "@/actions/account";
 import { useRecaptchaV3 } from "@/components/recaptcha/use-recaptcha-v3";
+import { AuthShell } from "@/components/auth/auth-shell";
 
 export default function ForgotPasswordPage() {
   const [message, setMessage] = useState<string | null>(null);
@@ -29,26 +32,30 @@ export default function ForgotPasswordPage() {
   }
 
   return (
-    <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
-      <section className="mx-auto max-w-md rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm sm:p-8">
-        <h1 className="text-2xl font-black tracking-tight text-zinc-950">Recuperar senha</h1>
-        <p className="mt-2 text-sm text-zinc-500">Informe seu e-mail para receber o link de redefinição.</p>
+    <AuthShell
+      eyebrow="Recuperação"
+      title="Recuperar senha"
+      description="Informe seu e-mail principal para receber um link seguro de redefinição de senha."
+      asideTitle="Recupere o acesso sem complicação"
+      asideDescription="Se o e-mail informado estiver cadastrado, enviamos um link de recuperação. Por segurança, a mensagem de retorno é discreta e não revela se a conta existe ou não."
+    >
+      <form action={onSubmit} className="space-y-4">
+        <div className="space-y-1.5">
+          <label htmlFor="forgot-email" className="text-sm font-semibold text-zinc-900">E-mail da conta</label>
+          <Input id="forgot-email" name="email" type="email" autoComplete="email" placeholder="voce@exemplo.com" required />
+        </div>
 
-        <form action={onSubmit} className="mt-6 space-y-4">
-          <input name="email" type="email" placeholder="Seu e-mail" required className="h-12 w-full rounded-xl border border-zinc-200 px-4 text-sm outline-none focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37]" />
+        {message ? <p className="rounded-[18px] border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-700">{message}</p> : null}
+        {error ? <p className="rounded-[18px] border border-rose-200 bg-rose-50 px-4 py-3 text-sm font-medium text-rose-700">{error}</p> : null}
 
-          {message ? <p className="text-sm font-medium text-emerald-700">{message}</p> : null}
-          {error ? <p className="text-sm font-medium text-red-600">{error}</p> : null}
+        <Button type="submit" disabled={isPending} className="h-12 w-full bg-[#111111] text-white hover:bg-[#111111]/92">
+          {isPending ? "Enviando..." : "Enviar link de recuperação"}
+        </Button>
+      </form>
 
-          <button type="submit" disabled={isPending} className="h-12 w-full rounded-xl bg-[#111111] text-sm font-bold text-white hover:bg-[#111111]/90 disabled:opacity-70">
-            {isPending ? "Enviando..." : "Enviar link"}
-          </button>
-        </form>
-
-        <p className="mt-4 text-sm text-zinc-500">
-          Lembrou a senha? <Link href="/login" className="font-semibold text-[#D4AF37] hover:text-[#b8932e]">Voltar para login</Link>
-        </p>
-      </section>
-    </div>
+      <p className="mt-5 border-t border-[#e7ddce] pt-5 text-sm text-zinc-600">
+        Lembrou a senha? <Link href="/login" className="font-semibold text-[#111111] underline decoration-[#D4AF37] decoration-2 underline-offset-4 hover:text-[#8a6e1e]">Voltar para login</Link>
+      </p>
+    </AuthShell>
   );
 }

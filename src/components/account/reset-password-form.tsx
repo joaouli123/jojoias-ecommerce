@@ -4,6 +4,8 @@ import { useState, useTransition } from "react";
 import Link from "next/link";
 import { resetPasswordAction } from "@/actions/account";
 import { useRecaptchaV3 } from "@/components/recaptcha/use-recaptcha-v3";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 type ResetPasswordFormProps = {
   token: string;
@@ -35,17 +37,21 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
   return (
     <form action={onSubmit} className="mt-6 space-y-4">
       <input type="hidden" name="token" value={token} />
-      <input name="password" type="password" minLength={6} required placeholder="Nova senha" className="h-12 w-full rounded-xl border border-zinc-200 px-4 text-sm outline-none focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37]" />
+      <div className="space-y-1.5">
+        <label htmlFor="reset-password" className="text-sm font-semibold text-zinc-900">Nova senha</label>
+        <Input id="reset-password" name="password" type="password" autoComplete="new-password" minLength={6} required placeholder="Crie uma nova senha segura" />
+        <p className="text-xs leading-5 text-zinc-500">Use pelo menos 6 caracteres. Se puder, combine letras e números.</p>
+      </div>
 
-      {message ? <p className="text-sm font-medium text-emerald-700">{message}</p> : null}
-      {error ? <p className="text-sm font-medium text-red-600">{error}</p> : null}
+      {message ? <p className="rounded-[18px] border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-700">{message}</p> : null}
+      {error ? <p className="rounded-[18px] border border-rose-200 bg-rose-50 px-4 py-3 text-sm font-medium text-rose-700">{error}</p> : null}
 
-      <button type="submit" disabled={isPending} className="h-12 w-full rounded-xl bg-[#111111] text-sm font-bold text-white hover:bg-[#111111]/90 disabled:opacity-70">
+      <Button type="submit" disabled={isPending} className="h-12 w-full bg-[#111111] text-white hover:bg-[#111111]/92">
         {isPending ? "Salvando..." : "Redefinir senha"}
-      </button>
+      </Button>
 
       <p className="text-sm text-zinc-500">
-        <Link href="/login" className="font-semibold text-[#D4AF37] hover:text-[#b8932e]">Voltar para login</Link>
+        <Link href="/login" className="font-semibold text-[#111111] underline decoration-[#D4AF37] decoration-2 underline-offset-4 hover:text-[#8a6e1e]">Voltar para login</Link>
       </p>
     </form>
   );

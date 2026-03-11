@@ -6,6 +6,7 @@ import { signIn } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useRecaptchaV3 } from "@/components/recaptcha/use-recaptcha-v3";
+import { AuthShell } from "@/components/auth/auth-shell";
 
 type RegisterResponse = {
   error?: string;
@@ -63,56 +64,86 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
-      <section className="mx-auto max-w-md rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm sm:p-8">
-      <h1 className="text-2xl font-black tracking-tight text-zinc-950">Criar conta</h1>
-      <p className="mt-2 text-sm text-zinc-500">Compre mais rápido e acompanhe pedidos em tempo real.</p>
+    <AuthShell
+      eyebrow="Cadastro"
+      title="Criar conta"
+      description="Preencha seus dados para acompanhar pedidos, salvar favoritos e finalizar compras com mais rapidez."
+      asideTitle="Cadastro rápido, claro e sem ruído"
+      asideDescription="Pedimos apenas as informações necessárias para sua conta começar bem configurada. Depois você pode completar endereço e outros dados dentro da área do cliente."
+    >
+      <form className="space-y-4" onSubmit={onSubmit}>
+        <div className="space-y-1.5">
+          <label htmlFor="register-name" className="text-sm font-semibold text-zinc-900">Nome completo</label>
+          <Input
+            id="register-name"
+            type="text"
+            autoComplete="name"
+            placeholder="Como devemos te chamar?"
+            value={name}
+            onChange={(event) => setName(event.target.value)}
+            required
+          />
+        </div>
 
-      <form className="mt-6 space-y-4" onSubmit={onSubmit}>
-        <Input
-          type="text"
-          placeholder="Seu nome"
-          value={name}
-          onChange={(event) => setName(event.target.value)}
-          required
-        />
-        <Input
-          type="email"
-          placeholder="Seu e-mail"
-          value={email}
-          onChange={(event) => setEmail(event.target.value)}
-          required
-        />
-        <Input
-          type="password"
-          placeholder="Crie uma senha"
-          value={password}
-          onChange={(event) => setPassword(event.target.value)}
-          minLength={6}
-          required
-        />
-        <Input
-          type="tel"
-          placeholder="Telefone (opcional)"
-          value={phone}
-          onChange={(event) => setPhone(event.target.value)}
-        />
+        <div className="space-y-1.5">
+          <label htmlFor="register-email" className="text-sm font-semibold text-zinc-900">E-mail principal</label>
+          <Input
+            id="register-email"
+            type="email"
+            autoComplete="email"
+            placeholder="voce@exemplo.com"
+            value={email}
+            onChange={(event) => setEmail(event.target.value)}
+            required
+          />
+          <p className="text-xs leading-5 text-zinc-500">Usaremos esse e-mail para login, recuperação de senha, pedidos e mensagens importantes da compra.</p>
+        </div>
 
-        {error ? <p className="text-sm font-medium text-red-600">{error}</p> : null}
+        <div className="space-y-1.5">
+          <label htmlFor="register-password" className="text-sm font-semibold text-zinc-900">Senha</label>
+          <Input
+            id="register-password"
+            type="password"
+            autoComplete="new-password"
+            placeholder="Crie uma senha segura"
+            value={password}
+            onChange={(event) => setPassword(event.target.value)}
+            minLength={6}
+            required
+          />
+          <p className="text-xs leading-5 text-zinc-500">Use pelo menos 6 caracteres. Se puder, combine letras e números para aumentar a segurança.</p>
+        </div>
 
-        <Button type="submit" className="h-12 w-full bg-blue-600 hover:bg-blue-700" disabled={isLoading}>
+        <div className="space-y-1.5">
+          <label htmlFor="register-phone" className="text-sm font-semibold text-zinc-900">Telefone</label>
+          <Input
+            id="register-phone"
+            type="tel"
+            autoComplete="tel"
+            placeholder="Opcional, para contato e suporte"
+            value={phone}
+            onChange={(event) => setPhone(event.target.value)}
+          />
+        </div>
+
+        {error ? <p className="rounded-[18px] border border-rose-200 bg-rose-50 px-4 py-3 text-sm font-medium text-rose-700">{error}</p> : null}
+
+        <div className="rounded-[20px] border border-[#eadfce] bg-[#fffaf1] px-4 py-3 text-xs leading-5 text-zinc-600">
+          Ao criar sua conta, você poderá acompanhar pedidos, recuperar acesso por e-mail e receber comunicações transacionais da loja quando necessário.
+        </div>
+
+        <Button type="submit" className="h-12 w-full bg-[#111111] text-white hover:bg-[#111111]/92" disabled={isLoading}>
           {isLoading ? "Criando conta..." : "Criar conta"}
         </Button>
       </form>
 
-      <p className="mt-4 text-sm text-zinc-500">
+      <p className="mt-5 border-t border-[#e7ddce] pt-5 text-sm text-zinc-600">
         Já possui conta?{" "}
-        <Link href="/login" className="font-semibold text-blue-600 hover:text-blue-700">
+        <Link href="/login" className="font-semibold text-[#111111] underline decoration-[#D4AF37] decoration-2 underline-offset-4 hover:text-[#8a6e1e]">
           Entrar
         </Link>
       </p>
-    </section>
-  </div>
+    </AuthShell>
   );
 }
 

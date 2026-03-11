@@ -6,6 +6,7 @@ import { getSession, signIn } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useRecaptchaV3 } from "@/components/recaptcha/use-recaptcha-v3";
+import { AuthShell } from "@/components/auth/auth-shell";
 
 const STAFF_ROLES = new Set(["SUPER_ADMIN", "ADMIN", "MANAGER", "EDITOR", "SUPPORT"]);
 
@@ -52,49 +53,60 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
-      <section className="mx-auto max-w-md rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm sm:p-8">
-      <h1 className="text-2xl font-black tracking-tight text-zinc-950">Entrar na conta</h1>
-      <p className="mt-2 text-sm text-zinc-500">Acesse seu histórico, pedidos e checkout rápido.</p>
+    <AuthShell
+      eyebrow="Acesso"
+      title="Entrar na conta"
+      description="Acesse seus pedidos, favoritos e checkout rápido com o mesmo padrão visual da loja."
+    >
+      <form className="space-y-4" onSubmit={onSubmit}>
+        <div className="space-y-1.5">
+          <label htmlFor="login-email" className="text-sm font-semibold text-zinc-900">E-mail</label>
+          <Input
+            id="login-email"
+            type="email"
+            autoComplete="email"
+            placeholder="voce@exemplo.com"
+            value={email}
+            onChange={(event) => setEmail(event.target.value)}
+            required
+          />
+        </div>
 
-      <form className="mt-6 space-y-4" onSubmit={onSubmit}>
-        <Input
-          type="email"
-          placeholder="Seu e-mail"
-          value={email}
-          onChange={(event) => setEmail(event.target.value)}
-          required
-        />
-        <Input
-          type="password"
-          placeholder="Sua senha"
-          value={password}
-          onChange={(event) => setPassword(event.target.value)}
-          required
-        />
+        <div className="space-y-1.5">
+          <label htmlFor="login-password" className="text-sm font-semibold text-zinc-900">Senha</label>
+          <Input
+            id="login-password"
+            type="password"
+            autoComplete="current-password"
+            placeholder="Digite sua senha"
+            value={password}
+            onChange={(event) => setPassword(event.target.value)}
+            required
+          />
+        </div>
 
-        {error ? <p className="text-sm font-medium text-red-600">{error}</p> : null}
+        {error ? <p className="rounded-[18px] border border-rose-200 bg-rose-50 px-4 py-3 text-sm font-medium text-rose-700">{error}</p> : null}
 
-        <Button type="submit" className="h-12 w-full bg-blue-600 hover:bg-blue-700" disabled={isLoading}>
+        <Button type="submit" className="h-12 w-full bg-[#111111] text-white hover:bg-[#111111]/92" disabled={isLoading}>
           {isLoading ? "Entrando..." : "Entrar"}
         </Button>
       </form>
 
-      <p className="mt-4 text-sm text-zinc-500">
-        Ainda não tem conta?{" "}
-        <Link href="/register" className="font-semibold text-blue-600 hover:text-blue-700">
-          Criar conta
-        </Link>
-      </p>
-
-      <p className="mt-3 text-sm text-zinc-500">
-        Esqueceu sua senha?{" "}
-        <Link href="/forgot-password" className="font-semibold text-[#D4AF37] hover:text-[#b8932e]">
-          Recuperar acesso
-        </Link>
-      </p>
-    </section>
-  </div>
+      <div className="mt-5 space-y-3 border-t border-[#e7ddce] pt-5 text-sm text-zinc-600">
+        <p>
+          Ainda não tem conta?{" "}
+          <Link href="/register" className="font-semibold text-[#111111] underline decoration-[#D4AF37] decoration-2 underline-offset-4 hover:text-[#8a6e1e]">
+            Criar conta
+          </Link>
+        </p>
+        <p>
+          Esqueceu sua senha?{" "}
+          <Link href="/forgot-password" className="font-semibold text-[#8a6e1e] underline decoration-[#D4AF37]/50 underline-offset-4 hover:text-[#6f5817]">
+            Recuperar acesso
+          </Link>
+        </p>
+      </div>
+    </AuthShell>
   );
 }
 
