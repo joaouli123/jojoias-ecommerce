@@ -22,7 +22,10 @@ export function BenefitsCarousel() {
 
   const scroll = (direction: "left" | "right") => {
     if (scrollRef.current) {
-      const scrollAmount = direction === "left" ? -300 : 300;
+      const firstCard = scrollRef.current.firstElementChild as HTMLElement | null;
+      const cardWidth = firstCard?.clientWidth ?? scrollRef.current.clientWidth * 0.85;
+      const gap = 16;
+      const scrollAmount = direction === "left" ? -(cardWidth + gap) : cardWidth + gap;
       scrollRef.current.scrollBy({ left: scrollAmount, behavior: "smooth" });
     }
   };
@@ -36,30 +39,27 @@ export function BenefitsCarousel() {
 
   return (
     <section className="bg-white pt-8 md:pt-12 relative group max-w-[1440px] w-full mx-auto px-4 sm:px-6 lg:px-8">
-      <div className="rounded-xl border border-zinc-200 bg-zinc-50/50 px-2 py-6 md:px-0 relative w-full">
-        <div 
-          ref={scrollRef}
-          className="flex overflow-x-auto snap-x snap-mandatory no-scrollbar md:grid md:grid-cols-4 items-center w-full"
-        >
-          {benefits.map((benefit, i) => (
-            <div key={i} className={`flex items-center px-2 min-w-full md:min-w-0 snap-center justify-center w-full group/item ${i !== benefits.length - 1 ? 'md:border-r md:border-zinc-200' : ''}`}>
-              <div className="flex items-center gap-4 p-3 rounded-xl transition-colors hover:bg-zinc-100/50 w-full justify-center">
-                <benefit.icon className="w-8 h-8 stroke-[1.5] text-zinc-900 shrink-0" />
-                <div className="flex flex-col text-left">
-                  <strong className="block text-sm md:text-[15px] font-bold text-zinc-950 leading-tight">{benefit.title}</strong>
-                  <span className="text-xs md:text-[13px] text-zinc-600">{benefit.subtitle}</span>
-                </div>
+      <div 
+        ref={scrollRef}
+        className="flex overflow-x-auto snap-x snap-mandatory gap-4 no-scrollbar pb-2 md:grid md:grid-cols-4 md:gap-4 md:overflow-visible md:pb-0"
+      >
+        {benefits.map((benefit, i) => (
+          <div key={i} className="min-w-[85vw] md:min-w-0 snap-center rounded-2xl border border-zinc-200 bg-zinc-50/60 p-6 shadow-sm">
+            <div className="flex items-center gap-4">
+              <benefit.icon className="w-8 h-8 stroke-[1.5] text-zinc-900 shrink-0" />
+              <div className="flex flex-col text-left">
+                <strong className="block text-sm md:text-[15px] font-bold text-zinc-950 leading-tight">{benefit.title}</strong>
+                <span className="text-xs md:text-[13px] text-zinc-600">{benefit.subtitle}</span>
               </div>
             </div>
-          ))}
         </div>
+        ))}
       </div>
-
       <button 
         type="button"
         onClick={() => scroll("left")}
         aria-label="Ver benefícios anteriores"
-        className="absolute left-1 top-[55%] -translate-y-1/2 w-10 h-10 items-center justify-center bg-white rounded-full shadow-lg z-10 text-zinc-900 md:hidden flex"
+        className="absolute left-2 top-1/2 -translate-y-1/2 w-11 h-11 items-center justify-center bg-white/95 rounded-full shadow-lg z-20 text-zinc-900 md:hidden flex"
       >
         <ChevronLeft className="w-6 h-6" />
       </button>
@@ -67,7 +67,7 @@ export function BenefitsCarousel() {
         type="button"
         onClick={() => scroll("right")}
         aria-label="Ver próximos benefícios"
-        className="absolute right-1 top-[55%] -translate-y-1/2 w-10 h-10 items-center justify-center bg-white rounded-full shadow-lg z-10 text-zinc-900 md:hidden flex"
+        className="absolute right-2 top-1/2 -translate-y-1/2 w-11 h-11 items-center justify-center bg-white/95 rounded-full shadow-lg z-20 text-zinc-900 md:hidden flex"
       >
         <ChevronRight className="w-6 h-6" />
       </button>
@@ -80,17 +80,23 @@ export function BannerCarousel({ banners = [] }: { banners?: StoreBanner[] }) {
 
   const scroll = (direction: "left" | "right") => {
     if (scrollRef.current) {
-      const scrollAmount = direction === "left" ? -scrollRef.current.clientWidth : scrollRef.current.clientWidth;
+      const slideWidth = scrollRef.current.clientWidth;
+      const scrollAmount = direction === "left" ? -slideWidth : slideWidth;
       scrollRef.current.scrollBy({ left: scrollAmount, behavior: "smooth" });
     }
   };
 
   const fallbackBanners: StoreBanner[] = [
     { id: "hero-1", title: "Banner principal", subtitle: null, imageUrl: "/banner-home-luxijoias.avif", mobileUrl: null, href: null, placement: "hero", position: 0 },
-    { id: "hero-2", title: "Coleção Premium", subtitle: "Peças com brilho elegante e acabamento refinado.", imageUrl: "/demo-products/banner-hero.svg", mobileUrl: "/demo-products/banner-hero.svg", href: "/search?q=colecao", placement: "hero", position: 1 },
+    { id: "hero-2", title: "Banner secundário", subtitle: null, imageUrl: "/banner-home-secundario-luxijoias.avif", mobileUrl: "/banner-home-secundario-luxijoias.avif", href: null, placement: "hero", position: 1 },
   ];
 
-  const items = banners.length ? banners : fallbackBanners;
+  const items = banners.length
+    ? [
+        ...banners,
+        ...fallbackBanners.filter((fallbackBanner) => !banners.some((banner) => banner.id === fallbackBanner.id)),
+      ].slice(0, Math.max(2, banners.length))
+    : fallbackBanners;
 
   return (
     <section className="w-full max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 mt-4 md:mt-6 relative group">
@@ -103,14 +109,13 @@ export function BannerCarousel({ banners = [] }: { banners?: StoreBanner[] }) {
             const isFirstBanner = banner.id === items[0]?.id;
             const desktopImage = resolveBannerImageUrl(
               banner.imageUrl,
-              isFirstBanner ? "/banner-home-luxijoias.avif" : "/demo-products/banner-hero.svg",
+              isFirstBanner ? "/banner-home-luxijoias.avif" : "/banner-home-secundario-luxijoias.avif",
             );
             const mobileImage = resolveBannerImageUrl(
               banner.mobileUrl || banner.imageUrl,
-              isFirstBanner ? "/banner-home-luxijoias.avif" : "/demo-products/banner-hero.svg",
+              isFirstBanner ? "/banner-home-luxijoias.avif" : "/banner-home-secundario-luxijoias.avif",
             );
-            const hasVisibleCopy = Boolean(banner.title || banner.subtitle);
-            const imageAlt = banner.href && hasVisibleCopy ? "" : banner.title || "Banner principal da loja";
+            const imageAlt = banner.title || "Banner principal da loja";
             const content = (
               <>
                 <div className="absolute inset-0 hidden md:block">
@@ -137,15 +142,6 @@ export function BannerCarousel({ banners = [] }: { banners?: StoreBanner[] }) {
                     className="object-cover"
                   />
                 </div>
-                <div className="absolute inset-0 bg-gradient-to-r from-black/55 via-black/15 to-transparent" />
-                {(banner.title || banner.subtitle) ? (
-                  <div className="absolute inset-x-0 bottom-0 z-10 p-6 text-white md:p-10">
-                    <div className="max-w-xl">
-                      <h2 className="text-2xl font-black tracking-tight md:text-4xl">{banner.title}</h2>
-                      {banner.subtitle ? <p className="mt-3 text-sm leading-6 text-white/90 md:text-base">{banner.subtitle}</p> : null}
-                    </div>
-                  </div>
-                ) : null}
               </>
             );
 
@@ -165,7 +161,7 @@ export function BannerCarousel({ banners = [] }: { banners?: StoreBanner[] }) {
           type="button"
           onClick={() => scroll("left")}
           aria-label="Ver banner anterior"
-          className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 flex items-center justify-center bg-white/90 rounded-full shadow-md z-10 text-zinc-900 opacity-0 group-hover:opacity-100 transition-opacity md:flex"
+          className="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 w-11 h-11 flex items-center justify-center bg-white/95 rounded-full shadow-lg z-20 text-zinc-900 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity"
         >
           <ChevronLeft className="w-6 h-6" />
         </button>
@@ -173,7 +169,7 @@ export function BannerCarousel({ banners = [] }: { banners?: StoreBanner[] }) {
           type="button"
           onClick={() => scroll("right")}
           aria-label="Ver próximo banner"
-          className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 flex items-center justify-center bg-white/90 rounded-full shadow-md z-10 text-zinc-900 opacity-0 group-hover:opacity-100 transition-opacity md:flex"
+          className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 w-11 h-11 flex items-center justify-center bg-white/95 rounded-full shadow-lg z-20 text-zinc-900 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity"
         >
           <ChevronRight className="w-6 h-6" />
         </button>
@@ -187,7 +183,10 @@ export function SecondaryBanners({ banners = [] }: { banners?: StoreBanner[] }) 
 
   const scroll = (direction: "left" | "right") => {
     if (scrollRef.current) {
-      const scrollAmount = direction === "left" ? -300 : 300;
+      const firstCard = scrollRef.current.firstElementChild as HTMLElement | null;
+      const cardWidth = firstCard?.clientWidth ?? scrollRef.current.clientWidth * 0.85;
+      const gap = 16;
+      const scrollAmount = direction === "left" ? -(cardWidth + gap) : cardWidth + gap;
       scrollRef.current.scrollBy({ left: scrollAmount, behavior: "smooth" });
     }
   };
@@ -237,7 +236,7 @@ export function SecondaryBanners({ banners = [] }: { banners?: StoreBanner[] }) 
         type="button"
         onClick={() => scroll("left")}
         aria-label="Ver promoções anteriores"
-        className="absolute left-1 md:-left-4 top-1/2 -translate-y-1/2 w-10 h-10 items-center justify-center bg-white rounded-full shadow-lg z-10 text-zinc-900 group-hover:opacity-100 transition-opacity flex md:hidden"
+        className="absolute left-2 top-1/2 -translate-y-1/2 w-11 h-11 items-center justify-center bg-white/95 rounded-full shadow-lg z-20 text-zinc-900 flex md:hidden"
       >
         <ChevronLeft className="w-6 h-6" />
       </button>
@@ -245,7 +244,7 @@ export function SecondaryBanners({ banners = [] }: { banners?: StoreBanner[] }) 
         type="button"
         onClick={() => scroll("right")}
         aria-label="Ver próximas promoções"
-        className="absolute right-1 md:-right-4 top-1/2 -translate-y-1/2 w-10 h-10 items-center justify-center bg-white rounded-full shadow-lg z-10 text-zinc-900 group-hover:opacity-100 transition-opacity flex md:hidden"
+        className="absolute right-2 top-1/2 -translate-y-1/2 w-11 h-11 items-center justify-center bg-white/95 rounded-full shadow-lg z-20 text-zinc-900 flex md:hidden"
       >
         <ChevronRight className="w-6 h-6" />
       </button>

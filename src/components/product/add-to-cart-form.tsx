@@ -155,9 +155,9 @@ export function AddToCartForm({ product, variants, totalAvailableQuantity, onVar
                 >
                   {variant.type === "cor" ? (
                     <>
-                      <span className={`flex h-11 w-11 items-center justify-center rounded-full border bg-white shadow-sm transition ${selected ? "border-zinc-900 ring-2 ring-zinc-900/15" : "border-zinc-200 hover:border-zinc-400"}`}>
+                      <span className={`flex h-11 w-11 items-center justify-center rounded-full border bg-white shadow-sm transition ${selected ? "border-[#D4AF37] ring-2 ring-[#D4AF37]/20" : "border-zinc-200 hover:border-zinc-400"}`}>
                         <span
-                          className={`h-6 w-6 rounded-full border ${selected ? "border-white shadow-[0_0_0_1px_rgba(24,24,27,0.08)]" : "border-zinc-200"}`}
+                          className={`h-6 w-6 rounded-full border ${selected ? "border-white shadow-[0_0_0_1px_rgba(212,175,55,0.2)]" : "border-zinc-200"}`}
                           style={{ backgroundColor: swatchColor || "#ffffff" }}
                         />
                       </span>
@@ -166,7 +166,7 @@ export function AddToCartForm({ product, variants, totalAvailableQuantity, onVar
                       </span>
                     </>
                   ) : (
-                    <span className={`inline-flex min-h-11 min-w-[72px] items-center justify-center rounded-full border px-3 py-2 text-sm font-medium transition ${selected ? "border-zinc-900 bg-zinc-900 text-white" : "border-zinc-300 bg-white text-zinc-900 hover:border-zinc-500"}`}>
+                    <span className={`inline-flex min-h-11 min-w-[72px] items-center justify-center rounded-full border px-3 py-2 text-sm font-medium transition ${selected ? "border-[#D4AF37] bg-[#D4AF37] text-[#111827]" : "border-zinc-300 bg-white text-zinc-900 hover:border-zinc-500"}`}>
                       {variant.label}
                     </span>
                   )}

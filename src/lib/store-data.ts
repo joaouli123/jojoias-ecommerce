@@ -754,25 +754,21 @@ export async function getStoreBanners(placement: "hero" | "secondary"): Promise<
   const now = new Date();
 
   try {
-    const banners = await unstable_cache(
-      async () => prisma.banner.findMany({
-        where: {
-          placement,
-          isActive: true,
-          AND: [
-            {
-              OR: [{ startsAt: null }, { startsAt: { lte: now } }],
-            },
-            {
-              OR: [{ endsAt: null }, { endsAt: { gte: now } }],
-            },
-          ],
-        },
-        orderBy: [{ position: "asc" }, { createdAt: "desc" }],
-      }),
-      ["store-banners", placement],
-      { revalidate: 300, tags: ["store:banners", `store:banners:${placement}`] },
-    )();
+    const banners = await prisma.banner.findMany({
+      where: {
+        placement,
+        isActive: true,
+        AND: [
+          {
+            OR: [{ startsAt: null }, { startsAt: { lte: now } }],
+          },
+          {
+            OR: [{ endsAt: null }, { endsAt: { gte: now } }],
+          },
+        ],
+      },
+      orderBy: [{ position: "asc" }, { createdAt: "desc" }],
+    });
 
     return banners.map((banner) => ({
       id: banner.id,

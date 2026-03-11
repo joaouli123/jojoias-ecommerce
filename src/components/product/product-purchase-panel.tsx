@@ -151,13 +151,13 @@ export function ProductPurchasePanel({
             </span>
           ) : null}
           <div className="flex flex-col">
-            <span className="mb-3 text-[30px] font-bold leading-none tracking-tight text-[#D4AF37]">
+            <span className="mb-3 text-[30px] font-bold leading-none tracking-tight text-zinc-950">
               {formatCurrency(product.price)}
             </span>
 
             <div className="flex items-center gap-2">
               <PixIcon className="h-[18px] w-[18px] text-[#32BCAD]" />
-              <span className="text-[16px] font-bold text-[#32BCAD]">{formatCurrency(pixPrice)} no Pix</span>
+              <span className="text-[16px] font-bold text-zinc-950">{formatCurrency(pixPrice)} no Pix</span>
             </div>
           </div>
         </div>

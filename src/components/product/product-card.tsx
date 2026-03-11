@@ -139,17 +139,17 @@ export function ProductCard({ product }: ProductCardProps) {
             </span>
           )}
           
-          <span className="text-2xl font-black tracking-tight text-[#D4AF37] leading-none mb-1">
+          <span className="text-2xl font-black tracking-tight text-zinc-950 leading-none mb-1">
             {formatCurrency(product.price)}
           </span>
           
-          <span className="text-xs font-medium text-zinc-500 mb-3">
+          <span className="text-xs font-medium text-zinc-900 mb-3">
             até {parcelas}x de {formatCurrency(valorParcela)} sem juros
           </span>
 
           <div className="w-full pt-3 border-t border-zinc-100 flex items-center justify-center gap-1.5 mt-2">
             <PixIcon className="w-[14px] h-[14px] text-[#32BCAD] shrink-0" />
-            <span className="text-sm font-bold text-[#32BCAD]">
+            <span className="text-sm font-bold text-zinc-950">
               ou {formatCurrency(pixPrice)} via Pix
             </span>
           </div>

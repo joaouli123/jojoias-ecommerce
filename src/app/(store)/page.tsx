@@ -3,8 +3,7 @@ import type { Metadata } from "next";
 import Script from "next/script";
 import { HomeProductCard } from "@/components/product/home-product-card";
 import { getBrandsAction, getCategoriesAction, getFeaturedProductsAction, getStoreBannersAction } from "@/actions/products";
-import { BannerCarousel, CategoriesCarousel, SecondaryBanners } from "@/components/home/carousels";
-import { BenefitsStrip } from "@/components/home/benefits-strip";
+import { BannerCarousel, BenefitsCarousel, CategoriesCarousel, SecondaryBanners } from "@/components/home/carousels";
 import { BrandGrid } from "@/components/catalog/brand-grid";
 import { getStoreSettings } from "@/lib/store-settings";
 
@@ -59,7 +58,7 @@ export default async function Home() {
 
       <BannerCarousel banners={heroBanners} />
 
-      <BenefitsStrip />
+      <BenefitsCarousel />
 
       <section className="bg-white py-8 md:py-12">
         <SecondaryBanners banners={secondaryBanners} />

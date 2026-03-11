@@ -133,7 +133,7 @@ export function SearchBar() {
                       <p className="text-sm font-semibold text-zinc-900">{product.name}</p>
                       <p className="text-xs text-zinc-500">{product.category}</p>
                     </div>
-                    <span className="text-sm font-bold text-[#D4AF37]">{formatCurrency(product.price)}</span>
+                    <span className="text-sm font-bold text-zinc-950">{formatCurrency(product.price)}</span>
                   </Link>
                 ))}
               </div>

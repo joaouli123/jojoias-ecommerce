@@ -48,13 +48,13 @@ export function HomeProductCard({ product }: HomeProductCardProps) {
             <span className="text-sm font-medium text-zinc-400 line-through decoration-zinc-400/50">{formatCurrency(oldPrice)}</span>
           ) : null}
 
-          <span className="mb-1 text-2xl font-black leading-none tracking-tight text-[#D4AF37]">{formatCurrency(product.price)}</span>
+          <span className="mb-1 text-2xl font-black leading-none tracking-tight text-zinc-950">{formatCurrency(product.price)}</span>
 
-          <span className="mb-3 text-xs font-medium text-zinc-500">até {parcelas}x de {formatCurrency(valorParcela)} sem juros</span>
+          <span className="mb-3 text-xs font-medium text-zinc-900">até {parcelas}x de {formatCurrency(valorParcela)} sem juros</span>
 
           <div className="mt-2 flex w-full items-center justify-center gap-1.5 border-t border-zinc-100 pt-3">
             <PixIcon className="h-[14px] w-[14px] shrink-0 text-[#32BCAD]" />
-            <span className="text-sm font-bold text-[#32BCAD]">ou {formatCurrency(pixPrice)} via Pix</span>
+            <span className="text-sm font-bold text-zinc-950">ou {formatCurrency(pixPrice)} via Pix</span>
           </div>
         </div>
       </div>
