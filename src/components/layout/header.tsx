@@ -74,9 +74,10 @@ export async function Header() {
           <Link href="/" className="flex shrink-0 items-center justify-center group">
             <Image
               src="/logo-oficial.avif"
-              alt="JoJoias Semijoias"
+              alt="Luxijóias Semijoias"
               width={200}
               height={60}
+              quality={50}
               priority
               sizes="(max-width: 640px) 150px, (max-width: 1024px) 170px, 200px"
               className="h-auto w-[150px] sm:w-[170px] lg:w-[200px]"
@@ -126,11 +127,11 @@ export async function Header() {
                     </div>
                   </Link>
                   <div className="w-full h-px bg-zinc-100"></div>
-                  <Link href={`mailto:${settings.supportEmail}`} className="flex gap-3 items-center rounded-2xl transition-colors hover:bg-zinc-50 -mx-2 px-2 py-1.5">
+                  <Link href="/contato" className="flex gap-3 items-center rounded-2xl transition-colors hover:bg-zinc-50 -mx-2 px-2 py-1.5">
                     <Mail className="w-5 h-5 text-zinc-900 shrink-0" />
                     <div className="flex flex-col">
                       <span className="text-[13px] font-bold text-zinc-900 leading-none mb-1">E-mail:</span>
-                      <span className="text-[14px] text-zinc-600 leading-none">{settings.supportEmail}</span>
+                      <span className="text-[14px] text-zinc-600 leading-none">Abrir atendimento por e-mail</span>
                     </div>
                   </Link>
                   <div className="w-full h-px bg-zinc-100"></div>

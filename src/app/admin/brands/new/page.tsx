@@ -20,12 +20,12 @@ export default async function NewBrandPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
               <label htmlFor="name" className="text-sm font-medium text-gray-700">Nome da marca *</label>
-              <input type="text" id="name" name="name" required className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500" placeholder="Ex: JoJoias Premium" />
+              <input type="text" id="name" name="name" required className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500" placeholder="Ex: Luxijóias Premium" />
             </div>
 
             <div className="space-y-2">
               <label htmlFor="slug" className="text-sm font-medium text-gray-700">Slug URL</label>
-              <input type="text" id="slug" name="slug" className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500" placeholder="jojoias-premium" />
+              <input type="text" id="slug" name="slug" className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500" placeholder="luxijoias-premium" />
             </div>
           </div>
 

@@ -50,6 +50,12 @@ const nextConfig: NextConfig = {
         ],
       },
       {
+        source: "/logo-oficial.avif",
+        headers: [
+          { key: "Cache-Control", value: "public, max-age=31536000, immutable" },
+        ],
+      },
+      {
         source: "/banner-home-jojoias.avif",
         headers: [
           { key: "Cache-Control", value: "public, max-age=31536000, immutable" },
@@ -57,6 +63,18 @@ const nextConfig: NextConfig = {
       },
       {
         source: "/formas-pagamento-jojoias.avif",
+        headers: [
+          { key: "Cache-Control", value: "public, max-age=31536000, immutable" },
+        ],
+      },
+      {
+        source: "/banner-home-luxijoias.avif",
+        headers: [
+          { key: "Cache-Control", value: "public, max-age=31536000, immutable" },
+        ],
+      },
+      {
+        source: "/formas-pagamento-luxijoias.avif",
         headers: [
           { key: "Cache-Control", value: "public, max-age=31536000, immutable" },
         ],

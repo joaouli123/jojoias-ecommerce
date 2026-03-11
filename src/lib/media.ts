@@ -123,7 +123,7 @@ function uploadBufferToCloudinary(buffer: Buffer, fileName: string, mimeType: st
   return new Promise<{ secure_url: string; public_id: string; bytes: number }>((resolve, reject) => {
     const upload = cloudinary.uploader.upload_stream(
       {
-        folder: "jojoias/media",
+        folder: "luxijoias/media",
         public_id: fileName.replace(/\.[^.]+$/, ""),
         resource_type: mimeType === "image/svg+xml" ? "image" : "auto",
         overwrite: false,

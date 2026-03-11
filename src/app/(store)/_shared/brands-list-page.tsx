@@ -7,13 +7,13 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://luxijoias.com.br"
 
 export const brandsListMetadata: Metadata = {
   title: "Marcas",
-  description: "Explore todas as marcas disponíveis na JoJoias com acesso rápido às vitrines dedicadas de cada uma.",
+  description: "Explore todas as marcas disponíveis na Luxijóias com acesso rápido às vitrines dedicadas de cada uma.",
   alternates: {
     canonical: "/marcas",
   },
   openGraph: {
-    title: "Marcas | JoJoias",
-    description: "Explore todas as marcas disponíveis na JoJoias com acesso rápido às vitrines dedicadas de cada uma.",
+    title: "Marcas | Luxijóias",
+    description: "Explore todas as marcas disponíveis na Luxijóias com acesso rápido às vitrines dedicadas de cada uma.",
     url: `${siteUrl}/marcas`,
     type: "website",
     locale: "pt_BR",
@@ -29,7 +29,7 @@ export async function BrandsListPage() {
 
       <div className="rounded-3xl border border-zinc-200 bg-gradient-to-br from-white to-zinc-50 px-6 py-10 md:px-10 md:py-12">
         <div className="max-w-3xl">
-          <p className="text-xs font-bold uppercase tracking-[0.3em] text-[#D4AF37]">Curadoria JoJoias</p>
+          <p className="text-xs font-bold uppercase tracking-[0.3em] text-[#D4AF37]">Curadoria Luxijóias</p>
           <h1 className="mt-4 text-3xl md:text-5xl font-black tracking-tight text-zinc-950">Marcas em destaque</h1>
           <p className="mt-4 text-sm md:text-base leading-7 text-zinc-600">
             Navegue por todas as marcas disponíveis no catálogo e encontre coleções, estilos e faixas de preço com páginas dedicadas para cada vitrine.

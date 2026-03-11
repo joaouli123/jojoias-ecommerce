@@ -71,8 +71,8 @@ export async function generateMetadata({ searchParams }: { searchParams: Promise
   return {
     title,
     description: query
-      ? `Resultados de busca para ${query} na JoJoias.`
-      : "Pesquise semijoias, acessórios e novidades da JoJoias.",
+      ? `Resultados de busca para ${query} na Luxijóias.`
+      : "Pesquise semijoias, acessórios e novidades da Luxijóias.",
     robots: {
       index: false,
       follow: true,
@@ -81,10 +81,10 @@ export async function generateMetadata({ searchParams }: { searchParams: Promise
       canonical: query ? `/search?q=${encodeURIComponent(query)}` : "/search",
     },
     openGraph: {
-      title: `${title} | JoJoias`,
+      title: `${title} | Luxijóias`,
       description: query
-        ? `Resultados de busca para ${query} na JoJoias.`
-        : "Pesquise semijoias, acessórios e novidades da JoJoias.",
+        ? `Resultados de busca para ${query} na Luxijóias.`
+        : "Pesquise semijoias, acessórios e novidades da Luxijóias.",
       url: query ? `${siteUrl}/search?q=${encodeURIComponent(query)}` : `${siteUrl}/search`,
       type: "website",
     },

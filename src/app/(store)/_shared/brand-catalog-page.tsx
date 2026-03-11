@@ -86,7 +86,7 @@ export async function generateBrandCatalogMetadata({ params }: { params: Promise
       canonical: `/marca/${slug}`,
     },
     openGraph: {
-      title: `${brand.name} | JoJoias`,
+      title: `${brand.name} | Luxijóias`,
       description: `Explore os produtos da marca ${brand.name} com curadoria premium e entrega rápida em todo o Brasil.`,
       url: `${siteUrl}/marca/${slug}`,
       type: "website",

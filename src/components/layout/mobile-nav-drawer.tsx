@@ -43,7 +43,7 @@ export function MobileNavDrawer() {
       >
         <div className="flex items-center justify-between border-b border-zinc-200 px-5 py-4">
           <div className="space-y-2">
-            <Image src="/logo-oficial.avif" alt="JoJoias Semijoias" width={170} height={50} sizes="150px" className="h-auto w-[150px]" />
+            <Image src="/logo-oficial.avif" alt="Luxijóias Semijoias" width={170} height={50} quality={50} sizes="150px" className="h-auto w-[150px]" />
             <h2 className="text-lg font-black text-zinc-900">Menu</h2>
           </div>
           <button

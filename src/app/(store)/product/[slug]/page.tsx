@@ -26,7 +26,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
   const description =
     product.description ||
-    "Produto premium JoJoias com compra segura e entrega rápida para todo o Brasil."
+    "Produto premium Luxijóias com compra segura e entrega rápida para todo o Brasil."
 
   return {
     title: product.name,
@@ -65,7 +65,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
   const oldPrice = product.comparePrice ?? product.price * 1.15;
   const pixPrice = product.price * 0.90;
   const sku = product.sku ?? product.slug.toUpperCase();
-  const brand = product.brand ?? "JoJoias";
+  const brand = product.brand ?? "Luxijóias";
   const whatsappHref = `${settings.whatsappUrl}${settings.whatsappUrl.includes("?") ? "&" : "?"}text=${encodeURIComponent(`Olá! Quero comprar o produto ${product.name} (SKU: ${sku}).`)}`;
   
   const description =

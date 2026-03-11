@@ -86,7 +86,7 @@ export function BannerCarousel({ banners = [] }: { banners?: StoreBanner[] }) {
   };
 
   const fallbackBanners: StoreBanner[] = [
-    { id: "hero-1", title: "Banner principal", subtitle: null, imageUrl: "/banner-home-jojoias.avif", mobileUrl: null, href: null, placement: "hero", position: 0 },
+    { id: "hero-1", title: "Banner principal", subtitle: null, imageUrl: "/banner-home-luxijoias.avif", mobileUrl: null, href: null, placement: "hero", position: 0 },
     { id: "hero-2", title: "Coleção Premium", subtitle: "Peças com brilho elegante e acabamento refinado.", imageUrl: "/demo-products/banner-hero.svg", mobileUrl: "/demo-products/banner-hero.svg", href: "/search?q=colecao", placement: "hero", position: 1 },
   ];
 
@@ -103,11 +103,11 @@ export function BannerCarousel({ banners = [] }: { banners?: StoreBanner[] }) {
             const isFirstBanner = banner.id === items[0]?.id;
             const desktopImage = resolveBannerImageUrl(
               banner.imageUrl,
-              isFirstBanner ? "/banner-home-jojoias.avif" : "/demo-products/banner-hero.svg",
+              isFirstBanner ? "/banner-home-luxijoias.avif" : "/demo-products/banner-hero.svg",
             );
             const mobileImage = resolveBannerImageUrl(
               banner.mobileUrl || banner.imageUrl,
-              isFirstBanner ? "/banner-home-jojoias.avif" : "/demo-products/banner-hero.svg",
+              isFirstBanner ? "/banner-home-luxijoias.avif" : "/demo-products/banner-hero.svg",
             );
             const hasVisibleCopy = Boolean(banner.title || banner.subtitle);
             const imageAlt = banner.href && hasVisibleCopy ? "" : banner.title || "Banner principal da loja";

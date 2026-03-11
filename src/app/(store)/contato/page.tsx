@@ -8,13 +8,13 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://luxijoias.com.br";
 
 export const metadata: Metadata = {
   title: "Contato",
-  description: "Fale com a JoJoias por telefone, WhatsApp ou e-mail para suporte, duvidas sobre pedidos e atendimento em todo o Brasil.",
+  description: "Fale com a Luxijóias por telefone, WhatsApp ou e-mail para suporte, duvidas sobre pedidos e atendimento em todo o Brasil.",
   alternates: {
     canonical: "/contato",
   },
   openGraph: {
-    title: "Contato | JoJoias",
-    description: "Fale com a JoJoias por telefone, WhatsApp ou e-mail para suporte, duvidas sobre pedidos e atendimento em todo o Brasil.",
+    title: "Contato | Luxijóias",
+    description: "Fale com a Luxijóias por telefone, WhatsApp ou e-mail para suporte, duvidas sobre pedidos e atendimento em todo o Brasil.",
     url: `${siteUrl}/contato`,
     type: "website",
     locale: "pt_BR",
@@ -28,7 +28,7 @@ export default async function ContactPage() {
     <div className="bg-white">
       <InstitutionalHero
         eyebrow="Contato"
-        title="Fale com a JoJoias pelo canal que for mais conveniente para você"
+        title="Fale com a Luxijóias pelo canal que for mais conveniente para você"
         description="Seja para tirar dúvidas, acompanhar pedidos ou solicitar suporte, nossa equipe está pronta para atender com rapidez."
       />
 

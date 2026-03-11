@@ -1,4 +1,4 @@
-export const STORE_NAME = "JoJoias";
+export const STORE_NAME = "Luxijóias";
 export const DEFAULT_COUNTRY = "Brasil";
 export const DEFAULT_SHIPPING_COST = 0;
 export const CART_COOKIE = "ecommerce_cart";

@@ -8,13 +8,13 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://luxijoias.com.br";
 
 export const metadata: Metadata = {
   title: "Rastreio",
-  description: "Acompanhe o status do seu pedido JoJoias com numero do pedido ou codigo de rastreio e e-mail da compra.",
+  description: "Acompanhe o status do seu pedido Luxijóias com numero do pedido ou codigo de rastreio e e-mail da compra.",
   alternates: {
     canonical: "/rastreio",
   },
   openGraph: {
-    title: "Rastreio | JoJoias",
-    description: "Acompanhe o status do seu pedido JoJoias com numero do pedido ou codigo de rastreio e e-mail da compra.",
+    title: "Rastreio | Luxijóias",
+    description: "Acompanhe o status do seu pedido Luxijóias com numero do pedido ou codigo de rastreio e e-mail da compra.",
     url: `${siteUrl}/rastreio`,
     type: "website",
     locale: "pt_BR",

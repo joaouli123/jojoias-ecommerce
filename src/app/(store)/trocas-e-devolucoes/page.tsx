@@ -6,13 +6,13 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://luxijoias.com.br";
 
 export const metadata: Metadata = {
   title: "Trocas e Devolucoes",
-  description: "Consulte a politica de trocas e devolucoes da JoJoias e entenda o fluxo de atendimento pos-venda da loja.",
+  description: "Consulte a politica de trocas e devolucoes da Luxijóias e entenda o fluxo de atendimento pos-venda da loja.",
   alternates: {
     canonical: "/trocas-e-devolucoes",
   },
   openGraph: {
-    title: "Trocas e Devolucoes | JoJoias",
-    description: "Consulte a politica de trocas e devolucoes da JoJoias e entenda o fluxo de atendimento pos-venda da loja.",
+    title: "Trocas e Devolucoes | Luxijóias",
+    description: "Consulte a politica de trocas e devolucoes da Luxijóias e entenda o fluxo de atendimento pos-venda da loja.",
     url: `${siteUrl}/trocas-e-devolucoes`,
     type: "website",
     locale: "pt_BR",
@@ -36,19 +36,19 @@ export default async function ExchangesPage() {
         description="Nosso objetivo é resolver qualquer necessidade com transparência e praticidade para você comprar com confiança."
       />
 
-      <section className="mx-auto max-w-5xl px-6 py-12 sm:px-8 lg:px-10 lg:py-14">
+      <section className="mx-auto max-w-5xl px-6 py-8 sm:px-8 lg:px-10 lg:py-10">
         <div className="grid gap-10 lg:grid-cols-[1fr_0.82fr]">
           <article>
             <h2 className="text-2xl font-bold text-zinc-950">Política de trocas</h2>
-            <p className="mt-5 whitespace-pre-line text-base leading-8 text-[#3f3f46] opacity-100">{settings.exchangesContent}</p>
+            <p className="mt-5 whitespace-pre-line text-base leading-7 text-zinc-900">{settings.exchangesContent}</p>
           </article>
 
-          <aside className="rounded-[24px] bg-zinc-50/80 p-8">
+          <aside className="rounded-[24px] border border-zinc-200 bg-white p-8">
             <h2 className="text-2xl font-bold text-zinc-950">Fluxo de atendimento</h2>
             <ol className="mt-6 space-y-4">
               {steps.map((step, index) => (
                 <li key={step} className="flex gap-4 text-sm leading-7 text-zinc-600">
-                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-zinc-950 text-xs font-bold text-white">
+                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-zinc-200 bg-zinc-100 text-xs font-bold text-zinc-900">
                     {index + 1}
                   </span>
                   <span>{step}</span>

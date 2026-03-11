@@ -83,7 +83,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       canonical: buildCategoryPath(slug),
     },
     openGraph: {
-      title: `${title} | JoJoias`,
+      title: `${title} | Luxijóias`,
       description: `Confira ${title.toLowerCase()} com ofertas exclusivas e entrega rápida em todo o Brasil.`,
       url: `${siteUrl}${buildCategoryPath(slug)}`,
       type: "website",

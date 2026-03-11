@@ -7,13 +7,13 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://luxijoias.com.br";
 
 export const metadata: Metadata = {
   title: "Quem Somos",
-  description: "Conheca a JoJoias, sua curadoria de joias e acessorios com compra segura, entrega agil e atendimento proximo em todo o Brasil.",
+  description: "Conheca a Luxijóias, sua curadoria de joias e acessorios com compra segura, entrega agil e atendimento proximo em todo o Brasil.",
   alternates: {
     canonical: "/quem-somos",
   },
   openGraph: {
-    title: "Quem Somos | JoJoias",
-    description: "Conheca a JoJoias, sua curadoria de joias e acessorios com compra segura, entrega agil e atendimento proximo em todo o Brasil.",
+    title: "Quem Somos | Luxijóias",
+    description: "Conheca a Luxijóias, sua curadoria de joias e acessorios com compra segura, entrega agil e atendimento proximo em todo o Brasil.",
     url: `${siteUrl}/quem-somos`,
     type: "website",
     locale: "pt_BR",
@@ -43,7 +43,7 @@ export default async function AboutPage() {
 
   return (
     <div className="bg-white">
-      <InstitutionalHero eyebrow="A JoJoias" title={settings.aboutTitle} description={settings.aboutDescription} />
+      <InstitutionalHero eyebrow="A Luxijóias" title={settings.aboutTitle} description={settings.aboutDescription} />
 
       <section className="mx-auto grid max-w-5xl gap-10 px-6 py-16 sm:px-8 lg:grid-cols-[1.3fr_0.7fr] lg:px-10 lg:py-20">
         <div className="rounded-[20px] border border-zinc-200 bg-white p-8 shadow-sm">

@@ -17,11 +17,11 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   }
 
   return {
-    title: `${post.title} | Blog JoJoias`,
+    title: `${post.title} | Blog Luxijóias`,
     description: post.excerpt,
     alternates: { canonical: `/blog/${post.slug}` },
     openGraph: {
-      title: `${post.title} | Blog JoJoias`,
+      title: `${post.title} | Blog Luxijóias`,
       description: post.excerpt,
       type: "article",
       url: `${siteUrl}/blog/${post.slug}`,
@@ -53,7 +53,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
           <h1 className="mt-5 text-4xl font-black tracking-tight text-zinc-950 sm:text-5xl">{post.title}</h1>
           <p className="mt-4 text-base leading-8 text-zinc-600 sm:text-lg">{post.excerpt}</p>
           <div className="mt-6 flex flex-wrap items-center gap-4 text-sm text-zinc-500">
-            <span>{post.authorName || "Equipe JoJoias"}</span>
+            <span>{post.authorName || "Equipe Luxijóias"}</span>
             <span>•</span>
             <span>{post.publishedAt ? new Intl.DateTimeFormat("pt-BR", { dateStyle: "long" }).format(post.publishedAt) : "Sem data"}</span>
             <span>•</span>

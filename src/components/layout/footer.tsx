@@ -16,7 +16,7 @@ export async function Footer() {
           {/* Brand & Newsletter Column */}
           <div className="lg:col-span-5 flex flex-col space-y-8">
             <div>
-              <Image src="/logo-oficial.avif" alt="JoJoias Semijoias" width={220} height={66} sizes="(max-width: 640px) 180px, 220px" className="h-auto w-[180px] sm:w-[220px]" />
+              <Image src="/logo-oficial.avif" alt="Luxijóias Semijoias" width={220} height={66} quality={50} sizes="(max-width: 640px) 180px, 220px" className="h-auto w-[180px] sm:w-[220px]" />
               <p className="mt-4 text-[15px] leading-relaxed text-zinc-600 max-w-sm">
                 {settings.tagline}
               </p>
@@ -47,7 +47,7 @@ export async function Footer() {
           <div className="lg:col-span-7 grid grid-cols-2 md:grid-cols-3 gap-8 sm:gap-10">
             {/* Links Columns */}
             <div>
-              <h3 className="font-semibold text-zinc-950 mb-6 uppercase tracking-wider text-xs">A JoJoias</h3>
+              <h3 className="font-semibold text-zinc-950 mb-6 uppercase tracking-wider text-xs">A Luxijóias</h3>
               <ul className="space-y-4">
                 <li><Link href="/quem-somos" className="text-[15px] text-zinc-500 hover:text-[#D4AF37] hover:pl-1 transition-all">Quem Somos</Link></li>
                 <li><Link href="/marcas" className="text-[15px] text-zinc-500 hover:text-[#D4AF37] hover:pl-1 transition-all">Marcas</Link></li>
@@ -122,8 +122,8 @@ export async function Footer() {
               <span className="block text-[11px] font-bold uppercase tracking-widest text-zinc-500 mb-4 text-center sm:text-left">Pagamento Seguro</span>
               <div className="flex items-center justify-center sm:justify-start">
                 <Image
-                  src="/formas-pagamento-jojoias.avif"
-                  alt="Bandeiras e formas de pagamento aceitas pela JoJoias"
+                  src="/formas-pagamento-luxijoias.avif"
+                  alt="Bandeiras e formas de pagamento aceitas pela Luxijóias"
                   width={643}
                   height={188}
                   sizes="(max-width: 640px) 80vw, 500px"
@@ -148,7 +148,7 @@ export async function Footer() {
           </div>
 
           <p className="text-sm text-zinc-500">
-            © {new Date().getFullYear()} JoJoias. Todos os direitos reservados.
+            © {new Date().getFullYear()} Luxijóias. Todos os direitos reservados.
           </p>
         </div>
       </div>

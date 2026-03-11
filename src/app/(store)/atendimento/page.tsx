@@ -8,13 +8,13 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://luxijoias.com.br";
 
 export const metadata: Metadata = {
   title: "Atendimento",
-  description: "Central de ajuda da JoJoias para suporte sobre produtos, pedidos, entregas, trocas e acompanhamento pos-venda.",
+  description: "Central de ajuda da Luxijóias para suporte sobre produtos, pedidos, entregas, trocas e acompanhamento pos-venda.",
   alternates: {
     canonical: "/atendimento",
   },
   openGraph: {
-    title: "Atendimento | JoJoias",
-    description: "Central de ajuda da JoJoias para suporte sobre produtos, pedidos, entregas, trocas e acompanhamento pos-venda.",
+    title: "Atendimento | Luxijóias",
+    description: "Central de ajuda da Luxijóias para suporte sobre produtos, pedidos, entregas, trocas e acompanhamento pos-venda.",
     url: `${siteUrl}/atendimento`,
     type: "website",
     locale: "pt_BR",

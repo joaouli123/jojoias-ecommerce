@@ -2,8 +2,8 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "JoJoias",
-    short_name: "JoJoias",
+    name: "Luxijóias",
+    short_name: "Luxijóias",
     description: "Semijoias premium com entrega rápida e compra segura.",
     start_url: "/",
     display: "standalone",

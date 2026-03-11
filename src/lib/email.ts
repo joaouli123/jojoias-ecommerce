@@ -295,7 +295,7 @@ async function sendEmail({ to, subject, html }: { to: string; subject: string; h
   const configuredFrom = typeof resend.extraConfig.fromEmail === "string" && resend.extraConfig.fromEmail
     ? resend.extraConfig.fromEmail
     : "";
-  const from = configuredFrom || "JoJoias <onboarding@resend.dev>";
+  const from = configuredFrom || "Luxijóias <onboarding@resend.dev>";
   const replyTo = typeof resend.extraConfig.replyTo === "string" ? resend.extraConfig.replyTo : undefined;
 
   if (process.env.NODE_ENV === "production" && (!configuredFrom || configuredFrom.includes("onboarding@resend.dev"))) {

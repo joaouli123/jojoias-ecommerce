@@ -16,9 +16,9 @@ export async function GET() {
     const xml = `<?xml version="1.0" encoding="UTF-8" ?>
   <rss version="2.0" xmlns:g="http://base.google.com/ns/1.0">
     <channel>
-      <title>JoJoias</title>
+      <title>Luxijóias</title>
       <link>${siteUrl}</link>
-      <description>Feed de produtos JoJoias</description>
+      <description>Feed de produtos Luxijóias</description>
     </channel>
   </rss>`;
 
@@ -48,15 +48,15 @@ export async function GET() {
       <g:condition>new</g:condition>
       <g:image_link>${escapeXml(product.image ? `${siteUrl}${product.image}` : `${siteUrl}/next.svg`)}</g:image_link>
       <g:product_type>${escapeXml(product.category.name)}</g:product_type>
-      <g:brand>${escapeXml(product.brand?.name || "JoJoias")}</g:brand>
+      <g:brand>${escapeXml(product.brand?.name || "Luxijóias")}</g:brand>
     </item>`).join("");
 
   const xml = `<?xml version="1.0" encoding="UTF-8" ?>
   <rss version="2.0" xmlns:g="http://base.google.com/ns/1.0">
     <channel>
-      <title>JoJoias</title>
+      <title>Luxijóias</title>
       <link>${siteUrl}</link>
-      <description>Feed de produtos JoJoias</description>
+      <description>Feed de produtos Luxijóias</description>
       ${items}
     </channel>
   </rss>`;

@@ -21,11 +21,11 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://luxijoias.com.br";
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "JoJoias | Semijoias Premium",
-    template: "%s | JoJoias",
+    default: "Luxijóias | Semijoias Premium",
+    template: "%s | Luxijóias",
   },
   description: "Semijoias premium com entrega rápida, compra segura e atendimento especializado.",
-  applicationName: "JoJoias",
+  applicationName: "Luxijóias",
   icons: {
     icon: [
       { url: "/favicon.png", type: "image/png" },
@@ -40,7 +40,7 @@ export const metadata: Metadata = {
     "joias femininas",
     "acessórios",
     "joias premium",
-    "jojoias",
+    "luxijoias",
   ],
   alternates: {
     canonical: "/",
@@ -49,13 +49,13 @@ export const metadata: Metadata = {
     type: "website",
     locale: "pt_BR",
     url: siteUrl,
-    siteName: "JoJoias",
-    title: "JoJoias | Semijoias Premium",
+    siteName: "Luxijóias",
+    title: "Luxijóias | Semijoias Premium",
     description: "Semijoias premium com entrega rápida, compra segura e atendimento especializado.",
   },
   twitter: {
     card: "summary_large_image",
-    title: "JoJoias | Semijoias Premium",
+    title: "Luxijóias | Semijoias Premium",
     description: "Semijoias premium com entrega rápida, compra segura e atendimento especializado.",
   },
   robots: {

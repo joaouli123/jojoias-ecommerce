@@ -3,7 +3,7 @@ export type StoredShippingSelection = {
   optionId?: string;
 };
 
-const SHIPPING_STORAGE_KEY = "jojoias:shipping-selection";
+const SHIPPING_STORAGE_KEY = "luxijoias:shipping-selection";
 
 export function readStoredShippingSelection(): StoredShippingSelection | null {
   if (typeof window === "undefined") return null;

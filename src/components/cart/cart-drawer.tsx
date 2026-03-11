@@ -110,8 +110,10 @@ export function CartDrawer({ initialCart = { items: [], subtotal: 0, shipping: 0
         onMouseLeave={() => setIsHoverOpen(false)}
       >
         <button 
+          type="button"
           onClick={() => setIsOpen(true)}
           className="group relative flex items-center gap-2 hover:opacity-80 transition-opacity"
+          aria-label={itemCount > 0 ? `Abrir carrinho com ${itemCount} item(ns)` : "Abrir carrinho"}
         >
           <div className="relative">
             <ShoppingCart className="h-7 w-7 text-zinc-800" strokeWidth={1.5} />
@@ -189,8 +191,10 @@ export function CartDrawer({ initialCart = { items: [], subtotal: 0, shipping: 0
               <ShoppingCart className="h-5 w-5" /> Seu Carrinho
             </h2>
             <button 
+              type="button"
               onClick={() => setIsOpen(false)}
               className="rounded-full p-2 text-zinc-400 hover:bg-zinc-100 hover:text-zinc-900 transition-colors"
+              aria-label="Fechar carrinho"
             >
               <X className="h-5 w-5" />
             </button>

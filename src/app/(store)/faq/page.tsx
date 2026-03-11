@@ -7,13 +7,13 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://luxijoias.com.br";
 
 export const metadata: Metadata = {
   title: "FAQ",
-  description: "Veja as duvidas frequentes da JoJoias sobre pagamento, frete, trocas, devolucoes e acompanhamento de pedidos.",
+  description: "Veja as duvidas frequentes da Luxijóias sobre pagamento, frete, trocas, devolucoes e acompanhamento de pedidos.",
   alternates: {
     canonical: "/faq",
   },
   openGraph: {
-    title: "FAQ | JoJoias",
-    description: "Veja as duvidas frequentes da JoJoias sobre pagamento, frete, trocas, devolucoes e acompanhamento de pedidos.",
+    title: "FAQ | Luxijóias",
+    description: "Veja as duvidas frequentes da Luxijóias sobre pagamento, frete, trocas, devolucoes e acompanhamento de pedidos.",
     url: `${siteUrl}/faq`,
     type: "website",
     locale: "pt_BR",

@@ -46,12 +46,12 @@ export default async function CmsPage({ params }: { params: Promise<{ slug: stri
       <InstitutionalHero
         eyebrow="Página especial"
         title={page.title}
-        description={page.metaDescription || "Conteúdo editorial publicado pela equipe da JoJoias."}
+        description={page.metaDescription || "Conteúdo editorial publicado pela equipe da Luxijóias."}
       />
 
-      <section className="mx-auto max-w-5xl px-6 py-12 sm:px-8 lg:px-10 lg:py-14">
-        <div className="max-w-3xl">
-          <article className="whitespace-pre-line text-base leading-8 text-[#3f3f46] opacity-100">
+      <section className="mx-auto max-w-5xl px-6 py-8 sm:px-8 lg:px-10 lg:py-10">
+        <div className="max-w-4xl">
+          <article className="whitespace-pre-line text-base leading-7 text-zinc-900">
             {page.content}
           </article>
         </div>

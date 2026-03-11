@@ -5,8 +5,8 @@ import { InstitutionalHero } from "@/components/store/institutional-hero";
 import { listPublishedBlogPosts } from "@/lib/blog";
 
 export const metadata = {
-  title: "Blog | JoJoias",
-  description: "Conteúdo editorial, tendências, guias e novidades do universo de semijoias da JoJoias.",
+  title: "Blog | Luxijóias",
+  description: "Conteúdo editorial, tendências, guias e novidades do universo de semijoias da Luxijóias.",
 };
 
 export default async function BlogIndexPage() {
@@ -17,7 +17,7 @@ export default async function BlogIndexPage() {
     <div className="bg-white">
       <InstitutionalHero
         eyebrow="Conteúdo e inspiração"
-        title="Blog JoJoias"
+        title="Blog Luxijóias"
         description="Tendências, presentes, cuidados e histórias da marca para fortalecer o SEO e o relacionamento com clientes."
       />
 
@@ -38,7 +38,7 @@ export default async function BlogIndexPage() {
               <h2 className="mt-5 text-3xl font-black tracking-tight text-zinc-950">{featuredPost.title}</h2>
               <p className="mt-4 text-base leading-8 text-zinc-600">{featuredPost.excerpt}</p>
               <div className="mt-6 flex flex-wrap items-center gap-4 text-sm text-zinc-500">
-                <span>{featuredPost.authorName || "Equipe JoJoias"}</span>
+                <span>{featuredPost.authorName || "Equipe Luxijóias"}</span>
                 <span>•</span>
                 <span>{featuredPost.publishedAt ? new Intl.DateTimeFormat("pt-BR", { dateStyle: "long" }).format(featuredPost.publishedAt) : "Em breve"}</span>
                 <span>•</span>
@@ -71,7 +71,7 @@ export default async function BlogIndexPage() {
                 </h2>
                 <p className="mt-3 text-sm leading-7 text-zinc-600">{post.excerpt}</p>
                 <div className="mt-5 flex items-center justify-between text-xs font-semibold uppercase tracking-wide text-zinc-400">
-                  <span>{post.authorName || "Equipe JoJoias"}</span>
+                  <span>{post.authorName || "Equipe Luxijóias"}</span>
                   <span>{post.readingMinutes} min</span>
                 </div>
               </div>
