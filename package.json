@@ -10,6 +10,7 @@
     "start": "next start",
     "lint": "eslint",
     "test": "node --import tsx --test tests/admin-permissions.test.ts tests/admin-audit.test.ts tests/shipping.test.ts tests/health.test.ts tests/coupons.test.ts tests/validators.test.ts tests/system-events.test.ts tests/catalog-facets.test.ts tests/search-ranking.test.ts tests/blog.test.ts",
+    "images:audit": "tsx scripts/audit-images.ts",
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",
     "db:push": "prisma db push",

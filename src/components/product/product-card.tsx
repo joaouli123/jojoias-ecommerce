@@ -1,5 +1,6 @@
 ﻿"use client"
 
+import Image from "next/image"
 import Link from "next/link"
 import { useEffect, useState, useTransition } from "react"
 import { useRouter } from "next/navigation"
@@ -117,8 +118,13 @@ export function ProductCard({ product }: ProductCardProps) {
 
       {/* Imagem Container */}
       <div className="relative aspect-[4/3] w-full overflow-hidden mb-4 rounded-[20px]">
-        {/* Usaremos imagens reais temporárias para dar o visual da foto enviada */}
-        <div style={{ backgroundImage: `url(${product.image || "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?q=80&w=600&h=600&fit=crop"})` }} className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110" />
+        <Image
+          src={product.image || "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?q=80&w=600&h=600&fit=crop"}
+          alt={product.name}
+          fill
+          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+          className="object-cover transition-transform duration-700 group-hover:scale-110"
+        />
       </div>
 
       <div className="flex flex-col flex-1 px-2 text-center">

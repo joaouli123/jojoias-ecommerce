@@ -18,7 +18,7 @@ export default async function NewProductPage() {
   ]);
 
   return (
-    <div className="max-w-3xl mx-auto space-y-6">
+    <div className="max-w-6xl mx-auto space-y-6">
       <div className="flex items-center gap-4">
         <Link href="/admin/products" className="p-2 text-gray-500 hover:text-gray-900 bg-white rounded-md shadow-sm border border-gray-100 transition-colors">
           <ArrowLeft className="w-5 h-5" />

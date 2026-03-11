@@ -1,8 +1,10 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
-import { Sparkles, Plus, Trash2 } from "lucide-react";
+import { Sparkles, Plus, Trash2, UploadCloud } from "lucide-react";
+import { ProductMediaManager } from "@/components/admin/product-media-manager";
 
 type CategoryOption = {
   id: string;
@@ -145,10 +147,13 @@ export function ProductEditorForm(props: ProductEditorFormProps) {
   const [name, setName] = useState(initialValues?.name ?? "");
   const [slug, setSlug] = useState(initialValues?.slug ?? "");
   const [description, setDescription] = useState(initialValues?.description ?? "");
+  const [mainImage, setMainImage] = useState(initialValues?.image ?? "");
+  const [galleryImages, setGalleryImages] = useState<string[]>(initialValues?.galleryImages ?? []);
   const [price, setPrice] = useState(formatCurrencyInput(initialValues?.price));
   const [comparePrice, setComparePrice] = useState(formatCurrencyInput(initialValues?.comparePrice ?? ""));
   const [aiLoading, setAiLoading] = useState(false);
   const [aiError, setAiError] = useState<string | null>(null);
+  const [mediaMessage, setMediaMessage] = useState<string | null>(null);
   const [slugTouched, setSlugTouched] = useState(Boolean(initialValues?.slug));
   const [quickVariantType, setQuickVariantType] = useState<string>("cor");
   const [customVariantLabel, setCustomVariantLabel] = useState("");
@@ -190,6 +195,43 @@ export function ProductEditorForm(props: ProductEditorFormProps) {
         isActive: variant.isActive,
       })),
   );
+
+  async function uploadVariantImage(variantId: string, files: FileList | null) {
+    if (!files?.length) {
+      return;
+    }
+
+    setMediaMessage(null);
+    const formData = new FormData();
+    formData.append("files", files[0]);
+
+    try {
+      const response = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      const payload = (await response.json().catch(() => ({}))) as {
+        assets?: Array<{ url: string }>;
+        error?: string;
+        message?: string;
+      };
+
+      if (!response.ok) {
+        throw new Error(payload.error || "Falha ao enviar imagem da variação.");
+      }
+
+      const nextUrl = payload.assets?.[0]?.url;
+      if (!nextUrl) {
+        throw new Error("O upload não retornou uma URL válida.");
+      }
+
+      setVariants((current) => current.map((entry) => entry.id === variantId ? { ...entry, image: nextUrl } : entry));
+      setMediaMessage(payload.message || "Imagem da variação enviada com sucesso.");
+    } catch (error) {
+      setMediaMessage(error instanceof Error ? error.message : "Falha ao enviar imagem da variação.");
+    }
+  }
 
   async function improveWithAi() {
     setAiError(null);
@@ -262,19 +304,12 @@ export function ProductEditorForm(props: ProductEditorFormProps) {
           <textarea value={description} onChange={(event) => setDescription(event.target.value)} id="description" name="description" rows={4} className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500" />
         </div>
 
-        <div className="space-y-2 md:col-span-2">
-          <label htmlFor="image" className="text-sm font-medium text-gray-700">Imagem principal</label>
-          <div className="flex items-center justify-between gap-3 text-xs text-gray-500">
-            <span>Aceita URL absoluta ou caminho interno como /uploads/media/... e /demo-products/...</span>
-            <Link href="/admin/media" className="font-semibold text-primary-600 hover:text-primary-700">Abrir biblioteca de mídia</Link>
-          </div>
-          <input defaultValue={initialValues?.image ?? ""} type="text" id="image" name="image" className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500" placeholder="https://... ou /uploads/media/arquivo.webp" />
-        </div>
-
-        <div className="space-y-2 md:col-span-2">
-          <label htmlFor="galleryImages" className="text-sm font-medium text-gray-700">Galeria de imagens</label>
-          <textarea defaultValue={initialValues?.galleryImages?.join("\n") ?? ""} id="galleryImages" name="galleryImages" rows={4} className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500" placeholder={"Uma URL por linha\nhttps://...\nhttps://..."} />
-        </div>
+        <ProductMediaManager
+          mainImage={mainImage}
+          galleryImages={galleryImages}
+          onMainImageChange={setMainImage}
+          onGalleryImagesChange={setGalleryImages}
+        />
 
         <div className="space-y-2">
           <label htmlFor="price" className="text-sm font-medium text-gray-700">Preço (R$) *</label>
@@ -420,7 +455,27 @@ export function ProductEditorForm(props: ProductEditorFormProps) {
                   <div className="grid grid-cols-1 gap-4 md:grid-cols-[1fr_auto]">
                     <div className="space-y-2">
                       <label className="text-xs font-semibold uppercase tracking-wide text-gray-500">Imagem da variação</label>
-                      <input value={variant.image} onChange={(event) => setVariants((current) => current.map((entry) => entry.id === variant.id ? { ...entry, image: event.target.value } : entry))} className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm" placeholder="https://... ou /uploads/media/..." />
+                      <div className="space-y-3 rounded-xl border border-gray-200 bg-gray-50 p-3">
+                        <div className="relative aspect-[4/3] overflow-hidden rounded-xl bg-white">
+                          {variant.image ? (
+                            <Image src={variant.image} alt={`Prévia da variação ${variant.label || variant.id}`} fill sizes="240px" className="object-cover" />
+                          ) : (
+                            <div className="flex h-full items-center justify-center text-xs text-gray-400">Sem imagem nesta variação</div>
+                          )}
+                        </div>
+                        <div className="flex flex-col gap-2 sm:flex-row">
+                          <input value={variant.image} onChange={(event) => setVariants((current) => current.map((entry) => entry.id === variant.id ? { ...entry, image: event.target.value } : entry))} className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm" placeholder="https://... ou URL da biblioteca" />
+                          <label className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100">
+                            <UploadCloud className="h-4 w-4" /> Upload
+                            <input
+                              type="file"
+                              accept="image/png,image/jpeg,image/webp,image/avif,image/svg+xml"
+                              className="hidden"
+                              onChange={(event) => void uploadVariantImage(variant.id, event.target.files)}
+                            />
+                          </label>
+                        </div>
+                      </div>
                     </div>
                     <button type="button" onClick={() => setVariants((current) => current.filter((entry) => entry.id !== variant.id))} className="inline-flex items-center justify-center gap-2 self-end rounded-md border border-rose-200 bg-rose-50 px-4 py-2 text-sm font-medium text-rose-700 hover:bg-rose-100">
                       <Trash2 className="h-4 w-4" /> Remover
@@ -432,6 +487,8 @@ export function ProductEditorForm(props: ProductEditorFormProps) {
           </div>
         </div>
       </div>
+
+      {mediaMessage ? <p className="rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-600">{mediaMessage}</p> : null}
 
       <div className="pt-4 border-t border-gray-100 flex justify-end gap-4">
         <Link href={backHref} className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2">

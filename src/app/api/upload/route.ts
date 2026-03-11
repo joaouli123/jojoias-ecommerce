@@ -1,12 +1,27 @@
 import { NextResponse } from "next/server";
-import { requireAdminPermission, unauthorizedJson } from "@/lib/admin-auth";
+import { auth } from "@/auth";
+import { hasAdminPermission } from "@/lib/admin-permissions";
+import { unauthorizedJson } from "@/lib/admin-auth";
 import { prisma } from "@/lib/prisma";
 import { saveMediaFile } from "@/lib/media";
 
+async function ensureUploadPermission() {
+  const session = await auth();
+
+  if (!session) {
+    return null;
+  }
+
+  const role = session.user.role;
+  if (hasAdminPermission(role, "products:manage") || hasAdminPermission(role, "marketing:manage")) {
+    return session.user;
+  }
+
+  return null;
+}
+
 export async function GET() {
-  try {
-    await requireAdminPermission("marketing:manage");
-  } catch {
+  if (!(await ensureUploadPermission())) {
     return unauthorizedJson();
   }
 
@@ -19,9 +34,7 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
-  try {
-    await requireAdminPermission("marketing:manage");
-  } catch {
+  if (!(await ensureUploadPermission())) {
     return unauthorizedJson();
   }
 

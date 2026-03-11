@@ -122,10 +122,11 @@ export async function Footer() {
               <span className="block text-[11px] font-bold uppercase tracking-widest text-zinc-400 mb-4 text-center sm:text-left">Pagamento Seguro</span>
               <div className="flex items-center justify-center sm:justify-start">
                 <Image
-                  src="/Formas-de-Pagamento.png"
-                  alt="Formas de pagamento aceitas"
-                  width={500}
-                  height={90}
+                  src="/formas-pagamento-jojoias.avif"
+                  alt="Bandeiras e formas de pagamento aceitas pela JoJoias"
+                  width={643}
+                  height={188}
+                  sizes="(max-width: 640px) 80vw, 500px"
                   className="h-20 sm:h-24 w-auto object-contain mix-blend-multiply opacity-90 grayscale hover:grayscale-0 transition-all duration-300"
                 />
               </div>
@@ -135,10 +136,11 @@ export async function Footer() {
               <span className="block text-[11px] font-bold uppercase tracking-widest text-zinc-400 mb-4 text-center sm:text-left">Compra Garantida</span>
               <div className="flex items-center justify-center sm:justify-start">
                 <Image
-                  src="/SELS%20DE%20SEGURAN%C3%87A%20GOOGLE.png"
-                  alt="Selos de segurança Google"
-                  width={320}
-                  height={48}
+                  src="/selos-seguranca-google.avif"
+                  alt="Selos de segurança e validação exibidos pela loja"
+                  width={752}
+                  height={141}
+                  sizes="(max-width: 640px) 60vw, 320px"
                   className="h-14 sm:h-12 w-auto object-contain mix-blend-multiply opacity-90 grayscale hover:grayscale-0 transition-all duration-300"
                 />
               </div>

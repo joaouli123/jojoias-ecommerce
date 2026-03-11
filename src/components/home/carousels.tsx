@@ -1,5 +1,6 @@
 ﻿"use client";
 
+import Image from "next/image";
 import { useRef } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import Link from "next/link";
@@ -71,7 +72,7 @@ export function BannerCarousel({ banners = [] }: { banners?: StoreBanner[] }) {
   };
 
   const fallbackBanners: StoreBanner[] = [
-    { id: "hero-1", title: "Banner principal", subtitle: null, imageUrl: "/banner1.png", mobileUrl: null, href: null, placement: "hero", position: 0 },
+    { id: "hero-1", title: "Banner principal", subtitle: null, imageUrl: "/banner-home-jojoias.avif", mobileUrl: null, href: null, placement: "hero", position: 0 },
     { id: "hero-2", title: "Banner secundário", subtitle: null, imageUrl: "https://images.unsplash.com/photo-1599643478524-fb66f7f3258c?q=80&w=1920", mobileUrl: "https://images.unsplash.com/photo-1599643478524-fb66f7f3258c?q=80&w=800&h=1200&fit=crop", href: null, placement: "hero", position: 1 },
   ];
 
@@ -87,8 +88,26 @@ export function BannerCarousel({ banners = [] }: { banners?: StoreBanner[] }) {
           {items.map((banner) => {
             const content = (
               <>
-                <div className="absolute inset-0 hidden bg-cover bg-center md:block" style={{ backgroundImage: `url(${banner.imageUrl})` }} />
-                <div className="absolute inset-0 bg-cover bg-center md:hidden" style={{ backgroundImage: `url(${banner.mobileUrl || banner.imageUrl})` }} />
+                <div className="absolute inset-0 hidden md:block">
+                  <Image
+                    src={banner.imageUrl}
+                    alt={banner.title || "Banner principal da loja"}
+                    fill
+                    priority={banner.id === items[0]?.id}
+                    sizes="100vw"
+                    className="object-cover"
+                  />
+                </div>
+                <div className="absolute inset-0 md:hidden">
+                  <Image
+                    src={banner.mobileUrl || banner.imageUrl}
+                    alt={banner.title || "Banner principal da loja"}
+                    fill
+                    priority={banner.id === items[0]?.id}
+                    sizes="100vw"
+                    className="object-cover"
+                  />
+                </div>
                 <div className="absolute inset-0 bg-gradient-to-r from-black/55 via-black/15 to-transparent" />
                 {(banner.title || banner.subtitle) ? (
                   <div className="absolute inset-x-0 bottom-0 z-10 p-6 text-white md:p-10">
@@ -156,7 +175,13 @@ export function SecondaryBanners({ banners = [] }: { banners?: StoreBanner[] }) 
       >
         {items.map((banner) => (
           <Link key={banner.id} href={banner.href || "/"} className="min-w-[85vw] md:min-w-0 h-[220px] md:h-[250px] snap-center rounded-xl overflow-hidden relative block group/banner border border-zinc-200 bg-white">
-            <div className="absolute inset-0 bg-cover bg-center transform group-hover/banner:scale-105 transition-transform duration-500" style={{ backgroundImage: `url(${banner.imageUrl})` }} />
+            <Image
+              src={banner.imageUrl}
+              alt={banner.title || "Banner promocional da loja"}
+              fill
+              sizes="(max-width: 768px) 85vw, 33vw"
+              className="object-cover transform group-hover/banner:scale-105 transition-transform duration-500"
+            />
             <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/10 to-transparent" />
             <div className="absolute inset-x-0 bottom-0 z-10 p-5 text-white">
               <h3 className="text-lg font-bold tracking-tight">{banner.title}</h3>
@@ -224,9 +249,12 @@ export function CategoriesCarousel({ categories = [] }: { categories?: StoreCate
           {items.map((cat, i) => (
             <Link key={i} href={"/categoria/" + cat.slug} className="min-w-[132px] snap-center block shrink-0 text-center group/cat">
               <div className="w-[132px] h-[132px] rounded-full overflow-hidden relative border border-zinc-200 bg-white">
-                <div
-                  className="absolute inset-0 bg-cover bg-center transform group-hover/cat:scale-110 transition-transform duration-700"
-                  style={{ backgroundImage: `url(${categoryImages[i % categoryImages.length]})` }}
+                <Image
+                  src={categoryImages[i % categoryImages.length]}
+                  alt={`Categoria ${cat.name}`}
+                  fill
+                  sizes="132px"
+                  className="object-cover transform group-hover/cat:scale-110 transition-transform duration-700"
                 />
               </div>
               <span className="mt-4 block text-[17px] text-zinc-900 font-bold tracking-tight">{cat.name}</span>
