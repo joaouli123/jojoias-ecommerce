@@ -295,12 +295,11 @@ export function BannerCarousel({ banners = [] }: { banners?: StoreBanner[] }) {
     { id: "hero-2", title: "Banner secundário", subtitle: null, imageUrl: secondaryBannerImage, mobileUrl: secondaryMobileBannerImage, href: null, placement: "hero", position: 1 },
   ];
 
-  const items = banners.length
-    ? [
-        ...banners,
-        ...fallbackBanners.filter((fallbackBanner) => !banners.some((banner) => banner.id === fallbackBanner.id)),
-      ].slice(0, Math.max(2, banners.length))
-    : fallbackBanners;
+  const items = banners.length >= 2
+    ? banners.slice(0, 2)
+    : banners.length === 1
+      ? [banners[0], fallbackBanners[1]]
+      : fallbackBanners;
   const { createHandlers } = useSwipeCarousel(items.length);
   const swipeHandlers = createHandlers(setActiveIndex);
 
@@ -317,8 +316,8 @@ export function BannerCarousel({ banners = [] }: { banners?: StoreBanner[] }) {
   }, [items.length]);
 
   return (
-    <section className="w-full max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 mt-4 md:mt-6 relative group">
-      <div className="relative overflow-hidden rounded-2xl shadow-sm md:rounded-3xl" style={{ touchAction: "pan-y" }} {...swipeHandlers}>
+    <section className="group relative mt-4 w-full max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 md:mt-6">
+      <div className="relative overflow-hidden rounded-2xl shadow-sm md:rounded-3xl" style={{ touchAction: "pan-y pinch-zoom" }} {...swipeHandlers}>
         <div className="flex transition-transform duration-500 ease-out" style={{ transform: `translateX(-${activeIndex * 100}%)` }}>
           {items.map((banner) => {
             const isFirstBanner = banner.id === items[0]?.id;
@@ -361,12 +360,26 @@ export function BannerCarousel({ banners = [] }: { banners?: StoreBanner[] }) {
             const href = banner.href || "/";
 
             return (
-              <Link key={banner.id} href={href} draggable={false} className="relative block h-[50vh] min-w-full select-none cursor-grab active:cursor-grabbing md:h-[480px]">
+              <Link key={banner.id} href={href} draggable={false} className="relative block h-[50vh] min-w-full select-none cursor-grab active:cursor-grabbing md:h-[480px]" onDragStart={(event) => event.preventDefault()}>
                 {content}
               </Link>
             );
           })}
         </div>
+
+        {items.length > 1 ? (
+          <div className="pointer-events-none absolute inset-x-0 bottom-4 z-10 flex justify-center gap-2">
+            {items.map((item, index) => (
+              <button
+                key={item.id}
+                type="button"
+                aria-label={`Ir para banner ${index + 1}`}
+                onClick={() => setActiveIndex(index)}
+                className={`pointer-events-auto h-2.5 rounded-full transition-all ${index === activeIndex ? "w-8 bg-white" : "w-2.5 bg-white/50"}`}
+              />
+            ))}
+          </div>
+        ) : null}
       </div>
     </section>
   );
@@ -483,17 +496,17 @@ export function CategoriesCarousel({ categories = [] }: { categories?: StoreCate
 
   return (
     <section className="max-w-[1440px] mx-auto w-full px-4 sm:px-6 lg:px-8 py-8 md:py-10 relative">
-      <h2 className="mb-8 text-center font-serif text-[clamp(1.9rem,3.2vw,2.8rem)] font-medium tracking-[-0.02em] text-[#1A1A1A]">Compre por Categoria</h2>
+      <h2 className="mb-8 text-center font-serif text-[clamp(2.2rem,3.6vw,3rem)] font-medium tracking-[-0.03em] text-[#1A1A1A]">Compre por Categoria</h2>
       
       <div className="relative group">
         <div 
           ref={scrollRef}
-          className={`flex overflow-x-auto snap-x snap-mandatory gap-5 no-scrollbar pb-2 pr-8 xl:justify-center ${isDragging ? "cursor-grabbing" : "cursor-grab"}`}
-          style={{ touchAction: "pan-x" }}
+          className={`flex overflow-x-auto snap-x snap-mandatory gap-5 no-scrollbar px-1 pb-2 pr-8 ${isDragging ? "cursor-grabbing" : "cursor-grab"}`}
+          style={{ touchAction: "pan-x pinch-zoom" }}
           {...dragProps}
         >
           {items.map((cat, i) => (
-            <Link key={i} href={"/categoria/" + cat.slug} draggable={false} className="block min-w-[150px] shrink-0 snap-center select-none group/cat sm:min-w-[180px]">
+            <Link key={i} href={"/categoria/" + cat.slug} draggable={false} onDragStart={(event) => event.preventDefault()} className="block min-w-[150px] shrink-0 snap-start select-none group/cat sm:min-w-[180px]">
               <div className="relative h-[180px] w-[150px] overflow-hidden rounded-[22px] border border-zinc-200 bg-zinc-100 shadow-sm transition-all duration-300 group-hover/cat:shadow-md sm:h-[220px] sm:w-[180px]">
                 <Image
                   src={CATEGORY_FALLBACK_IMAGES[i % CATEGORY_FALLBACK_IMAGES.length]}

@@ -19,7 +19,7 @@ export function NewsletterSubscribeForm() {
 
   return (
     <form
-      className="space-y-3"
+      className="max-w-sm space-y-3"
       onSubmit={(event) => {
         event.preventDefault();
         setMessage(null);
@@ -91,7 +91,7 @@ export function NewsletterSubscribeForm() {
         </div>
 
         {showNameField ? (
-          <div className="w-full sm:max-w-[280px]">
+          <div className="w-full">
             <input
               type="text"
               placeholder="Seu nome"

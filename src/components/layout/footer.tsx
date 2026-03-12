@@ -1,8 +1,9 @@
 ﻿import Link from "next/link"
 import Image from "next/image"
-import { Instagram, Facebook, Youtube, Mail, Phone, MapPin, MessageCircleMore } from "lucide-react"
+import { Instagram, Facebook, Youtube, Mail, Phone, MapPin } from "lucide-react"
 import { getStoreSettings } from "@/lib/store-settings"
 import { NewsletterSubscribeForm } from "@/components/layout/newsletter-subscribe-form"
+import { WhatsAppIcon } from "@/components/ui/icons"
 
 export async function Footer() {
   const settings = await getStoreSettings()
@@ -22,23 +23,23 @@ export async function Footer() {
             </div>
 
             <div className="space-y-4">
-              <h3 className="font-semibold text-lg text-[#1A1A1A] font-serif">Acompanhe as Novidades</h3>
+              <h3 className="font-serif text-[clamp(2rem,3.1vw,2.5rem)] font-medium tracking-[-0.03em] text-[#1A1A1A]">Acompanhe as Novidades</h3>
               <p className="text-sm text-[#666666] max-w-sm">Inscreva-se para receber tendências, lançamentos e ofertas exclusivas no seu e-mail.</p>
               <NewsletterSubscribeForm />
             </div>
 
             <div className="flex gap-3 pt-2">
-              <Link href={settings.instagramUrl} target="_blank" aria-label="Instagram" className="w-10 h-10 rounded-full border border-zinc-300 bg-white flex items-center justify-center text-[#666666] hover:text-white hover:bg-[#D4AF37] hover:border-[#D4AF37] transition-all shadow-sm">
+              <Link href={settings.instagramUrl} target="_blank" aria-label="Instagram" className="flex h-10 w-10 items-center justify-center rounded-full border border-zinc-300 bg-white text-[#666666] transition-all hover:border-[#D4AF37] hover:bg-[#D4AF37] hover:text-white">
                 <Instagram className="w-4 h-4 stroke-[1.8]" />
               </Link>
-              <Link href={settings.facebookUrl} target="_blank" aria-label="Facebook" className="w-10 h-10 rounded-full border border-zinc-300 bg-white flex items-center justify-center text-[#666666] hover:text-white hover:bg-[#D4AF37] hover:border-[#D4AF37] transition-all shadow-sm">
+              <Link href={settings.facebookUrl} target="_blank" aria-label="Facebook" className="flex h-10 w-10 items-center justify-center rounded-full border border-zinc-300 bg-white text-[#666666] transition-all hover:border-[#D4AF37] hover:bg-[#D4AF37] hover:text-white">
                 <Facebook className="w-4 h-4 stroke-[1.8]" />
               </Link>
-              <Link href={settings.youtubeUrl} target="_blank" aria-label="YouTube" className="w-10 h-10 rounded-full border border-zinc-300 bg-white flex items-center justify-center text-[#666666] hover:text-white hover:bg-[#D4AF37] hover:border-[#D4AF37] transition-all shadow-sm">
+              <Link href={settings.youtubeUrl} target="_blank" aria-label="YouTube" className="flex h-10 w-10 items-center justify-center rounded-full border border-zinc-300 bg-white text-[#666666] transition-all hover:border-[#D4AF37] hover:bg-[#D4AF37] hover:text-white">
                 <Youtube className="w-4 h-4 stroke-[1.8]" />
               </Link>
-              <Link href={settings.whatsappUrl} target="_blank" aria-label="WhatsApp" className="w-10 h-10 rounded-full border border-zinc-300 bg-white flex items-center justify-center text-[#666666] hover:text-white hover:bg-[#D4AF37] hover:border-[#D4AF37] transition-all shadow-sm">
-                <MessageCircleMore className="w-4 h-4 stroke-[1.8]" />
+              <Link href={settings.whatsappUrl} target="_blank" aria-label="WhatsApp" className="flex h-10 w-10 items-center justify-center rounded-full border border-zinc-300 bg-white text-[#666666] transition-all hover:border-[#D4AF37] hover:bg-[#D4AF37] hover:text-white">
+                <WhatsAppIcon className="h-4 w-4" />
               </Link>
             </div>
           </div>
@@ -116,15 +117,15 @@ export async function Footer() {
             </div>
             
             <div className="col-span-2 md:col-span-3 pt-6 lg:pt-2">
-              <h3 className="font-semibold text-[#1A1A1A] mb-5 uppercase tracking-wider text-xs">Fale com a gente</h3>
+              <h3 className="mb-5 font-serif text-[clamp(2rem,3vw,2.45rem)] font-medium uppercase tracking-[0.14em] text-[#1A1A1A]">Fale com a gente</h3>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
                 <div className="flex items-start gap-4">
                   <div className="w-10 h-10 rounded-full bg-white border border-zinc-200 flex items-center justify-center flex-shrink-0">
                     <Phone className="w-4 h-4 stroke-[1.8] text-[#666666]" />
                   </div>
                   <div>
-                    <h4 className="text-sm font-medium text-[#1A1A1A]">Telefone / WhatsApp</h4>
-                    <p className="text-sm text-[#666666] mt-1 hover:text-[#D4AF37] transition-colors cursor-pointer">{settings.supportPhone}</p>
+                    <h4 className="text-base font-medium text-[#1A1A1A] md:text-[1.1rem]">Telefone / WhatsApp</h4>
+                    <p className="mt-1 text-base text-[#666666] transition-colors cursor-pointer hover:text-[#D4AF37]">{settings.supportPhone}</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-4">
@@ -132,8 +133,8 @@ export async function Footer() {
                     <Mail className="w-4 h-4 stroke-[1.8] text-[#666666]" />
                   </div>
                   <div>
-                    <h4 className="text-sm font-medium text-[#1A1A1A]">E-mail</h4>
-                    <Link href="/contato" className="mt-1 inline-flex text-sm text-[#666666] transition-colors hover:text-[#D4AF37]">Abrir atendimento por e-mail</Link>
+                    <h4 className="text-base font-medium text-[#1A1A1A] md:text-[1.1rem]">E-mail</h4>
+                    <Link href="/contato" className="mt-1 inline-flex text-base text-[#666666] transition-colors hover:text-[#D4AF37]">Abrir atendimento por e-mail</Link>
                   </div>
                 </div>
                 <div className="flex items-start gap-4">
@@ -141,8 +142,8 @@ export async function Footer() {
                     <MapPin className="w-4 h-4 stroke-[1.8] text-[#666666]" />
                   </div>
                   <div>
-                    <h4 className="text-sm font-medium text-[#1A1A1A]">Escritório</h4>
-                    <p className="text-sm text-[#666666] mt-1">{settings.addressLine}<br />{settings.businessHours}</p>
+                    <h4 className="text-base font-medium text-[#1A1A1A] md:text-[1.1rem]">Escritório</h4>
+                    <p className="mt-1 text-base text-[#666666]">{settings.addressLine}<br />{settings.businessHours}</p>
                   </div>
                 </div>
               </div>

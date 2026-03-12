@@ -75,6 +75,31 @@ export default async function Home() {
     };
   });
 
+  const heroSlides = normalizedHeroBanners.length >= 2
+    ? normalizedHeroBanners.slice(0, 2)
+    : [
+        normalizedHeroBanners[0] ?? {
+          id: "hero-primary-fallback",
+          title: "Banner principal",
+          subtitle: null,
+          imageUrl: HERO_BANNER_PRIMARY,
+          mobileUrl: HERO_BANNER_PRIMARY_MOBILE,
+          href: "/",
+          placement: "hero" as const,
+          position: 0,
+        },
+        {
+          id: "hero-secondary-fallback",
+          title: "Banner secundário",
+          subtitle: null,
+          imageUrl: HERO_BANNER_SECONDARY,
+          mobileUrl: HERO_BANNER_SECONDARY_MOBILE,
+          href: "/",
+          placement: "hero" as const,
+          position: 1,
+        },
+      ];
+
   return (
     <div className="flex flex-col w-full bg-white overflow-hidden relative">
       <Script id="website-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }} />
@@ -83,7 +108,7 @@ export default async function Home() {
         <MessageCircleMore className="h-7 w-7 stroke-[1.9]" />
       </Link>
 
-      <BannerCarousel banners={normalizedHeroBanners} />
+      <BannerCarousel banners={heroSlides} />
 
       <BenefitsCarousel />
 
