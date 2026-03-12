@@ -6,15 +6,16 @@ import { PixIcon } from "@/components/ui/icons"
 import { MobileNavDrawer } from "@/components/layout/mobile-nav-drawer"
 import { SearchBar } from "@/components/layout/search-bar"
 import { getStoreSettings } from "@/lib/store-settings"
+import { DiamondRingIcon, NecklaceIcon, BraceletIcon, JewelryIcon, DiamondIcon } from "@/components/ui/jewelry-icons"
 
 const navigationItems = [
   { label: "Marcas", href: "/marcas", icon: Badge },
   { label: "Blog", href: "/blog", icon: Newspaper },
-  { label: "Acessórios", href: "/categoria/acessorios", icon: Gem },
-  { label: "Anéis", href: "/categoria/aneis", icon: Circle, hasChevron: true },
-  { label: "Colares", href: "/categoria/colares", icon: Circle, hasChevron: true },
+  { label: "Acessórios", href: "/categoria/acessorios", icon: DiamondIcon },
+  { label: "Anéis", href: "/categoria/aneis", icon: DiamondRingIcon, hasChevron: true },
+  { label: "Colares", href: "/categoria/colares", icon: NecklaceIcon, hasChevron: true },
   { label: "Promoções", href: "/categoria/promocoes", icon: BadgePercent },
-  { label: "Pulseiras", href: "/categoria/pulseiras", icon: Link2 },
+  { label: "Pulseiras", href: "/categoria/pulseiras", icon: BraceletIcon },
 ];
 
 export async function Header() {
