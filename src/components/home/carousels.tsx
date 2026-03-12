@@ -57,7 +57,7 @@ function animateHorizontalScroll(container: HTMLDivElement, targetLeft: number, 
   window.requestAnimationFrame(step);
 }
 
-function useDragScroll() {
+export function useDragScroll() {
   const [isDragging, setIsDragging] = useState(false);
   const dragState = useRef({
     pointerId: -1,
@@ -227,22 +227,6 @@ export function BenefitsCarousel() {
             </div>
           ))}
         </div>
-        <button 
-          type="button"
-          onClick={() => scroll("left")}
-          aria-label="Ver benefícios anteriores"
-          className="hidden md:flex absolute left-2 top-1/2 -translate-y-1/2 h-11 w-11 items-center justify-center rounded-full bg-white shadow-md z-20 text-[#1A1A1A]"
-        >
-          <ChevronLeft className="w-6 h-6" />
-        </button>
-        <button 
-          type="button"
-          onClick={() => scroll("right")}
-          aria-label="Ver próximos benefícios"
-          className="hidden md:flex absolute right-2 top-1/2 -translate-y-1/2 h-11 w-11 items-center justify-center rounded-full bg-white shadow-md z-20 text-[#1A1A1A]"
-        >
-          <ChevronRight className="w-6 h-6" />
-        </button>
       </div>
 
       <div className="hidden md:grid md:grid-cols-4 md:overflow-hidden md:rounded-[26px] md:border md:border-zinc-200 md:bg-white">
@@ -553,23 +537,6 @@ export function SecondaryBanners({ banners = [] }: { banners?: StoreBanner[] }) 
           );
         })}
       </div>
-
-      <button 
-        type="button"
-        onClick={() => scroll("left")}
-        aria-label="Ver promoções anteriores"
-        className="hidden"
-      >
-        <ChevronLeft className="w-6 h-6" />
-      </button>
-      <button 
-        type="button"
-        onClick={() => scroll("right")}
-        aria-label="Ver próximas promoções"
-        className="hidden"
-      >
-        <ChevronRight className="w-6 h-6" />
-      </button>
     </section>
   );
 }
@@ -639,23 +606,6 @@ export function CategoriesCarousel({ categories = [] }: { categories?: StoreCate
             </Link>
           ))}
         </div>
-
-        <button 
-          type="button"
-          onClick={() => scroll("left")}
-          aria-label="Ver categorias anteriores"
-          className="hidden md:flex absolute -left-4 md:left-0 top-[33%] -translate-y-1/2 w-12 h-12 items-center justify-center bg-zinc-200/80 rounded-full z-10 text-[#666666] xl:hidden"
-        >
-          <ChevronLeft className="w-6 h-6" />
-        </button>
-        <button 
-          type="button"
-          onClick={() => scroll("right")}
-          aria-label="Ver próximas categorias"
-          className="hidden md:flex absolute -right-4 md:right-0 top-[33%] -translate-y-1/2 w-12 h-12 items-center justify-center bg-zinc-200/80 rounded-full z-10 text-[#666666] xl:hidden"
-        >
-          <ChevronRight className="w-6 h-6" />
-        </button>
       </div>
     </section>
   );

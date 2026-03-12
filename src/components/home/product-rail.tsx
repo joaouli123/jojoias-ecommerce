@@ -1,7 +1,7 @@
 "use client";
 
-import { useRef } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useRef, useState } from "react";
+import { useDragScroll } from "@/components/home/carousels";
 import { ProductCard } from "@/components/product/product-card";
 
 type ProductRailItem = {
@@ -46,6 +46,7 @@ function animateHorizontalScroll(container: HTMLDivElement, targetLeft: number, 
 
 export function ProductRail({ products, size = "regular" }: ProductRailProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
+  const { isDragging, dragProps } = useDragScroll();
 
   const itemClassName = size === "compact"
     ? "min-w-[220px] max-w-[220px] sm:min-w-[250px] sm:max-w-[250px]"
@@ -70,8 +71,9 @@ export function ProductRail({ products, size = "regular" }: ProductRailProps) {
     <div className="relative group/rail">
       <div
         ref={scrollRef}
-        className="-mx-4 flex overflow-x-auto px-4 pb-12 pt-4 no-scrollbar sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8"
+        className={`-mx-4 flex overflow-x-auto px-4 pb-12 pt-4 no-scrollbar sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8 ${isDragging ? "cursor-grabbing" : "cursor-grab"}`}
         style={{ touchAction: "pan-y pinch-zoom" }}
+        {...dragProps}
       >
         <div className="flex gap-4 md:gap-6">
           {products.map((product) => (
@@ -81,23 +83,6 @@ export function ProductRail({ products, size = "regular" }: ProductRailProps) {
           ))}
         </div>
       </div>
-
-      <button
-        type="button"
-        onClick={() => scroll("left")}
-        aria-label="Ver produtos anteriores"
-        className="absolute left-1 top-1/2 z-10 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-zinc-200 bg-white/92 text-[#1A1A1A] shadow-[0_16px_28px_-20px_rgba(26,26,26,0.8)] backdrop-blur transition-all hover:border-[#D4AF37] hover:text-[#D4AF37] md:flex"
-      >
-        <ChevronLeft className="h-5 w-5" />
-      </button>
-      <button
-        type="button"
-        onClick={() => scroll("right")}
-        aria-label="Ver próximos produtos"
-        className="absolute right-1 top-1/2 z-10 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-zinc-200 bg-white/92 text-[#1A1A1A] shadow-[0_16px_28px_-20px_rgba(26,26,26,0.8)] backdrop-blur transition-all hover:border-[#D4AF37] hover:text-[#D4AF37] md:flex"
-      >
-        <ChevronRight className="h-5 w-5" />
-      </button>
     </div>
   );
 }
