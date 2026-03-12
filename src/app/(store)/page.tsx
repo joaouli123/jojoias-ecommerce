@@ -2,13 +2,14 @@ import Image from "next/image";
 import Link from "next/link";
 import type { Metadata } from "next";
 import Script from "next/script";
-import { ArrowRight, Instagram, MessageCircleMore } from "lucide-react";
+import { ArrowRight, Instagram } from "lucide-react";
 import { ProductCard } from "@/components/product/product-card";
 import { getBrandsAction, getCategoriesAction, getFeaturedProductsAction, getProductsByCategoryAction, getStoreBannersAction } from "@/actions/products";
 import { BannerCarousel, BenefitsCarousel, CategoriesCarousel, SecondaryBanners } from "@/components/home/carousels";
 import { BrandGrid } from "@/components/catalog/brand-grid";
 import { getStoreSettings } from "@/lib/store-settings";
 import { NewsletterSubscribeForm } from "@/components/layout/newsletter-subscribe-form";
+import { WhatsAppIcon } from "@/components/ui/icons";
 import type { StoreProduct } from "@/lib/store-data";
 import { ProductRail } from "@/components/home/product-rail";
 
@@ -150,7 +151,7 @@ export default async function Home() {
       <Script id="website-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }} />
       <Script id="organization-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }} />
       <Link href={settings.whatsappUrl} target="_blank" rel="noreferrer" aria-label="Falar com a Luxijóias no WhatsApp" className="fixed bottom-5 right-5 z-50 flex h-14 w-14 items-center justify-center rounded-full border border-white/70 bg-[#25D366] text-white shadow-[0_14px_32px_-14px_rgba(37,211,102,0.9)] transition-transform hover:scale-110 md:bottom-6 md:right-6">
-        <MessageCircleMore className="h-7 w-7 stroke-[1.9]" />
+        <WhatsAppIcon className="h-7 w-7" />
       </Link>
 
       <BannerCarousel banners={heroSlides} />

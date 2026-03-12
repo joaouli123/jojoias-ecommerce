@@ -3,9 +3,9 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useMemo, useState } from "react";
-import { Droplets, Facebook, Gem, Link2, MessageCircleMore, ShieldCheck, Star, Truck } from "lucide-react";
+import { Droplets, Facebook, Gem, Link2, ShieldCheck, Star, Truck } from "lucide-react";
 import { formatCurrency } from "@/lib/utils";
-import { PixIcon } from "@/components/ui/icons";
+import { PixIcon, WhatsAppIcon } from "@/components/ui/icons";
 import { FavoriteButton } from "@/components/product/favorite-button";
 import { ProductShippingEstimator } from "@/components/product/product-shipping-estimator";
 import { AddToCartForm } from "@/components/product/add-to-cart-form";
@@ -223,7 +223,7 @@ export function ProductPurchasePanel({
             rel="noreferrer"
             className="flex h-[50px] w-full items-center justify-center gap-2 rounded-[12px] border border-[#25D366] bg-white text-[14px] font-medium text-[#25D366] transition-colors hover:bg-[#F1FDF6]"
           >
-            <MessageCircleMore className="h-[18px] w-[18px] stroke-[1.9]" aria-hidden="true" />
+            <WhatsAppIcon className="h-[18px] w-[18px]" />
             Falar no WhatsApp
           </Link>
         </div>
@@ -250,7 +250,7 @@ export function ProductPurchasePanel({
               <Link2 className="h-[18px] w-[18px] stroke-[1.8]" />
             </button>
             <button type="button" aria-label="Compartilhar no WhatsApp" className="flex h-10 w-10 items-center justify-center rounded-full border border-zinc-200 text-[#666666] transition-all hover:border-[#25D366] hover:text-[#25D366]">
-              <MessageCircleMore className="h-[18px] w-[18px] stroke-[1.8]" />
+              <WhatsAppIcon className="h-[18px] w-[18px]" />
             </button>
             <button type="button" aria-label="Compartilhar no Facebook" className="flex h-10 w-10 items-center justify-center rounded-full border border-zinc-200 text-[#666666] transition-all hover:border-[#1877F2] hover:text-[#1877F2]">
               <Facebook className="h-[18px] w-[18px] stroke-[1.8]" />
