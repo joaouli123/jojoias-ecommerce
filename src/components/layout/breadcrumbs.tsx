@@ -12,13 +12,13 @@ type BreadcrumbsProps = {
 
 export function Breadcrumbs({ items }: BreadcrumbsProps) {
   return (
-    <nav aria-label="Breadcrumb" className="flex items-center overflow-x-auto">
-      <ol className="flex items-center gap-2 whitespace-nowrap text-sm text-[#666666]">
+    <nav aria-label="Breadcrumb" className="flex items-center w-full">
+      <ol className="flex items-center gap-1.5 whitespace-nowrap text-[13px] text-[#666666] overflow-x-auto no-scrollbar pb-1">
         {items.map((item, index) => {
           const isLast = index === items.length - 1;
 
           return (
-            <li key={`${item.label}-${index}`} className="flex items-center gap-2">
+            <li key={`${item.label}-${index}`} className="flex items-center gap-1.5">
               {item.href && !isLast ? (
                 <Link href={item.href} className="font-medium hover:text-[#1A1A1A] transition-colors">
                   {item.label}

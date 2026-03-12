@@ -4,11 +4,13 @@ import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Loader2, Search, Tag } from "lucide-react";
 import { formatCurrency } from "@/lib/utils";
+import { getProductPath } from "@/lib/product-url";
 
 type SearchSuggestionProduct = {
   id: string;
   name: string;
   slug: string;
+  categorySlug: string;
   price: number;
   image: string | null;
   category: string;
@@ -126,7 +128,7 @@ export function SearchBar() {
                 {results.products.map((product) => (
                   <Link
                     key={product.id}
-                    href={`/produto/${product.slug}`}
+                    href={getProductPath(product)}
                     className="flex items-center justify-between gap-3 rounded-[20px] px-3 py-3 hover:bg-[#FFFFFF]"
                   >
                     <div>

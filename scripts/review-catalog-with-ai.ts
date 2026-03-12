@@ -7,8 +7,6 @@ import {
   generateProductSlug,
 } from "@/lib/product-seo";
 import {
-  buildStructuredProductDescription,
-  extractProductInfoFromDescription,
   type ProductSpecItem,
 } from "@/lib/product-content";
 
@@ -42,6 +40,11 @@ type ReviewPlan = {
   specItems: ProductSpecItem[];
   seoTitle: string;
   metaDescription: string;
+};
+
+type ExistingInfoItem = {
+  label: string;
+  value: string;
 };
 
 const MODEL = "gemini-3.1-pro-preview";
@@ -170,6 +173,70 @@ function parseLegacySpecLines(lines: string[]) {
         value: cleanWhitespace(match[2]),
       }];
     });
+}
+
+function parseExistingInfoBlock(description: string) {
+  const match = description.match(/^Informações importantes:\n((?:- .+\n?)*)\n*/i);
+  if (!match) {
+    return {
+      descriptionBody: description,
+      infoItems: [] as ExistingInfoItem[],
+    };
+  }
+
+  const infoItems = match[1]
+    .split("\n")
+    .map((line) => cleanWhitespace(line.replace(/^[-•]\s*/, "")))
+    .filter(Boolean)
+    .map((value) => ({ label: "Detalhe", value }));
+
+  return {
+    descriptionBody: description.slice(match[0].length).trim(),
+    infoItems,
+  };
+}
+
+function parseExistingSpecsBlock(description: string) {
+  const match = description.match(/\n*Especificações técnicas:\n((?:- .+\n?)*)/i);
+  if (!match) {
+    return {
+      descriptionBody: description,
+      specItems: [] as ProductSpecItem[],
+    };
+  }
+
+  return {
+    descriptionBody: `${description.slice(0, match.index ?? 0)}${description.slice((match.index ?? 0) + match[0].length)}`.trim(),
+    specItems: parseLegacySpecLines(match[1].split("\n")),
+  };
+}
+
+function buildStructuredCatalogDescription(description: string, highlights: string[], specItems: ProductSpecItem[]) {
+  const normalizedDescription = cleanWhitespace(description);
+  const normalizedHighlights = Array.from(new Set(highlights.map((item) => cleanWhitespace(item)).filter(Boolean)));
+  const normalizedSpecs = Array.from(new Set(specItems
+    .map((item) => ({ label: titleCase(cleanWhitespace(item.label)), value: cleanWhitespace(item.value) }))
+    .filter((item) => item.label && item.value)
+    .map((item) => `${item.label}:::${item.value}`)))
+    .map((entry) => {
+      const [label, value] = entry.split(":::");
+      return { label, value };
+    });
+
+  const sections: string[] = [];
+  if (normalizedHighlights.length > 0) {
+    sections.push(`Informações importantes:\n${normalizedHighlights.map((item) => `- ${item}`).join("\n")}`);
+  }
+
+  if (normalizedDescription) {
+    sections.push(normalizedDescription);
+  }
+
+  if (normalizedSpecs.length > 0) {
+    sections.push(`Especificações técnicas:\n${normalizedSpecs.map((item) => `- ${item.label}: ${item.value}`).join("\n")}`);
+  }
+
+  return sections.join("\n\n").trim();
 }
 
 function extractLegacySpecsFallback(description: string) {
@@ -504,7 +571,10 @@ async function main() {
       brand: { select: { name: true, slug: true } },
       variants: { select: { name: true, price: true, quantity: true } },
     },
-    orderBy: { updatedAt: "desc" },
+    orderBy: [
+      { createdAt: "asc" },
+      { id: "asc" },
+    ],
     skip: offset,
     take: limit || undefined,
   });
@@ -518,13 +588,16 @@ async function main() {
     const prepared = batch.map((product) => {
       const brandName = normalizeBrandName(product.brand?.name, product.brand?.slug);
       const sanitizedDescription = stripPromotionalNoise(cleanWhitespace(product.description));
-      const extracted = extractProductInfoFromDescription(sanitizedDescription);
-      const effectiveExtraction = extracted.specItems.length > 0
-        ? extracted
-        : {
-            ...extracted,
-            ...extractLegacySpecsFallback(sanitizedDescription),
-          };
+      const existingInfo = parseExistingInfoBlock(sanitizedDescription);
+      const existingSpecs = parseExistingSpecsBlock(existingInfo.descriptionBody);
+      const legacyFallback = existingSpecs.specItems.length > 0
+        ? { descriptionBody: existingSpecs.descriptionBody, specItems: existingSpecs.specItems }
+        : extractLegacySpecsFallback(existingSpecs.descriptionBody);
+      const effectiveExtraction = {
+        descriptionBody: legacyFallback.descriptionBody,
+        infoItems: existingInfo.infoItems,
+        specItems: legacyFallback.specItems,
+      };
       const highlights = buildHeuristicHighlights({
         name: product.name,
         description: effectiveExtraction.descriptionBody,
@@ -578,6 +651,7 @@ async function main() {
         const categoryName = resolveCanonicalCategory(aiProduct?.category || fallback.categoryName, entry.product.category.name);
         const descriptionBody = cleanWhitespace(aiProduct?.description || fallback.description);
         const mergedHighlights = Array.from(new Set([
+          ...entry.extracted.infoItems.map((item) => item.value),
           ...entry.highlights,
           ...(Array.isArray(aiProduct?.infoItems) ? aiProduct.infoItems.map((item) => cleanWhitespace(item)) : []),
         ].filter((item) => Boolean(item) && item.length <= 110))).slice(0, 4);
@@ -602,7 +676,7 @@ async function main() {
           siteName: "Luxijóias",
         });
 
-        const finalDescription = buildStructuredProductDescription(
+        const finalDescription = buildStructuredCatalogDescription(
           descriptionBody,
           mergedHighlights,
           entry.extracted.specItems,

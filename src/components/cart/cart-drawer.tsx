@@ -5,6 +5,7 @@ import { ShoppingCart, X, Trash2, ArrowRight, Minus, Plus } from "lucide-react"
 import { formatCurrency } from "@/lib/utils"
 import Link from "next/link"
 import { CART_UPDATED_EVENT, dispatchCartUpdated, fetchCartState, getEmptyCartState, primeCartState, type CartStatePayload } from "@/lib/cart-sync"
+import { getProductPath } from "@/lib/product-url"
 
 type CartDrawerProps = {
   initialCart?: CartStatePayload
@@ -230,7 +231,7 @@ export function CartDrawer({ initialCart = getEmptyCartState() }: CartDrawerProp
                   </div>
                   <div className="flex flex-1 flex-col justify-between">
                     <div>
-                      <Link href={`/produto/${item.slug}`} className="text-sm font-medium text-[#1A1A1A] line-clamp-1 hover:text-[#D4AF37] transition-colors" onClick={() => setIsOpen(false)}>
+                      <Link href={getProductPath(item)} className="text-sm font-medium text-[#1A1A1A] line-clamp-1 hover:text-[#D4AF37] transition-colors" onClick={() => setIsOpen(false)}>
                         {item.name}
                       </Link>
                       {item.variantName ? <p className="mt-1 text-xs text-[#666666]">{item.variantName}</p> : null}

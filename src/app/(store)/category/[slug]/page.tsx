@@ -3,6 +3,7 @@ import Link from "next/link"
 import { ProductCard } from "@/components/product/product-card"
 import { getCatalogFacetsAction, getCatalogProductsAction } from "@/actions/products"
 import { MobileFilters } from "@/components/catalog/mobile-filters"
+import { getAbsoluteProductUrl } from "@/lib/product-url"
 import { getStoreSettings } from "@/lib/store-settings"
 import { buildBreadcrumbJsonLd, buildPageJsonLd, buildPageMetadata, toAbsoluteUrl } from "@/lib/site-seo"
 
@@ -134,7 +135,7 @@ export default async function CategoryPage({
     itemListElement: products.slice(0, 12).map((product, index) => ({
       "@type": "ListItem",
       position: index + 1,
-      url: `${siteUrl}/produto/${product.slug}`,
+      url: getAbsoluteProductUrl(siteUrl, product),
       name: product.name,
     })),
   }
@@ -156,7 +157,7 @@ export default async function CategoryPage({
       itemListElement: products.slice(0, 12).map((product, index) => ({
         "@type": "ListItem",
         position: index + 1,
-        url: `${siteUrl}/produto/${product.slug}`,
+        url: getAbsoluteProductUrl(siteUrl, product),
         name: product.name,
       })),
     },
@@ -322,6 +323,7 @@ export default async function CategoryPage({
                     id: product.id,
                     name: product.name,
                     slug: product.slug,
+                    categorySlug: product.categorySlug,
                     price: product.price,
                     comparePrice: product.comparePrice,
                     image: product.image || "/mock",

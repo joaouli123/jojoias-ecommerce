@@ -11,6 +11,7 @@ import { ProductViewTracker } from "@/components/analytics/ecommerce-trackers"
 import { extractProductInfoFromDescription } from "@/lib/product-content"
 import { buildProductMetaDescription, buildProductSeoTitle } from "@/lib/product-seo"
 import { getStoreSettings } from "@/lib/store-settings"
+import { ProductRail } from "@/components/home/product-rail"
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://luxijoias.com.br"
 const productTabKeys = ["description", "specs", "reviews"] as const
@@ -350,25 +351,20 @@ function RelatedProductsSection({
         </Link>
       </div>
 
-      <div className="grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-4">
-        {relatedProducts.map((relatedProduct) => (
-          <ProductCard
-            key={relatedProduct.id}
-            product={{
-              id: relatedProduct.id,
-              name: relatedProduct.name,
-              slug: relatedProduct.slug,
-              price: relatedProduct.price,
-              comparePrice: relatedProduct.comparePrice,
-              image: relatedProduct.image || "",
-              category: relatedProduct.category,
-              variantId: relatedProduct.variants.find((variant) => variant.quantity > 0)?.id ?? relatedProduct.variants[0]?.id ?? null,
-              requiresSelection: relatedProduct.variants.length > 1,
-              whatsappBaseUrl: whatsappUrl,
-            }}
-          />
-        ))}
-      </div>
+      <ProductRail
+        products={relatedProducts.map((relatedProduct) => ({
+          id: relatedProduct.id,
+          name: relatedProduct.name,
+          slug: relatedProduct.slug,
+          price: relatedProduct.price,
+          comparePrice: relatedProduct.comparePrice,
+          image: relatedProduct.image || "",
+          category: relatedProduct.category,
+          variantId: relatedProduct.variants.find((variant) => variant.quantity > 0)?.id ?? relatedProduct.variants[0]?.id ?? null,
+          requiresSelection: relatedProduct.variants.length > 1,
+          whatsappBaseUrl: whatsappUrl,
+        }))}
+      />
     </section>
   )
 }
@@ -377,9 +373,9 @@ function RelatedProductsSkeleton() {
   return (
     <section className="mt-14 md:mt-20 animate-pulse">
       <div className="mb-6 h-8 w-64 rounded bg-zinc-200" />
-      <div className="grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-4">
+      <div className="flex gap-4 md:gap-6 overflow-hidden">
         {Array.from({ length: 4 }).map((_, index) => (
-          <div key={index} className="aspect-[3/4] rounded-2xl border border-zinc-200 bg-[#FFFFFF]" />
+          <div key={index} className="aspect-[3/4] min-w-[260px] rounded-2xl border border-zinc-200 bg-[#FFFFFF]" />
         ))}
       </div>
     </section>

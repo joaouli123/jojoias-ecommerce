@@ -74,6 +74,7 @@ export type SearchSuggestionProduct = {
   id: string;
   name: string;
   slug: string;
+  categorySlug: string;
   price: number;
   image: string | null;
   category: string;
@@ -108,6 +109,7 @@ export type HydratedCartItem = {
   productId: string;
   variantId: string | null;
   slug: string;
+  categorySlug: string;
   name: string;
   image: string | null;
   unitPrice: number;
@@ -853,9 +855,9 @@ export async function getSearchSuggestions(query: string, limit = 5): Promise<Se
               id: true,
               name: true,
               slug: true,
+              category: { select: { name: true, slug: true } },
               price: true,
               image: true,
-              category: { select: { name: true } },
               brand: { select: { name: true } },
               description: true,
               sku: true,
@@ -932,6 +934,7 @@ export async function getSearchSuggestions(query: string, limit = 5): Promise<Se
           id: product.id,
           name: product.name,
           slug: product.slug,
+          categorySlug: product.category.slug,
           price: product.price,
           image: product.image,
           category: product.category.name,
@@ -968,6 +971,11 @@ export async function hydrateCart(lines: CartLine[]): Promise<HydratedCartItem[]
         id: true,
         name: true,
         slug: true,
+        category: {
+          select: {
+            slug: true,
+          },
+        },
         image: true,
         price: true,
         sku: true,
@@ -1003,6 +1011,7 @@ export async function hydrateCart(lines: CartLine[]): Promise<HydratedCartItem[]
           productId: product.id,
           variantId: variant?.id ?? null,
           slug: product.slug,
+          categorySlug: product.category.slug,
           name: product.name,
           image,
           unitPrice,

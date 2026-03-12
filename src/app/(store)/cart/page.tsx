@@ -5,6 +5,7 @@ import { getCartAction, removeFromCartAction, updateCartItemAction } from "@/act
 import { CartViewTracker } from "@/components/analytics/ecommerce-trackers";
 import { Breadcrumbs } from "@/components/layout/breadcrumbs";
 import { CartSummary } from "@/components/cart/cart-summary";
+import { getProductPath } from "@/lib/product-url";
 
 export default async function CartPage() {
   const cart = await getCartAction();
@@ -52,7 +53,7 @@ export default async function CartPage() {
                       />
                     </div>
                     <div className="flex flex-col justify-center">
-                      <Link href={`/produto/${item.slug}`} className="font-semibold text-[#1A1A1A] group-hover:text-[#D4AF37] transition-colors line-clamp-2 leading-tight">
+                      <Link href={getProductPath(item)} className="font-semibold text-[#1A1A1A] group-hover:text-[#D4AF37] transition-colors line-clamp-2 leading-tight">
                         {item.name}
                       </Link>
                       {item.variantName ? (

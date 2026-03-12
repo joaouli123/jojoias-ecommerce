@@ -8,6 +8,7 @@ type ProductRailItem = {
   id: string;
   name: string;
   slug: string;
+  categorySlug?: string | null;
   price: number;
   comparePrice?: number | null;
   image: string;

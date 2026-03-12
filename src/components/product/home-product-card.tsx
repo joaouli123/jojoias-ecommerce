@@ -2,11 +2,13 @@ import Image from "next/image";
 import Link from "next/link";
 import { formatCurrency } from "@/lib/utils";
 import { PixIcon } from "@/components/ui/icons";
+import { getProductPath } from "@/lib/product-url";
 
 type HomeProductCardProps = {
   product: {
     name: string;
     slug: string;
+    categorySlug?: string | null;
     price: number;
     comparePrice?: number | null;
     image: string;
@@ -20,8 +22,10 @@ export function HomeProductCard({ product }: HomeProductCardProps) {
   const parcelas = 6;
   const valorParcela = product.price / parcelas;
 
+  const productHref = getProductPath(product);
+
   return (
-    <Link href={`/produto/${product.slug}`} className="group relative flex h-full select-none flex-col rounded-[18px] border border-zinc-200 bg-white p-2 transition-colors hover:border-zinc-300 sm:p-3">
+    <Link href={productHref} className="group relative flex h-full select-none flex-col rounded-[18px] border border-zinc-200 bg-white p-2 transition-colors hover:border-zinc-300 sm:p-3">
       {hasDiscount ? (
         <div className="absolute left-2 top-2 z-20">
           <span className="rounded-full bg-[#D4AF37] px-2 py-1 text-[10px] font-medium tracking-wide text-[#111111]">

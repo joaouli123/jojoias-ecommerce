@@ -9,12 +9,14 @@ import { formatCurrency } from "@/lib/utils"
 import { dispatchCartUpdated, type CartStatePayload } from "@/lib/cart-sync"
 import { PixIcon, WhatsAppIcon } from "@/components/ui/icons"
 import { FavoriteButton } from "@/components/product/favorite-button"
+import { getProductPath } from "@/lib/product-url"
 
 interface ProductCardProps {
   product: {
     id: string
     name: string
     slug: string
+    categorySlug?: string | null
     price: number
     comparePrice?: number | null
     image: string
@@ -39,7 +41,8 @@ export function ProductCard({ product }: ProductCardProps) {
   const discountPercent = Math.round((1 - (product.price / oldPrice)) * 100);
   const whatsappHref = product.whatsappBaseUrl
     ? `${product.whatsappBaseUrl}${product.whatsappBaseUrl.includes("?") ? "&" : "?"}text=${encodeURIComponent(`Olá! Quero comprar o produto ${product.name}.`)}`
-    : `/produto/${product.slug}`;
+    : getProductPath(product);
+  const productHref = getProductPath(product);
 
   useEffect(() => {
     if (!showCartNotice) return;
@@ -57,7 +60,7 @@ export function ProductCard({ product }: ProductCardProps) {
 
   async function handleAddToCart() {
     if (product.requiresSelection && !product.variantId) {
-      router.push(`/produto/${product.slug}`);
+      router.push(productHref);
       return;
     }
 
@@ -146,7 +149,7 @@ export function ProductCard({ product }: ProductCardProps) {
 
       {/* Imagem Container */}
       <Link
-        href={`/produto/${product.slug}`}
+        href={productHref}
         aria-label={`Ver detalhes de ${product.name}`}
         className="relative mb-3 block aspect-square w-full overflow-hidden rounded-[18px] bg-[#F7F5F2] select-none"
       >
@@ -165,7 +168,7 @@ export function ProductCard({ product }: ProductCardProps) {
         <p className="mb-2 text-[10px] font-medium uppercase tracking-[0.2em] text-[#8A7F72]">
           {product.category}
         </p>
-        <Link href={`/produto/${product.slug}`} className="mb-3 block min-h-[64px] select-none">
+        <Link href={productHref} className="mb-3 block min-h-[64px] select-none">
           <h3 className="line-clamp-2 font-serif text-[clamp(1.08rem,1.45vw,1.24rem)] font-medium leading-[1.1] tracking-[-0.015em] text-[#1A1A1A]">
             {product.name}
           </h3>

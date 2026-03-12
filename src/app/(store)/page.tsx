@@ -260,6 +260,7 @@ function HorizontalProductSection({
           id: product.id,
           name: product.name,
           slug: product.slug,
+          categorySlug: product.categorySlug,
           price: product.price,
           comparePrice: product.comparePrice,
           image: product.image || "",
