@@ -64,6 +64,7 @@ export function useDragScroll() {
     startX: 0,
     startScrollLeft: 0,
     hasMoved: false,
+    isTouch: false,
   });
 
   function onPointerDown(event: React.PointerEvent<HTMLDivElement>) {
@@ -75,9 +76,13 @@ export function useDragScroll() {
       startX: event.clientX,
       startScrollLeft: container.scrollLeft,
       hasMoved: false,
+      isTouch: event.pointerType === "touch",
     };
     setIsDragging(true);
-    container.setPointerCapture(event.pointerId);
+
+    if (event.pointerType !== "touch") {
+      container.setPointerCapture(event.pointerId);
+    }
   }
 
   function onPointerMove(event: React.PointerEvent<HTMLDivElement>) {
@@ -89,11 +94,38 @@ export function useDragScroll() {
       dragState.current.hasMoved = true;
     }
 
+    if (dragState.current.isTouch) {
+      return;
+    }
+
     if (dragState.current.hasMoved) {
       event.preventDefault();
     }
 
     container.scrollLeft = dragState.current.startScrollLeft - deltaX;
+  }
+
+  function onTouchStart(event: React.TouchEvent<HTMLDivElement>) {
+    const touch = event.touches[0];
+    if (!touch) return;
+
+    dragState.current = {
+      pointerId: -1,
+      startX: touch.clientX,
+      startScrollLeft: event.currentTarget.scrollLeft,
+      hasMoved: false,
+      isTouch: true,
+    };
+    setIsDragging(true);
+  }
+
+  function onTouchMove(event: React.TouchEvent<HTMLDivElement>) {
+    const touch = event.touches[0];
+    if (!touch) return;
+
+    if (Math.abs(touch.clientX - dragState.current.startX) > 6) {
+      dragState.current.hasMoved = true;
+    }
   }
 
   function onClickCapture(event: React.MouseEvent<HTMLDivElement>) {
@@ -113,6 +145,10 @@ export function useDragScroll() {
     setIsDragging(false);
   }
 
+  function stopTouchDragging() {
+    setIsDragging(false);
+  }
+
   return {
     isDragging,
     dragProps: {
@@ -120,6 +156,10 @@ export function useDragScroll() {
       onPointerMove,
       onPointerUp: stopDragging,
       onPointerCancel: stopDragging,
+      onTouchStart,
+      onTouchMove,
+      onTouchEnd: stopTouchDragging,
+      onTouchCancel: stopTouchDragging,
       onClickCapture,
       onDragStart: (event: React.DragEvent<HTMLDivElement>) => event.preventDefault(),
     },
@@ -212,7 +252,7 @@ export function BenefitsCarousel() {
         <div 
           ref={scrollRef}
           className={`flex overflow-x-auto snap-x snap-mandatory gap-4 no-scrollbar pb-2 pr-6 ${isDragging ? "cursor-grabbing" : "cursor-grab"}`}
-          style={{ touchAction: "pan-y pinch-zoom" }}
+          style={{ touchAction: "pan-x pan-y pinch-zoom", WebkitOverflowScrolling: "touch", overscrollBehaviorX: "contain" }}
           {...dragProps}
         >
           {benefits.map((benefit, i) => (
@@ -249,8 +289,11 @@ export function BenefitsCarousel() {
 export function BannerCarousel({ banners = [] }: { banners?: StoreBanner[] }) {
   const secondaryBannerImage = HERO_SECONDARY_FALLBACK;
   const secondaryMobileBannerImage = HERO_SECONDARY_MOBILE_FALLBACK;
-  const pointerState = useRef({ startX: 0, pointerId: -1, hasMoved: false });
+  const sliderRef = useRef<HTMLDivElement>(null);
+  const pointerState = useRef({ startX: 0, startY: 0, currentX: 0, pointerId: -1, hasMoved: false, lockAxis: null as "x" | "y" | null });
   const [isAutoPaused, setIsAutoPaused] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragOffset, setDragOffset] = useState(0);
 
   const fallbackBanners: StoreBanner[] = [
     { id: "hero-1", title: "Banner principal", subtitle: null, imageUrl: HERO_PRIMARY_FALLBACK, mobileUrl: HERO_PRIMARY_MOBILE_FALLBACK, href: null, placement: "hero", position: 0 },
@@ -296,17 +339,54 @@ export function BannerCarousel({ banners = [] }: { banners?: StoreBanner[] }) {
     setActiveIndex(index + 1);
   }
 
+  function beginSwipe(startX: number, startY: number, pointerId = -1) {
+    pointerState.current = { startX, startY, currentX: startX, pointerId, hasMoved: false, lockAxis: null };
+    setIsDragging(true);
+    setIsAutoPaused(true);
+  }
+
+  function updateSwipe(currentX: number, currentY: number) {
+    const deltaX = currentX - pointerState.current.startX;
+    const deltaY = currentY - pointerState.current.startY;
+
+    if (!pointerState.current.lockAxis && (Math.abs(deltaX) > 6 || Math.abs(deltaY) > 6)) {
+      pointerState.current.lockAxis = Math.abs(deltaX) >= Math.abs(deltaY) ? "x" : "y";
+    }
+
+    if (pointerState.current.lockAxis === "y") {
+      return false;
+    }
+
+    pointerState.current.currentX = currentX;
+    pointerState.current.hasMoved = Math.abs(deltaX) > 8;
+    setDragOffset(deltaX);
+    return pointerState.current.hasMoved;
+  }
+
+  function finishSwipe() {
+    const deltaX = pointerState.current.currentX - pointerState.current.startX;
+
+    if (pointerState.current.lockAxis !== "y" && Math.abs(deltaX) > 30) {
+      moveSlide(deltaX < 0 ? "right" : "left");
+    }
+
+    pointerState.current = { startX: 0, startY: 0, currentX: 0, pointerId: -1, hasMoved: false, lockAxis: null };
+    setDragOffset(0);
+    setIsDragging(false);
+    setIsAutoPaused(false);
+  }
+
   function onPointerDown(event: React.PointerEvent<HTMLDivElement>) {
-    pointerState.current = { startX: event.clientX, pointerId: event.pointerId, hasMoved: false };
+    if (event.pointerType !== "mouse" || event.button !== 0) return;
+
+    beginSwipe(event.clientX, event.clientY, event.pointerId);
     event.currentTarget.setPointerCapture(event.pointerId);
   }
 
   function onPointerMove(event: React.PointerEvent<HTMLDivElement>) {
-    if (pointerState.current.pointerId !== event.pointerId) return;
+    if (pointerState.current.pointerId !== event.pointerId || !isDragging) return;
 
-    const deltaX = event.clientX - pointerState.current.startX;
-    if (Math.abs(deltaX) > 8) {
-      pointerState.current.hasMoved = true;
+    if (updateSwipe(event.clientX, event.clientY)) {
       event.preventDefault();
     }
   }
@@ -314,16 +394,31 @@ export function BannerCarousel({ banners = [] }: { banners?: StoreBanner[] }) {
   function onPointerUp(event: React.PointerEvent<HTMLDivElement>) {
     if (pointerState.current.pointerId !== event.pointerId) return;
 
-    const deltaX = event.clientX - pointerState.current.startX;
-    if (Math.abs(deltaX) > 50) {
-      moveSlide(deltaX < 0 ? "right" : "left");
-    }
-
     if (event.currentTarget.hasPointerCapture(event.pointerId)) {
       event.currentTarget.releasePointerCapture(event.pointerId);
     }
 
-    pointerState.current.pointerId = -1;
+    finishSwipe();
+  }
+
+  function onTouchStart(event: React.TouchEvent<HTMLDivElement>) {
+    const touch = event.touches[0];
+    if (!touch) return;
+
+    beginSwipe(touch.clientX, touch.clientY);
+  }
+
+  function onTouchMove(event: React.TouchEvent<HTMLDivElement>) {
+    const touch = event.touches[0];
+    if (!touch || !isDragging) return;
+
+    if (updateSwipe(touch.clientX, touch.clientY)) {
+      event.preventDefault();
+    }
+  }
+
+  function onTouchEnd() {
+    finishSwipe();
   }
 
   function onClickCapture(event: React.MouseEvent<HTMLDivElement>) {
@@ -376,6 +471,7 @@ export function BannerCarousel({ banners = [] }: { banners?: StoreBanner[] }) {
   return (
     <section className="group relative mt-4 w-full max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 md:mt-6">
       <div
+        ref={sliderRef}
         className="relative overflow-hidden rounded-[28px] border border-white/70 shadow-[0_22px_60px_-34px_rgba(26,26,26,0.45)] md:rounded-[36px]"
         style={{ touchAction: "pan-y pinch-zoom" }}
         onMouseEnter={() => setIsAutoPaused(true)}
@@ -384,12 +480,16 @@ export function BannerCarousel({ banners = [] }: { banners?: StoreBanner[] }) {
         onPointerMove={onPointerMove}
         onPointerUp={onPointerUp}
         onPointerCancel={onPointerUp}
+        onTouchStart={onTouchStart}
+        onTouchMove={onTouchMove}
+        onTouchEnd={onTouchEnd}
+        onTouchCancel={onTouchEnd}
         onClickCapture={onClickCapture}
       >
         <div
-          className={`flex will-change-transform ${isAnimating ? "transition-transform duration-[1100ms]" : "transition-none"}`}
+          className={`flex will-change-transform ${isDragging ? "transition-none" : isAnimating ? "transition-transform duration-[620ms]" : "transition-none"}`}
           style={{
-            transform: `translateX(-${activeIndex * 100}%)`,
+            transform: `translateX(calc(-${activeIndex * 100}% + ${dragOffset}px))`,
             transitionTimingFunction: isAnimating ? SLIDE_EASE : undefined,
           }}
           onTransitionEnd={onTransitionEnd}
@@ -511,7 +611,7 @@ export function SecondaryBanners({ banners = [] }: { banners?: StoreBanner[] }) 
       <div 
         ref={scrollRef}
         className={`flex overflow-x-auto snap-x snap-mandatory gap-4 no-scrollbar pb-2 pr-6 md:grid md:grid-cols-3 md:gap-6 md:overflow-visible md:pb-0 ${isDragging ? "cursor-grabbing" : "cursor-grab md:cursor-default"}`}
-        style={{ touchAction: "pan-y pinch-zoom" }}
+        style={{ touchAction: "pan-x pan-y pinch-zoom", WebkitOverflowScrolling: "touch", overscrollBehaviorX: "contain" }}
         {...dragProps}
       >
         {items.map((banner, index) => {
@@ -582,13 +682,13 @@ export function CategoriesCarousel({ categories = [] }: { categories?: StoreCate
         <div 
           ref={scrollRef}
           className={`flex overflow-x-auto snap-x snap-mandatory gap-5 no-scrollbar px-2 pb-12 pt-6 pr-8 ${isDragging ? "cursor-grabbing" : "cursor-grab"}`}
-          style={{ touchAction: "pan-y pinch-zoom" }}
+          style={{ touchAction: "pan-x pan-y pinch-zoom", WebkitOverflowScrolling: "touch", overscrollBehaviorX: "contain" }}
           {...dragProps}
         >
           {items.map((cat, i) => (
             <Link key={i} href={"/categoria/" + cat.slug} draggable={false} onDragStart={(event) => event.preventDefault()} className="block min-w-[124px] shrink-0 snap-start select-none group/cat sm:min-w-[156px]">
               <div className="flex flex-col items-center gap-3">
-                <div className="relative h-[124px] w-[124px] overflow-hidden rounded-full border-[3px] border-[#D4AF37] bg-[#f7f1e7] p-[3px] shadow-[0_18px_35px_-26px_rgba(26,26,26,0.55)] transition-all duration-500 ease-out group-hover/cat:-translate-y-1 group-hover/cat:shadow-[0_24px_42px_-24px_rgba(26,26,26,0.65)] sm:h-[156px] sm:w-[156px]">
+                <div className="relative h-[124px] w-[124px] overflow-hidden rounded-full border border-zinc-200 bg-white p-[3px] shadow-[0_18px_35px_-26px_rgba(26,26,26,0.55)] transition-all duration-500 ease-out group-hover/cat:-translate-y-1 group-hover/cat:border-zinc-300 group-hover/cat:shadow-[0_24px_42px_-24px_rgba(26,26,26,0.65)] sm:h-[156px] sm:w-[156px]">
                   <div className="relative h-full w-full overflow-hidden rounded-full">
                     <Image
                       src={CATEGORY_EDITORIAL_IMAGES[cat.slug] || CATEGORY_FALLBACK_IMAGES[i % CATEGORY_FALLBACK_IMAGES.length]}
@@ -598,7 +698,7 @@ export function CategoriesCarousel({ categories = [] }: { categories?: StoreCate
                       sizes="(max-width: 640px) 124px, 156px"
                       className="object-cover transform transition-transform duration-[1100ms] ease-out group-hover/cat:scale-[1.08]"
                     />
-                    <div className="absolute inset-0 rounded-full ring-1 ring-white/40" />
+                    <div className="absolute inset-0 rounded-full ring-1 ring-zinc-200/70" />
                   </div>
                 </div>
                 <span className="sr-only">{cat.name}</span>

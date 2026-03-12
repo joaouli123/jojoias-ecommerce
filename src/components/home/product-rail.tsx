@@ -73,7 +73,7 @@ export function ProductRail({ products, size = "regular" }: ProductRailProps) {
       <div
         ref={scrollRef}
         className={`-mx-4 flex overflow-x-auto px-4 pb-12 pt-4 no-scrollbar sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8 ${isDragging ? "cursor-grabbing" : "cursor-grab"}`}
-        style={{ touchAction: "pan-y pinch-zoom" }}
+        style={{ touchAction: "pan-x pan-y pinch-zoom", WebkitOverflowScrolling: "touch", overscrollBehaviorX: "contain" }}
         {...dragProps}
       >
         <div className="flex gap-4 md:gap-6">
