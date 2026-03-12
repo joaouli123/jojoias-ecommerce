@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
@@ -7,6 +7,9 @@ import Link from "next/link";
 import { ShieldCheck, Truck, CreditCard, Map } from "lucide-react";
 import type { StoreBanner, StoreCategory } from "@/lib/store-data";
 
+const HERO_PRIMARY_FALLBACK = "/banner 1.png";
+const HERO_SECONDARY_FALLBACK = "/banner-home-secundario-luxijoias.avif";
+
 function resolveBannerImageUrl(imageUrl: string | null | undefined, fallbackUrl: string) {
   if (!imageUrl) return fallbackUrl;
 
@@ -14,7 +17,58 @@ function resolveBannerImageUrl(imageUrl: string | null | undefined, fallbackUrl:
     return fallbackUrl;
   }
 
+  if (imageUrl === "/banner-home-luxijoias.avif") {
+    return HERO_PRIMARY_FALLBACK;
+  }
+
+  if (imageUrl === "/banner-home-luxijoias 2.avif") {
+    return HERO_SECONDARY_FALLBACK;
+  }
+
   return imageUrl;
+}
+
+function BannerSlideImage({
+  src,
+  fallbackSrc,
+  alt,
+  priority,
+  loading,
+  fetchPriority,
+  className,
+}: {
+  src: string;
+  fallbackSrc: string;
+  alt: string;
+  priority: boolean;
+  loading: "eager" | "lazy";
+  fetchPriority?: "high";
+  className: string;
+}) {
+  const [currentSrc, setCurrentSrc] = useState(src);
+
+  useEffect(() => {
+    setCurrentSrc(src);
+  }, [src]);
+
+  return (
+    <Image
+      src={currentSrc}
+      alt={alt}
+      fill
+      priority={priority}
+      quality={60}
+      fetchPriority={fetchPriority}
+      loading={loading}
+      sizes="100vw"
+      className={className}
+      onError={() => {
+        if (currentSrc !== fallbackSrc) {
+          setCurrentSrc(fallbackSrc);
+        }
+      }}
+    />
+  );
 }
 
 export function BenefitsCarousel() {
@@ -65,7 +119,7 @@ export function BenefitsCarousel() {
           type="button"
           onClick={() => scroll("left")}
           aria-label="Ver benefícios anteriores"
-          className="absolute left-2 top-1/2 -translate-y-1/2 flex h-11 w-11 items-center justify-center rounded-full bg-white shadow-md z-20 text-zinc-900"
+          className="hidden md:flex absolute left-2 top-1/2 -translate-y-1/2 h-11 w-11 items-center justify-center rounded-full bg-white shadow-md z-20 text-zinc-900"
         >
           <ChevronLeft className="w-6 h-6" />
         </button>
@@ -73,7 +127,7 @@ export function BenefitsCarousel() {
           type="button"
           onClick={() => scroll("right")}
           aria-label="Ver próximos benefícios"
-          className="absolute right-2 top-1/2 -translate-y-1/2 flex h-11 w-11 items-center justify-center rounded-full bg-white shadow-md z-20 text-zinc-900"
+          className="hidden md:flex absolute right-2 top-1/2 -translate-y-1/2 h-11 w-11 items-center justify-center rounded-full bg-white shadow-md z-20 text-zinc-900"
         >
           <ChevronRight className="w-6 h-6" />
         </button>
@@ -99,7 +153,7 @@ export function BenefitsCarousel() {
 export function BannerCarousel({ banners = [] }: { banners?: StoreBanner[] }) {
   const [activeIndex, setActiveIndex] = useState(0);
 
-  const secondaryBannerImage = "/banner-home-luxijoias 2.avif";
+  const secondaryBannerImage = HERO_SECONDARY_FALLBACK;
 
   const scroll = (direction: "left" | "right") => {
     setActiveIndex((current) => {
@@ -109,7 +163,7 @@ export function BannerCarousel({ banners = [] }: { banners?: StoreBanner[] }) {
   };
 
   const fallbackBanners: StoreBanner[] = [
-    { id: "hero-1", title: "Banner principal", subtitle: null, imageUrl: "/banner-home-luxijoias.avif", mobileUrl: null, href: null, placement: "hero", position: 0 },
+    { id: "hero-1", title: "Banner principal", subtitle: null, imageUrl: HERO_PRIMARY_FALLBACK, mobileUrl: null, href: null, placement: "hero", position: 0 },
     { id: "hero-2", title: "Banner secundário", subtitle: null, imageUrl: secondaryBannerImage, mobileUrl: secondaryBannerImage, href: null, placement: "hero", position: 1 },
   ];
 
@@ -128,38 +182,34 @@ export function BannerCarousel({ banners = [] }: { banners?: StoreBanner[] }) {
             const isFirstBanner = banner.id === items[0]?.id;
             const desktopImage = resolveBannerImageUrl(
               banner.imageUrl,
-              isFirstBanner ? "/banner-home-luxijoias.avif" : secondaryBannerImage,
+              isFirstBanner ? HERO_PRIMARY_FALLBACK : secondaryBannerImage,
             );
             const mobileImage = resolveBannerImageUrl(
               banner.mobileUrl || banner.imageUrl,
-              isFirstBanner ? "/banner-home-luxijoias.avif" : secondaryBannerImage,
+              isFirstBanner ? HERO_PRIMARY_FALLBACK : secondaryBannerImage,
             );
             const imageAlt = banner.title || "Banner principal da loja";
             const content = (
               <>
                 <div className="absolute inset-0 hidden md:block">
-                  <Image
+                  <BannerSlideImage
                     src={desktopImage}
+                    fallbackSrc={isFirstBanner ? HERO_PRIMARY_FALLBACK : secondaryBannerImage}
                     alt={imageAlt}
-                    fill
                     priority={isFirstBanner}
-                    quality={60}
                     fetchPriority={isFirstBanner ? "high" : undefined}
                     loading={isFirstBanner ? "eager" : "lazy"}
-                    sizes="100vw"
                     className="object-cover"
                   />
                 </div>
                 <div className="absolute inset-0 md:hidden">
-                  <Image
+                  <BannerSlideImage
                     src={mobileImage}
+                    fallbackSrc={isFirstBanner ? HERO_PRIMARY_FALLBACK : secondaryBannerImage}
                     alt={imageAlt}
-                    fill
                     priority={isFirstBanner}
-                    quality={60}
                     fetchPriority={isFirstBanner ? "high" : undefined}
                     loading={isFirstBanner ? "eager" : "lazy"}
-                    sizes="100vw"
                     className="object-cover"
                   />
                 </div>
@@ -180,7 +230,7 @@ export function BannerCarousel({ banners = [] }: { banners?: StoreBanner[] }) {
           type="button"
           onClick={() => scroll("left")}
           aria-label="Ver banner anterior"
-          className="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 w-11 h-11 flex items-center justify-center bg-white/95 rounded-full shadow-lg z-20 text-zinc-900 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity"
+          className="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 w-11 h-11 hidden md:flex items-center justify-center bg-white/95 rounded-full shadow-lg z-20 text-zinc-900 md:opacity-0 md:group-hover:opacity-100 transition-opacity"
         >
           <ChevronLeft className="w-6 h-6" />
         </button>
@@ -188,7 +238,7 @@ export function BannerCarousel({ banners = [] }: { banners?: StoreBanner[] }) {
           type="button"
           onClick={() => scroll("right")}
           aria-label="Ver próximo banner"
-          className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 w-11 h-11 flex items-center justify-center bg-white/95 rounded-full shadow-lg z-20 text-zinc-900 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity"
+          className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 w-11 h-11 hidden md:flex items-center justify-center bg-white/95 rounded-full shadow-lg z-20 text-zinc-900 md:opacity-0 md:group-hover:opacity-100 transition-opacity"
         >
           <ChevronRight className="w-6 h-6" />
         </button>
@@ -256,7 +306,7 @@ export function SecondaryBanners({ banners = [] }: { banners?: StoreBanner[] }) 
         type="button"
         onClick={() => scroll("left")}
         aria-label="Ver promoções anteriores"
-        className="absolute left-2 top-1/2 -translate-y-1/2 w-11 h-11 items-center justify-center bg-white/95 rounded-full shadow-lg z-20 text-zinc-900 flex md:hidden"
+        className="hidden"
       >
         <ChevronLeft className="w-6 h-6" />
       </button>
@@ -264,7 +314,7 @@ export function SecondaryBanners({ banners = [] }: { banners?: StoreBanner[] }) 
         type="button"
         onClick={() => scroll("right")}
         aria-label="Ver próximas promoções"
-        className="absolute right-2 top-1/2 -translate-y-1/2 w-11 h-11 items-center justify-center bg-white/95 rounded-full shadow-lg z-20 text-zinc-900 flex md:hidden"
+        className="hidden"
       >
         <ChevronRight className="w-6 h-6" />
       </button>
@@ -339,7 +389,7 @@ export function CategoriesCarousel({ categories = [] }: { categories?: StoreCate
           type="button"
           onClick={() => scroll("left")}
           aria-label="Ver categorias anteriores"
-          className="absolute -left-4 md:left-0 top-[33%] -translate-y-1/2 w-12 h-12 flex items-center justify-center bg-zinc-200/80 rounded-full z-10 text-zinc-700 xl:hidden"
+          className="hidden md:flex absolute -left-4 md:left-0 top-[33%] -translate-y-1/2 w-12 h-12 items-center justify-center bg-zinc-200/80 rounded-full z-10 text-zinc-700 xl:hidden"
         >
           <ChevronLeft className="w-6 h-6" />
         </button>
@@ -347,7 +397,7 @@ export function CategoriesCarousel({ categories = [] }: { categories?: StoreCate
           type="button"
           onClick={() => scroll("right")}
           aria-label="Ver próximas categorias"
-          className="absolute -right-4 md:right-0 top-[33%] -translate-y-1/2 w-12 h-12 flex items-center justify-center bg-zinc-200/80 rounded-full z-10 text-zinc-700 xl:hidden"
+          className="hidden md:flex absolute -right-4 md:right-0 top-[33%] -translate-y-1/2 w-12 h-12 items-center justify-center bg-zinc-200/80 rounded-full z-10 text-zinc-700 xl:hidden"
         >
           <ChevronRight className="w-6 h-6" />
         </button>

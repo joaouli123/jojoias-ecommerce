@@ -149,7 +149,11 @@ export function ProductCard({ product }: ProductCardProps) {
           }}
           disabled={isPending}
           aria-label={canAddDirectly ? `Adicionar ${product.name} ao carrinho` : `Escolher opções de ${product.name}`}
-          className="relative z-10 inline-flex h-8 w-8 touch-manipulation items-center justify-center rounded-full border border-[#D4AF37] bg-[#D4AF37] text-white transition-colors hover:border-[#b8921f] hover:bg-[#b8921f] disabled:cursor-not-allowed disabled:opacity-60"
+          className={`relative z-10 inline-flex h-8 w-8 touch-manipulation items-center justify-center rounded-full border transition-colors disabled:cursor-not-allowed disabled:opacity-60 ${
+            showCartNotice
+              ? "border-[#D4AF37] bg-[#D4AF37] text-white"
+              : "border-zinc-200 bg-white text-zinc-600 hover:border-[#D4AF37] hover:text-[#D4AF37]"
+          }`}
         >
           <ShoppingCart className="h-4 w-4" />
         </button>

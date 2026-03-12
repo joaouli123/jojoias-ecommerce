@@ -1,26 +1,34 @@
 ﻿@import "tailwindcss";
 
 @theme {
-  --color-brand: #111111;
+  --color-brand: #1A1A1A;
+  --color-brand-muted: #666666;
+  --color-brand-border: #E5E5E5;
   --color-brand-hover: #000000;
-  --color-accent: #D4AF37;
+  --color-accent: #C19B54;
+  --color-cta: #21352A;
   --color-pix: #32BCAD;
   --color-whatsapp: #25D366;
-  --color-base: #FAFAFA;
-  --color-surface: #ffffff;
-  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --color-base: #FFFFFF;
+  --color-surface: #F9F8F6;
+  --font-sans: var(--font-montserrat), ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-serif: var(--font-playfair), ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
   --font-mono: var(--font-jetbrains-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 }
 
 :root {
   --background: var(--color-base);
-  --foreground: #111111;
+  --foreground: var(--color-brand);
 }
 
 body {
   background-color: var(--background);
   color: var(--foreground);
-  font-family: var(--font-inter), sans-serif;
+  font-family: var(--font-montserrat), sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-playfair), serif;
 }
 
 input:-webkit-autofill,

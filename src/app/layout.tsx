@@ -1,13 +1,18 @@
 ﻿import type { Metadata } from "next";
-import { Inter, JetBrains_Mono } from "next/font/google";
+import { Montserrat, Playfair_Display, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { ThirdPartyScripts } from "@/components/integrations/third-party-scripts";
 import { RegisterServiceWorker } from "@/components/pwa/register-sw";
-import { RecaptchaScript } from "@/components/recaptcha/recaptcha-script";
+import { RecaptchaScript } from "@/components/recaptcha/recaptcha-script";      
 import { getIntegrationSettings } from "@/lib/integrations";
 
-const inter = Inter({
-  variable: "--font-inter",
+const montserrat = Montserrat({
+  variable: "--font-montserrat",
+  subsets: ["latin"],
+});
+
+const playfairDisplay = Playfair_Display({
+  variable: "--font-playfair",
   subsets: ["latin"],
 });
 
@@ -100,7 +105,7 @@ export default async function RootLayout({
         {googleVerification ? <meta name="google-site-verification" content={googleVerification} /> : null}
         {bingVerification ? <meta name="msvalidate.01" content={bingVerification} /> : null}
       </head>
-      <body suppressHydrationWarning className={`${inter.variable} ${jetbrainsMono.variable} font-sans antialiased`}>
+      <body suppressHydrationWarning className={`${montserrat.variable} ${playfairDisplay.variable} ${jetbrainsMono.variable} font-sans antialiased`}>
         <RecaptchaScript />
         <ThirdPartyScripts />
         <RegisterServiceWorker />
