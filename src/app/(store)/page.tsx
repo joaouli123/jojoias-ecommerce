@@ -17,20 +17,6 @@ const HERO_BANNER_PRIMARY = "/banner-home-luxijoias 2.avif";
 const HERO_BANNER_SECONDARY = "/banner-home-secundario-luxijoias.avif";
 const HERO_BANNER_PRIMARY_MOBILE = "/banner-celular.avif";
 const HERO_BANNER_SECONDARY_MOBILE = "/banner-celular-2.avif";
-const NEWSLETTER_IMAGES = [
-  {
-    src: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?auto=format&fit=crop&w=1400&q=80",
-    alt: "Joias douradas em composição sofisticada sobre superfície clara",
-  },
-  {
-    src: "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?auto=format&fit=crop&w=1400&q=80",
-    alt: "Acessórios femininos em linguagem visual luxuosa",
-  },
-  {
-    src: "https://images.unsplash.com/photo-1588444837495-c6cfeb53f32d?auto=format&fit=crop&w=1400&q=80",
-    alt: "Braceletes e joias em fotografia editorial clara",
-  },
-];
 const ABOUT_IMAGES = [
   {
     src: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?auto=format&fit=crop&w=1400&q=80",
@@ -64,79 +50,6 @@ const INSTAGRAM_IMAGES = [
   },
 ];
 
-type RailTheme = {
-  accentLabel: string;
-  cardSize: "compact" | "regular" | "spacious";
-  layout: "left" | "right";
-  sectionClassName: string;
-  panelClassName: string;
-  image: string;
-  imageAlt: string;
-  chip: string;
-};
-
-const HOME_RAIL_THEMES: Record<string, RailTheme> = {
-  featured: {
-    accentLabel: "Nova campanha",
-    cardSize: "spacious",
-    layout: "right",
-    sectionClassName: "border border-[#e7dcc8] bg-[linear-gradient(135deg,#fffdfa_0%,#f7efe4_100%)]",
-    panelClassName: "bg-[linear-gradient(180deg,#2c241c_0%,#16120d_100%)] text-white",
-    image: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?auto=format&fit=crop&w=1600&q=80",
-    imageAlt: "Joias douradas em fotografia de campanha sofisticada",
-    chip: "Curadoria de estreia",
-  },
-  aneis: {
-    accentLabel: "Anéis em foco",
-    cardSize: "compact",
-    layout: "left",
-    sectionClassName: "border border-[#d8c4a6] bg-[linear-gradient(135deg,#1a1410_0%,#2a2118_100%)] text-white",
-    panelClassName: "bg-white/8 text-white border border-white/10",
-    image: "https://images.unsplash.com/photo-1602173574767-37ac01994b2a?auto=format&fit=crop&w=1600&q=80",
-    imageAlt: "Anéis dourados em produção editorial escura",
-    chip: "Brilho escultural",
-  },
-  colares: {
-    accentLabel: "Colares em destaque",
-    cardSize: "spacious",
-    layout: "right",
-    sectionClassName: "border border-[#e6dccf] bg-[linear-gradient(180deg,#fbf7f2_0%,#f2eadf_100%)]",
-    panelClassName: "bg-[#ffffff]/80 text-[#1A1A1A] border border-white/70",
-    image: "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?auto=format&fit=crop&w=1600&q=80",
-    imageAlt: "Colares delicados em composição clara e elegante",
-    chip: "Leveza com presença",
-  },
-  pulseiras: {
-    accentLabel: "Pulseiras da vez",
-    cardSize: "regular",
-    layout: "left",
-    sectionClassName: "border border-[#dcc8a7] bg-[linear-gradient(135deg,#f9f4ec_0%,#efe2cf_100%)]",
-    panelClassName: "bg-[#fff9f0] text-[#1A1A1A] border border-[#eadcc5]",
-    image: "https://images.unsplash.com/photo-1588444837495-c6cfeb53f32d?auto=format&fit=crop&w=1600&q=80",
-    imageAlt: "Pulseiras douradas em fotografia clean de campanha",
-    chip: "Elegância cotidiana",
-  },
-  brincos: {
-    accentLabel: "Brincos essenciais",
-    cardSize: "compact",
-    layout: "right",
-    sectionClassName: "border border-[#e8dece] bg-[linear-gradient(180deg,#fffdfa_0%,#f7efe5_100%)]",
-    panelClassName: "bg-white/85 text-[#1A1A1A] border border-white/80",
-    image: "https://images.unsplash.com/photo-1630019852942-f89202989a59?auto=format&fit=crop&w=1600&q=80",
-    imageAlt: "Brincos com styling clean e refinado",
-    chip: "Luz e movimento",
-  },
-  acessorios: {
-    accentLabel: "Acessórios selecionados",
-    cardSize: "regular",
-    layout: "left",
-    sectionClassName: "border border-[#eadfce] bg-[linear-gradient(180deg,#fcfaf6_0%,#f4eee5_100%)]",
-    panelClassName: "bg-white/82 text-[#1A1A1A] border border-white/80",
-    image: "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?auto=format&fit=crop&w=1600&q=80",
-    imageAlt: "Acessórios femininos em direção de arte luxuosa",
-    chip: "Vitrine autoral",
-  },
-};
 export const revalidate = 300;
 
 export const metadata: Metadata = {
@@ -274,7 +187,6 @@ export default async function Home() {
         products={featuredProducts}
         whatsappUrl={settings.whatsappUrl}
         anchorId="produtos"
-        theme={HOME_RAIL_THEMES.featured}
       />
 
       {categoryRailProducts.map(({ category, products }) => (
@@ -286,7 +198,6 @@ export default async function Home() {
           products={products}
           categoryHref={`/categoria/${category.slug}`}
           whatsappUrl={settings.whatsappUrl}
-          theme={HOME_RAIL_THEMES[category.slug] ?? HOME_RAIL_THEMES.acessorios}
         />
       ))}
 
@@ -315,7 +226,6 @@ function HorizontalProductSection({
   whatsappUrl,
   categoryHref,
   anchorId,
-  theme,
 }: {
   eyebrow: string;
   title: string;
@@ -324,114 +234,67 @@ function HorizontalProductSection({
   whatsappUrl: string;
   categoryHref?: string;
   anchorId?: string;
-  theme: RailTheme;
 }) {
   if (!products.length) {
     return null;
   }
 
-  const isPanelLeft = theme.layout === "left";
-
   return (
-    <section id={anchorId} className="max-w-[1440px] mx-auto w-full px-4 sm:px-6 lg:px-8 py-10 md:py-12 scroll-mt-24">
-      <div className={`overflow-hidden rounded-[34px] p-4 shadow-[0_30px_70px_-50px_rgba(26,26,26,0.8)] md:p-5 ${theme.sectionClassName}`}>
-        <div className="grid gap-5 lg:grid-cols-[0.34fr_0.66fr] lg:gap-6">
-          <div className={`${isPanelLeft ? "lg:order-1" : "lg:order-2"}`}>
-            <div className={`flex h-full flex-col overflow-hidden rounded-[28px] p-5 shadow-[0_20px_45px_-35px_rgba(26,26,26,0.8)] md:p-6 ${theme.panelClassName}`}>
-              <p className="text-[11px] font-medium uppercase tracking-[0.3em] text-[#D4AF37]">{eyebrow}</p>
-              <h2 className="mt-3 font-serif text-[clamp(2rem,3vw,2.7rem)] leading-[0.98] tracking-[-0.03em]">{title}</h2>
-              <p className="mt-4 text-sm leading-6 text-current/72 md:text-[15px]">{description}</p>
-
-              <div className="mt-6 rounded-full border border-current/15 bg-black/5 px-4 py-2 text-[11px] font-medium uppercase tracking-[0.22em] text-current/72 w-fit">
-                {theme.chip}
-              </div>
-
-              <div className="relative mt-6 min-h-[220px] overflow-hidden rounded-[24px]">
-                <Image src={theme.image} alt={theme.imageAlt} fill sizes="(max-width: 1024px) 100vw, 26vw" className="object-cover" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent" />
-                <div className="absolute left-4 top-4 rounded-full border border-white/30 bg-black/20 px-3 py-1.5 text-[10px] font-medium uppercase tracking-[0.2em] text-white backdrop-blur-sm">
-                  {theme.accentLabel}
-                </div>
-              </div>
-
-              {categoryHref ? (
-                <Link href={categoryHref} className="mt-6 inline-flex items-center gap-2 rounded-full border border-current/18 bg-white/10 px-5 py-3 text-sm font-medium transition-colors hover:border-[#D4AF37] hover:text-[#D4AF37] w-fit">
-                  Ver coleção
-                  <ArrowRight className="h-4 w-4" />
-                </Link>
-              ) : null}
-            </div>
-          </div>
-
-          <div className={`${isPanelLeft ? "lg:order-2" : "lg:order-1"}`}>
-            <div className="mb-4 flex items-center justify-between gap-4 px-1">
-              <div>
-                <p className="text-[11px] font-medium uppercase tracking-[0.26em] text-[#8A7F72]">Vitrine da categoria</p>
-                <p className="mt-2 font-serif text-[clamp(1.35rem,2vw,1.8rem)] text-[#1A1A1A]">Seleção lateral com navegação fluida</p>
-              </div>
-            </div>
-
-            <ProductRail
-              size={theme.cardSize}
-              products={products.map((product) => ({
-                id: product.id,
-                name: product.name,
-                slug: product.slug,
-                price: product.price,
-                comparePrice: product.comparePrice,
-                image: product.image || "",
-                category: product.category,
-                variantId: product.variants.find((variant) => variant.quantity > 0)?.id ?? product.variants[0]?.id ?? null,
-                requiresSelection: product.variants.length > 1,
-                whatsappBaseUrl: whatsappUrl,
-              }))}
-            />
-          </div>
+    <section id={anchorId} className="max-w-[1440px] mx-auto w-full px-4 sm:px-6 lg:px-8 py-10 md:py-14 scroll-mt-24">
+      <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-end md:justify-between border-t border-zinc-200/80 pt-8 md:mb-8 md:pt-10">
+        <div className="max-w-2xl">
+          <p className="text-xs font-medium font-serif uppercase tracking-[0.3em] text-[#D4AF37]">{eyebrow}</p>
+          <h2 className="mt-2 text-[clamp(1.8rem,3vw,2.4rem)] font-medium text-[#1A1A1A] font-serif tracking-[-0.02em]">{title}</h2>
+          <p className="mt-3 text-sm leading-6 text-[#666666] md:text-[15px]">{description}</p>
         </div>
+        {categoryHref ? (
+          <Link href={categoryHref} className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-zinc-200 px-5 text-sm font-medium text-[#1A1A1A] transition-colors hover:border-[#D4AF37] hover:text-[#D4AF37]">
+            Ver coleção
+            <ArrowRight className="h-4 w-4" />
+          </Link>
+        ) : null}
       </div>
+
+      <ProductRail
+        products={products.map((product) => ({
+          id: product.id,
+          name: product.name,
+          slug: product.slug,
+          price: product.price,
+          comparePrice: product.comparePrice,
+          image: product.image || "",
+          category: product.category,
+          variantId: product.variants.find((variant) => variant.quantity > 0)?.id ?? product.variants[0]?.id ?? null,
+          requiresSelection: product.variants.length > 1,
+          whatsappBaseUrl: whatsappUrl,
+        }))}
+      />
     </section>
   );
 }
 
 function NewsletterEditorialSection() {
   return (
-    <section className="max-w-[1440px] mx-auto w-full px-4 sm:px-6 lg:px-8 py-8 md:py-12">
-      <div className="grid overflow-hidden rounded-[32px] border border-zinc-200/80 bg-[linear-gradient(135deg,#111111_0%,#1f1a15_58%,#6f5630_100%)] shadow-[0_32px_70px_-42px_rgba(17,17,17,0.8)] lg:grid-cols-[1.15fr_0.85fr]">
-        <div className="relative px-6 py-8 text-white sm:px-8 sm:py-10 lg:px-10 lg:py-12">
-          <div className="relative z-10 max-w-xl">
-            <p className="text-xs font-medium uppercase tracking-[0.32em] text-[#e7cf9a]">Clube Luxijóias</p>
-            <h2 className="mt-4 font-serif text-[clamp(2rem,4vw,3.35rem)] leading-[0.96] tracking-[-0.03em] text-white">
-              Cadastre-se e fique por dentro das promoções
-            </h2>
-            <p className="mt-4 max-w-lg text-sm leading-6 text-white/78 md:text-[15px]">
-              Receba novidades, campanhas sazonais, acesso antecipado a seleções especiais e condições pensadas para quem acompanha a marca de perto.
-            </p>
-
-            <div className="mt-8 rounded-[26px] border border-white/15 bg-white/10 p-5 backdrop-blur-md sm:p-6">
-              <p className="mb-4 text-sm font-medium text-white">Inscreva-se para receber ofertas e lançamentos em primeira mão.</p>
-              <NewsletterSubscribeForm />
-            </div>
-
-            <div className="mt-6 flex flex-wrap gap-3 text-[11px] uppercase tracking-[0.18em] text-white/72">
-              <span className="rounded-full border border-white/15 bg-white/10 px-4 py-2">Lançamentos exclusivos</span>
-              <span className="rounded-full border border-white/15 bg-white/10 px-4 py-2">Cupons especiais</span>
-              <span className="rounded-full border border-white/15 bg-white/10 px-4 py-2">Curadoria da semana</span>
-            </div>
-          </div>
-
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.16),transparent_26%),radial-gradient(circle_at_bottom_left,rgba(212,175,55,0.22),transparent_35%)]" />
+    <section className="bg-zinc-50 border-y border-zinc-100 py-16 md:py-24">
+      <div className="max-w-3xl mx-auto px-4 text-center">
+        <p className="text-xs font-medium font-serif uppercase tracking-[0.3em] text-[#D4AF37] mb-4">Clube Luxijóias</p>
+        <h2 className="font-serif text-[clamp(2.2rem,4vw,3.35rem)] leading-[1.1] tracking-[-0.03em] text-[#1A1A1A] mb-4">
+          Fique por dentro das promoções
+        </h2>
+        <p className="text-[#666666] mb-8 text-sm md:text-base leading-relaxed">
+          Receba novidades, campanhas sazonais, acesso antecipado a seleções especiais e condições pensadas para quem acompanha a marca de perto.
+        </p>
+        
+        <div className="max-w-md mx-auto">
+          <NewsletterSubscribeForm />
         </div>
 
-        <div className="grid min-h-[340px] grid-cols-2 grid-rows-2 gap-3 bg-[#f6f0e8] p-3 sm:min-h-[420px]">
-          <div className="relative col-span-2 overflow-hidden rounded-[26px]">
-            <Image src={NEWSLETTER_IMAGES[0].src} alt={NEWSLETTER_IMAGES[0].alt} fill sizes="(max-width: 1024px) 100vw, 40vw" className="object-cover" />
-          </div>
-          <div className="relative overflow-hidden rounded-[22px]">
-            <Image src={NEWSLETTER_IMAGES[1].src} alt={NEWSLETTER_IMAGES[1].alt} fill sizes="(max-width: 1024px) 50vw, 20vw" className="object-cover" />
-          </div>
-          <div className="relative overflow-hidden rounded-[22px]">
-            <Image src={NEWSLETTER_IMAGES[2].src} alt={NEWSLETTER_IMAGES[2].alt} fill sizes="(max-width: 1024px) 50vw, 20vw" className="object-cover" />
-          </div>
+        <div className="mt-8 flex flex-wrap justify-center gap-4 text-[11px] font-medium uppercase tracking-[0.18em] text-[#8A7F72]">
+          <span>Lançamentos exclusivos</span>
+          <span className="hidden sm:inline">•</span>
+          <span>Cupons especiais</span>
+          <span className="hidden sm:inline">•</span>
+          <span>Curadoria da semana</span>
         </div>
       </div>
     </section>
@@ -451,12 +314,12 @@ function AboutEditorialSection({
 
   return (
     <section className="max-w-[1440px] mx-auto w-full px-4 sm:px-6 lg:px-8 py-12 md:py-16">
-      <div className="grid gap-8 rounded-[32px] border border-zinc-200/80 bg-white p-5 shadow-[0_28px_60px_-44px_rgba(26,26,26,0.65)] md:p-8 lg:grid-cols-[0.92fr_1.08fr] lg:gap-10 lg:p-10">
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
-          <div className="relative min-h-[300px] overflow-hidden rounded-[28px] sm:min-h-[360px]">
+      <div className="grid gap-8 lg:grid-cols-[0.92fr_1.08fr] lg:gap-16 items-center">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
+          <div className="relative min-h-[300px] overflow-hidden rounded-2xl sm:min-h-[360px]">
             <Image src={ABOUT_IMAGES[0].src} alt={ABOUT_IMAGES[0].alt} fill sizes="(max-width: 1024px) 100vw, 36vw" className="object-cover" />
           </div>
-          <div className="relative min-h-[220px] overflow-hidden rounded-[28px] sm:min-h-[360px] lg:min-h-[240px]">
+          <div className="relative min-h-[220px] overflow-hidden rounded-2xl sm:min-h-[360px] lg:min-h-[240px]">
             <Image src={ABOUT_IMAGES[1].src} alt={ABOUT_IMAGES[1].alt} fill sizes="(max-width: 1024px) 100vw, 30vw" className="object-cover" />
           </div>
         </div>
@@ -505,37 +368,36 @@ function AboutEditorialSection({
 
 function InstagramEditorialSection({ instagramUrl }: { instagramUrl: string }) {
   return (
-    <section className="max-w-[1440px] mx-auto w-full px-4 sm:px-6 lg:px-8 py-12 md:py-16">
-      <div className="grid gap-6 rounded-[32px] border border-zinc-200/80 bg-[linear-gradient(180deg,#fffdfa_0%,#f8f4ed_100%)] p-5 shadow-[0_28px_60px_-46px_rgba(26,26,26,0.65)] md:p-8 lg:grid-cols-[0.82fr_1.18fr] lg:items-end lg:gap-8 lg:p-10">
+    <section className="max-w-[1440px] mx-auto w-full px-4 sm:px-6 lg:px-8 py-16 md:py-24 border-t border-zinc-100">
+      <div className="grid gap-10 lg:grid-cols-[0.82fr_1.18fr] lg:items-center lg:gap-16">
         <div className="max-w-xl">
           <p className="text-xs font-medium uppercase tracking-[0.32em] text-[#D4AF37]">Siga-nos no Instagram</p>
-          <h2 className="mt-4 font-serif text-[clamp(2rem,3.6vw,3rem)] leading-[0.98] tracking-[-0.03em] text-[#1A1A1A]">
+          <h2 className="mt-4 font-serif text-[clamp(2.2rem,3.6vw,3rem)] leading-[1.05] tracking-[-0.03em] text-[#1A1A1A]">
             Conteúdo com cara de vitrine, desejo e inspiração diária
           </h2>
-          <p className="mt-4 text-[15px] leading-7 text-[#666666]">
+          <p className="mt-4 text-base leading-relaxed text-[#666666]">
             Mostramos combinações reais, detalhes de acabamento, ideias de presente e composições para valorizar cada coleção dentro e fora da loja.
           </p>
 
           <div className="mt-8 flex flex-wrap gap-3">
-            <span className="rounded-full bg-white px-4 py-2 text-[11px] font-medium uppercase tracking-[0.18em] text-[#8A7F72] shadow-sm">Looks e composições</span>
-            <span className="rounded-full bg-white px-4 py-2 text-[11px] font-medium uppercase tracking-[0.18em] text-[#8A7F72] shadow-sm">Novidades da semana</span>
-            <span className="rounded-full bg-white px-4 py-2 text-[11px] font-medium uppercase tracking-[0.18em] text-[#8A7F72] shadow-sm">Bastidores da curadoria</span>
+            <span className="rounded-full border border-zinc-200 px-4 py-2 text-[11px] font-medium uppercase tracking-[0.18em] text-[#8A7F72]">Looks e composições</span>
+            <span className="rounded-full border border-zinc-200 px-4 py-2 text-[11px] font-medium uppercase tracking-[0.18em] text-[#8A7F72]">Novidades da semana</span>
+            <span className="rounded-full border border-zinc-200 px-4 py-2 text-[11px] font-medium uppercase tracking-[0.18em] text-[#8A7F72]">Curadoria</span>
           </div>
 
-          <Link href={instagramUrl} target="_blank" rel="noreferrer" className="mt-8 inline-flex items-center gap-2 rounded-full bg-[#111111] px-5 py-3 text-sm font-medium text-white transition-colors hover:bg-[#1f1f1f]">
+          <Link href={instagramUrl} target="_blank" rel="noreferrer" className="mt-8 inline-flex items-center gap-2 rounded-xl bg-[#1A1A1A] px-6 py-3.5 text-sm font-medium text-white transition-colors hover:bg-[#D4AF37]">
             <Instagram className="h-4 w-4" />
             Acompanhar perfil
           </Link>
         </div>
 
-        <div className="grid grid-cols-2 gap-3 md:grid-cols-3">
+        <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
           {INSTAGRAM_IMAGES.map((image, index) => (
             <div
               key={image.src}
-              className={`relative overflow-hidden rounded-[24px] ${index === 0 ? "col-span-2 row-span-2 min-h-[280px] md:col-span-1 md:min-h-[220px]" : "min-h-[135px] md:min-h-[180px]"}`}
+              className={`relative overflow-hidden rounded-2xl ${index === 0 ? "col-span-2 min-h-[220px] md:col-span-1" : "min-h-[160px] md:min-h-[220px]"}`}
             >
-              <Image src={image.src} alt={image.alt} fill sizes="(max-width: 768px) 50vw, 22vw" className="object-cover" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent" />
+              <Image src={image.src} alt={image.alt} fill sizes="(max-width: 768px) 50vw, 22vw" className="object-cover transition-transform duration-700 hover:scale-105" />
             </div>
           ))}
         </div>

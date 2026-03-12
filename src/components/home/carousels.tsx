@@ -614,7 +614,7 @@ export function CategoriesCarousel({ categories = [] }: { categories?: StoreCate
       <div className="relative group">
         <div 
           ref={scrollRef}
-          className={`flex overflow-x-auto snap-x snap-mandatory gap-5 no-scrollbar px-1 pb-2 pr-8 ${isDragging ? "cursor-grabbing" : "cursor-grab"}`}
+          className={`flex overflow-x-auto snap-x snap-mandatory gap-5 no-scrollbar px-2 pb-12 pt-6 pr-8 ${isDragging ? "cursor-grabbing" : "cursor-grab"}`}
           style={{ touchAction: "pan-y pinch-zoom" }}
           {...dragProps}
         >
