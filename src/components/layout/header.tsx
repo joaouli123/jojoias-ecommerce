@@ -1,5 +1,5 @@
 ﻿import Image from "next/image"
-import { User, HeadphonesIcon, Menu, MessageCircle, Gem, Sparkles, Smile, Percent, Droplets, CreditCard, Phone, Mail, Clock, ChevronRight, ChevronDown, ArrowRight } from "lucide-react"
+import { User, HeadphonesIcon, Menu, MessageCircle, Gem, Newspaper, BadgePercent, Link2, Circle, CreditCard, Phone, Mail, Clock, ChevronRight, ChevronDown, ArrowRight, Badge } from "lucide-react"
 import Link from "next/link"
 import { CartDrawer } from "@/components/cart/cart-drawer"
 import { PixIcon } from "@/components/ui/icons"
@@ -8,13 +8,13 @@ import { SearchBar } from "@/components/layout/search-bar"
 import { getStoreSettings } from "@/lib/store-settings"
 
 const navigationItems = [
-  { label: "Marcas", href: "/marcas", icon: Gem },
-  { label: "Blog", href: "/blog", icon: Smile },
+  { label: "Marcas", href: "/marcas", icon: Badge },
+  { label: "Blog", href: "/blog", icon: Newspaper },
   { label: "Acessórios", href: "/categoria/acessorios", icon: Gem },
-  { label: "Anéis", href: "/categoria/aneis", icon: Sparkles, hasChevron: true },
-  { label: "Colares", href: "/categoria/colares", icon: Smile, hasChevron: true },
-  { label: "Promoções", href: "/categoria/promocoes", icon: Percent },
-  { label: "Pulseiras", href: "/categoria/pulseiras", icon: Droplets },
+  { label: "Anéis", href: "/categoria/aneis", icon: Circle, hasChevron: true },
+  { label: "Colares", href: "/categoria/colares", icon: Circle, hasChevron: true },
+  { label: "Promoções", href: "/categoria/promocoes", icon: BadgePercent },
+  { label: "Pulseiras", href: "/categoria/pulseiras", icon: Link2 },
 ];
 
 export async function Header() {
@@ -224,7 +224,7 @@ export async function Header() {
 
             <li className="ml-auto pl-6">
               <Link href="/categoria/ofertas" className="inline-flex items-center gap-2 rounded-xl bg-[#111111] px-5 py-2 text-[14px] font-medium font-serif text-[#D4AF37] hover:bg-[#1a1a1a] transition-colors shadow-sm">
-                <Percent className="w-3.5 h-3.5" strokeWidth={2.25} />
+                <BadgePercent className="w-3.5 h-3.5" strokeWidth={2.1} />
                 <span>Ofertas Especiais</span>
               </Link>
             </li>
