@@ -1,12 +1,12 @@
 ﻿import Image from "next/image"
-import { User, HeadphonesIcon, Menu, MessageCircle, Gem, Newspaper, BadgePercent, Link2, Circle, CreditCard, Phone, Mail, Clock, ChevronRight, ChevronDown, ArrowRight, Badge } from "lucide-react"
+import { User, HeadphonesIcon, Menu, MessageCircle, Newspaper, BadgePercent, CreditCard, Phone, Mail, Clock, ChevronRight, ChevronDown, ArrowRight, Badge } from "lucide-react"
 import Link from "next/link"
 import { CartDrawer } from "@/components/cart/cart-drawer"
 import { PixIcon } from "@/components/ui/icons"
 import { MobileNavDrawer } from "@/components/layout/mobile-nav-drawer"
 import { SearchBar } from "@/components/layout/search-bar"
 import { getStoreSettings } from "@/lib/store-settings"
-import { DiamondRingIcon, NecklaceIcon, BraceletIcon, JewelryIcon, DiamondIcon } from "@/components/ui/jewelry-icons"
+import { DiamondRingIcon, NecklaceIcon, BraceletIcon, DiamondIcon } from "@/components/ui/jewelry-icons"
 
 const navigationItems = [
   { label: "Marcas", href: "/marcas", icon: Badge },
