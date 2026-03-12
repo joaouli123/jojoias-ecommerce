@@ -6,6 +6,7 @@ import { requireAdminPermission } from "@/lib/admin-auth";
 import { logAdminAudit } from "@/lib/audit-log";
 import { getSiteUrl } from "@/lib/site-url";
 import { parseIntegrationExtraConfig, type IntegrationExtraConfig } from "@/lib/integrations";
+import { redirect } from "next/navigation";
 
 async function checkAdmin() {
   return requireAdminPermission("settings:manage");
@@ -376,82 +377,91 @@ function buildSingleProviderPayload(formData: FormData, existingExtraConfig: Int
 
 export async function saveIntegrationSettings(provider: string, formData: FormData) {
   const actor = await checkAdmin();
-
   const normalizedProvider = provider.trim().toLowerCase();
-  const name = readRequiredString(formData, "name", normalizedProvider);
-  const isEnabled = formData.get("isEnabled") === "on";
-  const existing = await prisma.integrationSetting.findUnique({ where: { provider: normalizedProvider } });
-  const existingExtraConfig = parseIntegrationExtraConfig(existing?.extraConfig ?? null);
+  const currentTab = readRequiredString(formData, "tab", "payments");
+  const redirectBase = `/admin/integrations?tab=${encodeURIComponent(currentTab)}`;
 
-  const payload = normalizedProvider === "mercado_pago"
-    ? buildMercadoPagoPayload(formData, existingExtraConfig)
-    : normalizedProvider === "resend"
-      ? buildResendPayload(formData, existingExtraConfig)
-      : normalizedProvider === "melhor_envio"
-        ? buildShippingPayload(formData, existingExtraConfig)
-        : normalizedProvider === "alerting"
-          ? buildAlertingPayload(formData, existingExtraConfig)
-          : buildSingleProviderPayload(formData, existingExtraConfig, normalizedProvider);
+  try {
+    const name = readRequiredString(formData, "name", normalizedProvider);
+    const isEnabled = formData.get("isEnabled") === "on";
+    const existing = await prisma.integrationSetting.findUnique({ where: { provider: normalizedProvider } });
+    const existingExtraConfig = parseIntegrationExtraConfig(existing?.extraConfig ?? null);
 
-  const serializedExtraConfig = Object.keys(payload.extraConfig).length
-    ? JSON.stringify(payload.extraConfig, null, 2)
-    : null;
+    const payload = normalizedProvider === "mercado_pago"
+      ? buildMercadoPagoPayload(formData, existingExtraConfig)
+      : normalizedProvider === "resend"
+        ? buildResendPayload(formData, existingExtraConfig)
+        : normalizedProvider === "melhor_envio"
+          ? buildShippingPayload(formData, existingExtraConfig)
+          : normalizedProvider === "alerting"
+            ? buildAlertingPayload(formData, existingExtraConfig)
+            : buildSingleProviderPayload(formData, existingExtraConfig, normalizedProvider);
 
-  if (isEnabled && ["melhor_envio", "alerting"].includes(normalizedProvider) && !payload.endpointUrl) {
-    throw new Error("Essa integração precisa de um endpoint configurado antes de ser ativada.");
+    const serializedExtraConfig = Object.keys(payload.extraConfig).length
+      ? JSON.stringify(payload.extraConfig, null, 2)
+      : null;
+
+    if (isEnabled && ["melhor_envio", "alerting"].includes(normalizedProvider) && !payload.endpointUrl) {
+      throw new Error("Essa integração precisa de um endpoint configurado antes de ser ativada.");
+    }
+
+    if (isEnabled && normalizedProvider === "mercado_pago" && !payload.secretKey) {
+      throw new Error("No Mercado Pago, preencha o access token do ambiente ativo antes de ativar.");
+    }
+
+    if (isEnabled && normalizedProvider === "resend" && !payload.secretKey) {
+      throw new Error("No Resend, preencha a API key do ambiente ativo antes de ativar.");
+    }
+
+    await prisma.integrationSetting.upsert({
+      where: { provider: normalizedProvider },
+      update: {
+        name,
+        isEnabled,
+        environment: payload.environment,
+        publicKey: payload.publicKey,
+        secretKey: payload.secretKey,
+        webhookSecret: payload.webhookSecret,
+        endpointUrl: payload.endpointUrl,
+        extraConfig: serializedExtraConfig,
+      },
+      create: {
+        provider: normalizedProvider,
+        name,
+        isEnabled,
+        environment: payload.environment,
+        publicKey: payload.publicKey,
+        secretKey: payload.secretKey,
+        webhookSecret: payload.webhookSecret,
+        endpointUrl: payload.endpointUrl,
+        extraConfig: serializedExtraConfig,
+      },
+    });
+
+    await logAdminAudit({
+      actor,
+      action: "integration.save",
+      entityType: "integration",
+      entityId: normalizedProvider,
+      summary: `Integração ${name} atualizada.`,
+      metadata: {
+        provider: normalizedProvider,
+        environment: payload.environment,
+        isEnabled,
+        hasPublicKey: Boolean(payload.publicKey),
+        hasSecretKey: Boolean(payload.secretKey),
+        hasWebhookSecret: Boolean(payload.webhookSecret),
+        hasEndpointUrl: Boolean(payload.endpointUrl),
+        hasExtraConfig: Boolean(serializedExtraConfig),
+      },
+    });
+
+    revalidatePath("/admin/integrations");
+    revalidatePath("/", "layout");
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Não foi possível salvar a integração.";
+    redirect(`${redirectBase}&error=${encodeURIComponent(message)}`);
   }
 
-  if (isEnabled && normalizedProvider === "mercado_pago" && !payload.secretKey) {
-    throw new Error("No Mercado Pago, preencha o access token do ambiente ativo antes de ativar.");
-  }
-
-  if (isEnabled && normalizedProvider === "resend" && !payload.secretKey) {
-    throw new Error("No Resend, preencha a API key do ambiente ativo antes de ativar.");
-  }
-
-  await prisma.integrationSetting.upsert({
-    where: { provider: normalizedProvider },
-    update: {
-      name,
-      isEnabled,
-      environment: payload.environment,
-      publicKey: payload.publicKey,
-      secretKey: payload.secretKey,
-      webhookSecret: payload.webhookSecret,
-      endpointUrl: payload.endpointUrl,
-      extraConfig: serializedExtraConfig,
-    },
-    create: {
-      provider: normalizedProvider,
-      name,
-      isEnabled,
-      environment: payload.environment,
-      publicKey: payload.publicKey,
-      secretKey: payload.secretKey,
-      webhookSecret: payload.webhookSecret,
-      endpointUrl: payload.endpointUrl,
-      extraConfig: serializedExtraConfig,
-    },
-  });
-
-  await logAdminAudit({
-    actor,
-    action: "integration.save",
-    entityType: "integration",
-    entityId: normalizedProvider,
-    summary: `Integração ${name} atualizada.`,
-    metadata: {
-      provider: normalizedProvider,
-      environment: payload.environment,
-      isEnabled,
-      hasPublicKey: Boolean(payload.publicKey),
-      hasSecretKey: Boolean(payload.secretKey),
-      hasWebhookSecret: Boolean(payload.webhookSecret),
-      hasEndpointUrl: Boolean(payload.endpointUrl),
-      hasExtraConfig: Boolean(serializedExtraConfig),
-    },
-  });
-
-  revalidatePath("/admin/integrations");
-  revalidatePath("/", "layout");
+  redirect(`${redirectBase}&saved=${encodeURIComponent(normalizedProvider)}`);
 }

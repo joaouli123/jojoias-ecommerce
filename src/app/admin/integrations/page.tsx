@@ -402,11 +402,11 @@ function renderStatsCard(title: string, value: string | number, description: str
 export default async function AdminIntegrationsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ tab?: string }>;
+  searchParams: Promise<{ tab?: string; saved?: string; error?: string }>;
 }) {
   await requireAdminPagePermission("settings:manage");
 
-  const { tab } = await searchParams;
+  const { tab, saved, error } = await searchParams;
   const activeTab = tabs.some((entry) => entry.id === tab) ? (tab as TabId) : "payments";
   const relevantProviders = integrationDefinitions.map((definition) => definition.provider);
 
@@ -452,6 +452,18 @@ export default async function AdminIntegrationsPage({
         {renderStatsCard("Com dados salvos", configuredCount, "Providers com credencial, token, URL ou configuração real preenchida.")}
         {renderStatsCard("Pontos pendentes", degradedCount, "Checks operacionais ainda degradados segundo a análise atual do sistema.")}
       </div>
+
+      {saved ? (
+        <section className="rounded-2xl border border-emerald-200 bg-emerald-50 px-5 py-4 text-sm text-emerald-900 shadow-sm">
+          Integração salva com sucesso: <span className="font-semibold">{saved}</span>.
+        </section>
+      ) : null}
+
+      {error ? (
+        <section className="rounded-2xl border border-red-200 bg-red-50 px-5 py-4 text-sm text-red-800 shadow-sm">
+          {error}
+        </section>
+      ) : null}
 
       <div className="overflow-x-auto">
         <div className="inline-flex min-w-full gap-3 rounded-2xl border border-gray-200 bg-white p-2 shadow-sm">
@@ -501,6 +513,7 @@ export default async function AdminIntegrationsPage({
 
               <form action={saveAction} className="space-y-5 p-6">
                 <input type="hidden" name="name" value={definition.name} />
+                <input type="hidden" name="tab" value={activeTab} />
 
                 <div className="flex flex-col gap-4 rounded-2xl border border-gray-200 bg-gray-50 px-4 py-4 lg:flex-row lg:items-center lg:justify-between">
                   <div>

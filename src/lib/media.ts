@@ -53,6 +53,14 @@ function normalizeTextFragment(value: string) {
     .slice(0, 72);
 }
 
+function extractOriginalBaseName(originalName: string) {
+  return path.basename(originalName, path.extname(originalName)).replace(/[-_]+/g, " ").trim();
+}
+
+function resolveSeoBaseTitle(options: SaveMediaFileOptions, originalName: string) {
+  return options.seoTitle?.trim() || options.alt?.trim() || extractOriginalBaseName(originalName) || "arquivo";
+}
+
 function buildSeoSnippet(description?: string | null) {
   if (!description) return "";
 
@@ -74,26 +82,18 @@ function buildSeoAltText(options: SaveMediaFileOptions, originalName: string) {
     return options.alt.trim();
   }
 
-  const title = options.seoTitle?.trim();
+  const title = resolveSeoBaseTitle(options, originalName);
   const role = options.seoRole?.trim();
-  const snippet = buildSeoSnippet(options.seoDescription);
-
-  if (!title) {
-    return path.basename(originalName, path.extname(originalName)).replace(/[-_]+/g, " ").trim();
-  }
+  const snippet = buildSeoSnippet(options.seoDescription || options.alt || extractOriginalBaseName(originalName));
 
   return [title, role, snippet].filter(Boolean).join(" - ").slice(0, 160);
 }
 
 function buildUploadFileName(originalName: string, options: SaveMediaFileOptions) {
-  const baseTitle = options.seoTitle?.trim();
+  const baseTitle = resolveSeoBaseTitle(options, originalName);
   const role = options.seoRole?.trim();
-  const snippet = buildSeoSnippet(options.seoDescription);
+  const snippet = buildSeoSnippet(options.seoDescription || options.alt || extractOriginalBaseName(originalName));
   const extension = path.extname(originalName).toLowerCase() || ".bin";
-
-  if (!baseTitle) {
-    return normalizeFileName(originalName);
-  }
 
   const parts = [baseTitle, role, snippet, typeof options.index === "number" ? String(options.index + 1) : undefined]
     .filter(Boolean)

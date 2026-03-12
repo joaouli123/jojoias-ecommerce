@@ -99,6 +99,8 @@ export function BenefitsCarousel() {
 export function BannerCarousel({ banners = [] }: { banners?: StoreBanner[] }) {
   const [activeIndex, setActiveIndex] = useState(0);
 
+  const secondaryBannerImage = "/banner-home-luxijoias 2.avif";
+
   const scroll = (direction: "left" | "right") => {
     setActiveIndex((current) => {
       const nextIndex = direction === "right" ? current + 1 : current - 1;
@@ -108,7 +110,7 @@ export function BannerCarousel({ banners = [] }: { banners?: StoreBanner[] }) {
 
   const fallbackBanners: StoreBanner[] = [
     { id: "hero-1", title: "Banner principal", subtitle: null, imageUrl: "/banner-home-luxijoias.avif", mobileUrl: null, href: null, placement: "hero", position: 0 },
-    { id: "hero-2", title: "Banner secundário", subtitle: null, imageUrl: "/banner-home-secundario-luxijoias.avif", mobileUrl: "/banner-home-secundario-luxijoias.avif", href: null, placement: "hero", position: 1 },
+    { id: "hero-2", title: "Banner secundário", subtitle: null, imageUrl: secondaryBannerImage, mobileUrl: secondaryBannerImage, href: null, placement: "hero", position: 1 },
   ];
 
   const items = banners.length
@@ -126,11 +128,11 @@ export function BannerCarousel({ banners = [] }: { banners?: StoreBanner[] }) {
             const isFirstBanner = banner.id === items[0]?.id;
             const desktopImage = resolveBannerImageUrl(
               banner.imageUrl,
-              isFirstBanner ? "/banner-home-luxijoias.avif" : "/banner-home-secundario-luxijoias.avif",
+              isFirstBanner ? "/banner-home-luxijoias.avif" : secondaryBannerImage,
             );
             const mobileImage = resolveBannerImageUrl(
               banner.mobileUrl || banner.imageUrl,
-              isFirstBanner ? "/banner-home-luxijoias.avif" : "/banner-home-secundario-luxijoias.avif",
+              isFirstBanner ? "/banner-home-luxijoias.avif" : secondaryBannerImage,
             );
             const imageAlt = banner.title || "Banner principal da loja";
             const content = (

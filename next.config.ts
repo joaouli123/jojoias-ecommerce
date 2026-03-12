@@ -85,6 +85,12 @@ const nextConfig: NextConfig = {
         ],
       },
       {
+        source: "/banner-home-luxijoias 2.avif",
+        headers: [
+          { key: "Cache-Control", value: "public, max-age=31536000, immutable" },
+        ],
+      },
+      {
         source: "/formas-pagamento-luxijoias.avif",
         headers: [
           { key: "Cache-Control", value: "public, max-age=31536000, immutable" },

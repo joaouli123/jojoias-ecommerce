@@ -22,28 +22,38 @@ export function MediaUploadForm() {
       onSubmit={(event) => {
         event.preventDefault();
         setMessage(null);
-        const formData = new FormData(event.currentTarget);
+        const form = event.currentTarget;
+        const formData = new FormData(form);
 
         startTransition(async () => {
-          const response = await fetch("/api/upload", {
-            method: "POST",
-            body: formData,
-          });
+          try {
+            const response = await fetch("/api/upload", {
+              method: "POST",
+              body: formData,
+            });
 
-          const payload = (await response.json().catch(() => ({}))) as { message?: string; error?: string; assets?: UploadedAsset[] };
-          setMessage(payload.message || payload.error || null);
+            const payload = (await response.json().catch(() => ({}))) as { message?: string; error?: string; assets?: UploadedAsset[] };
+            setMessage(payload.message || payload.error || null);
 
-          if (response.ok) {
-            setUploadedAssets(payload.assets ?? []);
-            event.currentTarget.reset();
+            if (response.ok) {
+              setUploadedAssets(payload.assets ?? []);
+              form.reset();
+            }
+          } catch (error) {
+            setMessage(error instanceof Error ? error.message : "Falha ao enviar arquivos.");
           }
         });
       }}
     >
       <div>
         <h2 className="text-base font-semibold text-gray-900">Upload nativo de mídia</h2>
-        <p className="mt-1 text-sm text-gray-600">Envie imagens da galeria, banners e catálogo direto para a plataforma.</p>
+        <p className="mt-1 text-sm text-gray-600">Envie imagens da galeria, banners e catálogo com nome estruturado, texto alternativo, otimização e conversão automática.</p>
       </div>
+      <div className="grid gap-4 md:grid-cols-2">
+        <input name="seoTitle" placeholder="Título SEO da imagem" className="h-11 w-full rounded-lg border border-gray-300 bg-white px-3 text-sm outline-none focus:border-gray-900 focus:ring-1 focus:ring-gray-900" />
+        <input name="seoRole" placeholder="Função da imagem, ex.: banner home" className="h-11 w-full rounded-lg border border-gray-300 bg-white px-3 text-sm outline-none focus:border-gray-900 focus:ring-1 focus:ring-gray-900" />
+      </div>
+      <textarea name="seoDescription" rows={3} placeholder="Descrição SEO opcional para enriquecer nome e alt da imagem" className="w-full rounded-lg border border-gray-300 bg-white px-3 py-3 text-sm outline-none focus:border-gray-900 focus:ring-1 focus:ring-gray-900" />
       <input name="alt" placeholder="Texto alternativo opcional" className="h-11 w-full rounded-lg border border-gray-300 bg-white px-3 text-sm outline-none focus:border-gray-900 focus:ring-1 focus:ring-gray-900" />
       <input name="files" type="file" accept="image/png,image/jpeg,image/webp,image/avif,image/svg+xml" multiple className="block w-full rounded-lg border border-gray-300 bg-white px-3 py-3 text-sm text-gray-700" />
       <button type="submit" disabled={isPending} className="inline-flex items-center gap-2 rounded-lg bg-gray-900 px-4 py-2 text-sm font-semibold text-white hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-70">

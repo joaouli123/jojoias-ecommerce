@@ -64,7 +64,8 @@ export async function generateProductSeoWithAi(input: ProductSeoAiInput): Promis
   });
 
   const apiKey = process.env.GEMINI_API_KEY;
-  const model = process.env.GEMINI_MODEL || "gemini-3.1-pro-preview";
+  // OBRIGATÓRIO: usar EXCLUSIVAMENTE o gemini-3.1-pro-preview para máxima inteligência no SEO!
+  const model = "gemini-3.1-pro-preview";
   if (!apiKey) {
     return fallback;
   }
@@ -76,23 +77,26 @@ export async function generateProductSeoWithAi(input: ProductSeoAiInput): Promis
   const comparePrice = typeof input.comparePrice === "number" && Number.isFinite(input.comparePrice) ? input.comparePrice : undefined;
 
   const prompt = [
-    "Você é um especialista sênior em SEO para ecommerce de joias e presentes premium no Brasil.",
-    "Siga boas práticas do Google Search Central: títulos únicos, claros, humanos, sem keyword stuffing, sem promessas enganosas e sem repetir termos desnecessariamente.",
-    "Melhore o produto em português brasileiro com foco em CTR, relevância semântica, intenção de busca e boa legibilidade.",
-    "Retorne apenas JSON válido com as chaves: title, slug, description, seoTitle, metaDescription, focusKeyword.",
-    "title: nome comercial do produto, elegante e vendável, mantendo a intenção principal do item.",
-    "slug: curto, sem acentos, minúsculo, pronto para URL, preferindo 3 a 8 palavras.",
-    "description: descrição profissional para a página do produto com 2 ou 3 parágrafos curtos separados por uma linha em branco, cobrindo o que é o produto, diferencial visual ou uso e informações confirmadas de compra. Não use markdown, não use emojis e não invente materiais, medidas ou atributos não informados.",
-    "seoTitle: título SEO com até 65 caracteres, descritivo e natural.",
-    "metaDescription: meta description com 140 a 160 caracteres, específica e persuasiva.",
-    "focusKeyword: palavra-chave principal com 2 a 5 termos.",
-    "Evite conteúdo genérico demais. Se houver categoria, marca ou faixa de preço, use isso para tornar o texto mais específico.",
+    "Você é o maior especialista Sênior em SEO Técnico e Copywriting de Conversão do mundo, focado em atingir o TOP 1 do Google para e-commerces de joias e presentes premium no Brasil.",
+    "Siga diretrizes rigorosas do Google Search Central e do Helpful Content Update: crie conteúdo rico, humano, altamente persuasivo e focado totalmente na experiência e intenção de busca do usuário (sem keyword stuffing).",
+    "SEU OBJETIVO: Maximizar o CTR (Click-Through Rate), o ranqueamento orgânico de longo prazo e a conversão direta.",
+    "Retorne EXCLUSIVAMENTE UM JSON VÁLIDO. Não adicione textos antes ou depois, não use formatação com crases (```json). Apenas o objeto JSON puro com as seguintes chaves exatas: title, slug, description, seoTitle, metaDescription, focusKeyword.",
+    "",
+    "INSTRUÇÕES OBRIGATÓRIAS PARA CADA CHAVE:",
+    "- title: Nome do produto otimizado para vendas e atração. O texto deve ser comercial, elegante e manter a intenção de quem quer comprar o item.",
+    "- slug: Uma URL amigável curta, contendo apenas letras minúsculas e hifens, sem acentos, focada diretamente na palavra-chave (exemplo perfeito: anel-solitario-ouro-18k). Evite preposições desnecessárias (de, para, com).",
+    "- description: Descrição incrivelmente bem escrita e persuasiva, simulando um copywriter de elite focando em despertar o desejo de compra. Crie de 2 a 3 parágrafos envolventes. Quebre parágrafos e fale sobre os benefícios reais do uso, o diferencial e qualidade (se não houver especificações, crie um tom inspirador sem mentir sobre os materiais). Não inclua Emojis nem Markdown.",
+    "- seoTitle: Título para a tag SEO <title>. CRÍTICO: Máximo de 65 caracteres. Coloque a palavra-chave principal no início e, se couber, algo atrativo no final. (ex: Colar de Ouro 18k Elegante | Luxijóias).",
+    "- metaDescription: Snippet para a tag Meta Description. Teto rigoroso de 140 a 155 caracteres. Precisa ser extremamente atrativa, resumir a oferta e contar com uma Call To Action sutil no final (ex: 'Garanta o seu hoje!', 'Frete Grátis e segurança.').",
+    "- focusKeyword: A Palavra-Chave Principal ('Cauda Longa' / Long-tail) com maior potencial de atração comercial para este produto específico (composta por 2 a 4 palavras fortes).",
+    "",
+    "DADOS TEMPLÁTICO DO PRODUTO A SER OTIMIZADO:",
     `Nome atual: ${normalizedName}`,
-    `Descrição atual: ${normalizedDescription || "sem descrição"}`,
-    `Marca: ${normalizedBrand || "sem marca"}`,
-    `Categoria: ${normalizedCategory || "sem categoria"}`,
-    `Preço atual: ${price ? `R$ ${price.toFixed(2)}` : "não informado"}`,
-    `Preço comparativo: ${comparePrice ? `R$ ${comparePrice.toFixed(2)}` : "não informado"}`,
+    `Descrição original: ${normalizedDescription || "Crie algo deslumbrante tendo como premissa apenas o Nome."}`,
+    `Marca: ${normalizedBrand || "Luxijóias (Use como marca oficial se fizer sentido)"}`,
+    `Categoria: ${normalizedCategory || "Mapeie inteligentemente a categoria cruzando dados do nome."}`,
+    `Preço de venda focado: ${price ? `R$ ${price.toFixed(2)}` : "não informado"}`,
+    `Ancoragem de preço (Preço original): ${comparePrice ? `R$ ${comparePrice.toFixed(2)}` : "não informado"}`,
   ].join("\n");
 
   try {
@@ -108,7 +112,7 @@ export async function generateProductSeoWithAi(input: ProductSeoAiInput): Promis
           },
         ],
         generationConfig: {
-          temperature: 0.7,
+          temperature: 0.65, // Ajustado para ser assertivo mas ainda criativo
           responseMimeType: "application/json",
         },
       }),
