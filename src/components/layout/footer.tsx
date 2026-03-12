@@ -1,15 +1,14 @@
 ﻿import Link from "next/link"
 import Image from "next/image"
-import { Instagram, Facebook, Youtube, Mail, Phone, MapPin } from "lucide-react"
+import { Instagram, Facebook, Youtube, Mail, Phone, MapPin, MessageCircleMore } from "lucide-react"
 import { getStoreSettings } from "@/lib/store-settings"
 import { NewsletterSubscribeForm } from "@/components/layout/newsletter-subscribe-form"
-import { WhatsAppIcon } from "@/components/ui/icons"
 
 export async function Footer() {
   const settings = await getStoreSettings()
 
   return (
-    <footer className="w-full bg-[#FCFCFC] border-t border-zinc-200 pt-16 pb-8">
+    <footer className="w-full border-t border-zinc-200 bg-[#FCFCFC] pt-16 pb-28 md:pb-8">
       <div className="mx-auto max-w-[1440px] px-6 lg:px-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 pb-16 border-b border-zinc-200">
           
@@ -30,23 +29,23 @@ export async function Footer() {
 
             <div className="flex gap-3 pt-2">
               <Link href={settings.instagramUrl} target="_blank" aria-label="Instagram" className="w-10 h-10 rounded-full border border-zinc-300 bg-white flex items-center justify-center text-[#666666] hover:text-white hover:bg-[#D4AF37] hover:border-[#D4AF37] transition-all shadow-sm">
-                <Instagram className="w-4 h-4" />
+                <Instagram className="w-4 h-4 stroke-[1.8]" />
               </Link>
               <Link href={settings.facebookUrl} target="_blank" aria-label="Facebook" className="w-10 h-10 rounded-full border border-zinc-300 bg-white flex items-center justify-center text-[#666666] hover:text-white hover:bg-[#D4AF37] hover:border-[#D4AF37] transition-all shadow-sm">
-                <Facebook className="w-4 h-4" />
+                <Facebook className="w-4 h-4 stroke-[1.8]" />
               </Link>
               <Link href={settings.youtubeUrl} target="_blank" aria-label="YouTube" className="w-10 h-10 rounded-full border border-zinc-300 bg-white flex items-center justify-center text-[#666666] hover:text-white hover:bg-[#D4AF37] hover:border-[#D4AF37] transition-all shadow-sm">
-                <Youtube className="w-4 h-4" />
+                <Youtube className="w-4 h-4 stroke-[1.8]" />
               </Link>
               <Link href={settings.whatsappUrl} target="_blank" aria-label="WhatsApp" className="w-10 h-10 rounded-full border border-zinc-300 bg-white flex items-center justify-center text-[#666666] hover:text-white hover:bg-[#D4AF37] hover:border-[#D4AF37] transition-all shadow-sm">
-                <WhatsAppIcon className="w-4 h-4" />
+                <MessageCircleMore className="w-4 h-4 stroke-[1.8]" />
               </Link>
             </div>
           </div>
 
-          <div className="lg:col-span-7 grid grid-cols-2 md:grid-cols-3 gap-8 sm:gap-10">
+          <div className="lg:col-span-7 grid grid-cols-1 gap-8 sm:gap-10 md:grid-cols-3">
             {/* Links Columns */}
-            <div>
+            <div className="hidden md:block">
               <h3 className="font-semibold text-[#1A1A1A] mb-6 uppercase tracking-wider text-xs">A Luxijóias</h3>
               <ul className="space-y-4">
                 <li><Link href="/quem-somos" className="text-[15px] text-[#666666] hover:text-[#D4AF37] hover:pl-1 transition-all">Quem Somos</Link></li>
@@ -59,7 +58,7 @@ export async function Footer() {
               </ul>
             </div>
 
-            <div>
+            <div className="hidden md:block">
               <h3 className="font-semibold text-[#1A1A1A] mb-6 uppercase tracking-wider text-xs">Suporte</h3>
               <ul className="space-y-4">
                 <li><Link href="/contato" className="text-[15px] text-[#666666] hover:text-[#D4AF37] hover:pl-1 transition-all">Central de Ajuda</Link></li>
@@ -70,7 +69,7 @@ export async function Footer() {
               </ul>
             </div>
 
-            <div>
+            <div className="hidden md:block">
               <h3 className="font-semibold text-[#1A1A1A] mb-6 uppercase tracking-wider text-xs">Legal</h3>
               <ul className="space-y-4">
                 <li><Link href="/termos-de-uso" className="text-[15px] text-[#666666] hover:text-[#D4AF37] hover:pl-1 transition-all">Termos de Uso</Link></li>
@@ -79,13 +78,49 @@ export async function Footer() {
                 <li><Link href="/privacidade" className="text-[15px] text-[#666666] hover:text-[#D4AF37] hover:pl-1 transition-all">Cookies</Link></li>
               </ul>
             </div>
+
+            <div className="space-y-3 md:hidden">
+              <details className="group rounded-2xl border border-zinc-200 bg-white px-5 py-4" open>
+                <summary className="cursor-pointer list-none text-xs font-semibold uppercase tracking-[0.24em] text-[#1A1A1A] marker:hidden">A Luxijóias</summary>
+                <ul className="mt-4 space-y-3">
+                  <li><Link href="/quem-somos" className="text-[15px] text-[#555555] transition-colors hover:text-[#D4AF37]">Quem Somos</Link></li>
+                  <li><Link href="/marcas" className="text-[15px] text-[#555555] transition-colors hover:text-[#D4AF37]">Marcas</Link></li>
+                  <li><Link href="/blog" className="text-[15px] text-[#555555] transition-colors hover:text-[#D4AF37]">Blog</Link></li>
+                  <li><Link href="/search?q=lancamentos" className="text-[15px] text-[#555555] transition-colors hover:text-[#D4AF37]">Lançamentos</Link></li>
+                  <li><Link href="/categoria/ofertas" className="text-[15px] text-[#555555] transition-colors hover:text-[#D4AF37]">Ofertas</Link></li>
+                  <li><Link href="/favorites" className="text-[15px] text-[#555555] transition-colors hover:text-[#D4AF37]">Favoritos</Link></li>
+                  <li><Link href="/account" className="text-[15px] text-[#555555] transition-colors hover:text-[#D4AF37]">Minha Conta</Link></li>
+                </ul>
+              </details>
+
+              <details className="group rounded-2xl border border-zinc-200 bg-white px-5 py-4">
+                <summary className="cursor-pointer list-none text-xs font-semibold uppercase tracking-[0.24em] text-[#1A1A1A] marker:hidden">Suporte</summary>
+                <ul className="mt-4 space-y-3">
+                  <li><Link href="/contato" className="text-[15px] text-[#555555] transition-colors hover:text-[#D4AF37]">Central de Ajuda</Link></li>
+                  <li><Link href="/trocas-e-devolucoes" className="text-[15px] text-[#555555] transition-colors hover:text-[#D4AF37]">Trocas e Devoluções</Link></li>
+                  <li><Link href="/rastreio" className="text-[15px] text-[#555555] transition-colors hover:text-[#D4AF37]">Rastrear Pedido</Link></li>
+                  <li><Link href="/checkout" className="text-[15px] text-[#555555] transition-colors hover:text-[#D4AF37]">Entregas</Link></li>
+                  <li><Link href="/faq" className="text-[15px] text-[#555555] transition-colors hover:text-[#D4AF37]">FAQ</Link></li>
+                </ul>
+              </details>
+
+              <details className="group rounded-2xl border border-zinc-200 bg-white px-5 py-4">
+                <summary className="cursor-pointer list-none text-xs font-semibold uppercase tracking-[0.24em] text-[#1A1A1A] marker:hidden">Legal</summary>
+                <ul className="mt-4 space-y-3">
+                  <li><Link href="/termos-de-uso" className="text-[15px] text-[#555555] transition-colors hover:text-[#D4AF37]">Termos de Uso</Link></li>
+                  <li><Link href="/privacidade" className="text-[15px] text-[#555555] transition-colors hover:text-[#D4AF37]">Privacidade</Link></li>
+                  <li><Link href="/trocas-e-devolucoes" className="text-[15px] text-[#555555] transition-colors hover:text-[#D4AF37]">Políticas de Compras</Link></li>
+                  <li><Link href="/privacidade" className="text-[15px] text-[#555555] transition-colors hover:text-[#D4AF37]">Cookies</Link></li>
+                </ul>
+              </details>
+            </div>
             
             <div className="col-span-2 md:col-span-3 pt-6 lg:pt-2">
               <h3 className="font-semibold text-[#1A1A1A] mb-5 uppercase tracking-wider text-xs">Fale com a gente</h3>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
                 <div className="flex items-start gap-4">
                   <div className="w-10 h-10 rounded-full bg-white border border-zinc-200 flex items-center justify-center flex-shrink-0">
-                    <Phone className="w-4 h-4 text-[#666666]" />
+                    <Phone className="w-4 h-4 stroke-[1.8] text-[#666666]" />
                   </div>
                   <div>
                     <h4 className="text-sm font-medium text-[#1A1A1A]">Telefone / WhatsApp</h4>
@@ -94,7 +129,7 @@ export async function Footer() {
                 </div>
                 <div className="flex items-start gap-4">
                   <div className="w-10 h-10 rounded-full bg-white border border-zinc-200 flex items-center justify-center flex-shrink-0">
-                    <Mail className="w-4 h-4 text-[#666666]" />
+                    <Mail className="w-4 h-4 stroke-[1.8] text-[#666666]" />
                   </div>
                   <div>
                     <h4 className="text-sm font-medium text-[#1A1A1A]">E-mail</h4>
@@ -103,7 +138,7 @@ export async function Footer() {
                 </div>
                 <div className="flex items-start gap-4">
                   <div className="w-10 h-10 rounded-full bg-white border border-zinc-200 flex items-center justify-center flex-shrink-0">
-                    <MapPin className="w-4 h-4 text-[#666666]" />
+                    <MapPin className="w-4 h-4 stroke-[1.8] text-[#666666]" />
                   </div>
                   <div>
                     <h4 className="text-sm font-medium text-[#1A1A1A]">Escritório</h4>

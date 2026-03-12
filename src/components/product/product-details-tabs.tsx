@@ -3,12 +3,13 @@
 import { useEffect, useMemo, useState } from "react";
 import { Star } from "lucide-react";
 import { ProductReviewForm } from "@/components/product/product-review-form";
-import type { ProductInfoItem } from "@/lib/product-content";
+import type { ProductInfoItem, ProductSpecItem } from "@/lib/product-content";
 import type { ProductReview } from "@/lib/store-data";
 
 type ProductDetailsTabsProps = {
   description: string;
   infoItems: ProductInfoItem[];
+  specItems: ProductSpecItem[];
   sku: string;
   brand: string;
   category: string;
@@ -31,6 +32,7 @@ const tabLabels: Record<TabKey, string> = {
 export function ProductDetailsTabs({
   description,
   infoItems,
+  specItems,
   sku,
   brand,
   category,
@@ -87,6 +89,7 @@ export function ProductDetailsTabs({
     { label: "Categoria", value: category },
     { label: "Disponibilidade", value: quantity > 0 ? `${quantity} em estoque` : "Sob consulta" },
     ...infoItems,
+    ...specItems,
     { label: "Envio", value: "Cálculo automático por CEP no checkout" },
   ];
 
@@ -156,7 +159,7 @@ export function ProductDetailsTabs({
         <table className="w-full border-collapse text-left text-sm md:text-[15px]">
           <tbody className="divide-y divide-zinc-200">
             {specs.map((item, index) => (
-              <tr key={item.label} className={index % 2 === 0 ? "bg-white" : "bg-[#FFFFFF]/80"}>
+              <tr key={`${item.label}-${item.value}-${index}`} className={index % 2 === 0 ? "bg-white" : "bg-[#FFFFFF]/80"}>
                 <th
                   scope="row"
                   className="w-[38%] px-4 py-4 align-top font-semibold text-[#1A1A1A] md:px-6"

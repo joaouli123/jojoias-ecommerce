@@ -6,7 +6,7 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
   images: {
     formats: ["image/avif", "image/webp"],
-    qualities: [50, 75],
+    qualities: [50, 55, 60, 75],
     deviceSizes: [360, 640, 768, 1024, 1280, 1440, 1920],
     imageSizes: [32, 48, 64, 96, 128, 180, 256, 384],
     minimumCacheTTL: 60 * 60 * 24 * 30,
@@ -26,6 +26,14 @@ const nextConfig: NextConfig = {
       {
         protocol: "https",
         hostname: "cdn.sistemawbuy.com.br",
+      },
+      {
+        protocol: "https",
+        hostname: "**.bwimg.com.br",
+      },
+      {
+        protocol: "https",
+        hostname: "images.tcdn.com.br",
       },
       {
         protocol: "https",

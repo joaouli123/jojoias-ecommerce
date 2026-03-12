@@ -98,17 +98,17 @@ export function ProductCard({ product }: ProductCardProps) {
   }
 
   return (
-    <div className="group relative flex flex-col bg-white rounded-none border border-transparent p-2 sm:p-3 transition-all hover:scale-[1.02]">
+    <div className="group relative flex h-full select-none flex-col rounded-[18px] border border-zinc-200 bg-white p-2 transition-colors hover:border-zinc-300 sm:p-3">
       {showCartNotice ? (
-        <div className="absolute inset-x-2 bottom-2 z-40 rounded-none border border-emerald-200 bg-white/95 p-3 shadow-lg backdrop-blur">
+        <div className="absolute inset-x-2 bottom-2 z-40 rounded-2xl border border-emerald-200 bg-white/95 p-3 backdrop-blur">
           <div className="flex items-start gap-2">
-            <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" />
+            <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 stroke-[1.85] text-emerald-600" />
             <div className="min-w-0 flex-1">
               <p className="text-sm font-semibold text-emerald-700">Adicionado ao carrinho</p>
               <p className="mt-1 line-clamp-1 text-xs text-[#666666]">{product.name}</p>
               <Link
                 href="/cart"
-                className="mt-2 inline-flex h-11 min-h-[44px] items-start justify-center rounded-none bg-[#21352A] px-4 text-xs font-medium font-serif text-white transition-colors hover:bg-[#21352A]/90"
+                className="mt-2 inline-flex h-11 min-h-[44px] items-center justify-center rounded-xl bg-[#21352A] px-4 text-xs font-medium text-white transition-colors hover:bg-[#21352A]/90"
               >
                 Ver carrinho
               </Link>
@@ -118,9 +118,9 @@ export function ProductCard({ product }: ProductCardProps) {
       ) : null}
 
       {cartError ? (
-        <div className="absolute inset-x-2 bottom-2 z-40 rounded-none border border-rose-200 bg-white/95 p-3 shadow-lg backdrop-blur">
+        <div className="absolute inset-x-2 bottom-2 z-40 rounded-2xl border border-rose-200 bg-white/95 p-3 backdrop-blur">
           <div className="flex items-start gap-2">
-            <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-rose-600" />
+            <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 stroke-[1.85] text-rose-600" />
             <div className="min-w-0 flex-1">
               <p className="text-sm font-semibold text-rose-700">Não foi possível adicionar</p>
               <p className="mt-1 text-xs text-[#666666]">{cartError}</p>
@@ -134,7 +134,7 @@ export function ProductCard({ product }: ProductCardProps) {
       {/* Badges de Destaque */}
       {hasDiscount && (
         <div className="absolute left-2 top-2 z-20">
-          <span className="bg-[#D4AF37] text-[#111111] text-[10px] font-medium font-serif px-2 py-1 rounded-sm shadow-sm tracking-wide">
+          <span className="rounded-full bg-[#D4AF37] px-2 py-1 text-[10px] font-medium tracking-wide text-[#111111]">
             {discountPercent}% OFF
           </span>
         </div>
@@ -144,43 +144,44 @@ export function ProductCard({ product }: ProductCardProps) {
       <Link
         href={`/produto/${product.slug}`}
         aria-label={`Ver detalhes de ${product.name}`}
-        className="relative mb-4 block aspect-square w-full overflow-hidden rounded-none"
+        className="relative mb-3 block aspect-square w-full overflow-hidden rounded-[14px] bg-[#F7F5F2] select-none"
       >
         <Image
           src={product.image || "/demo-products/kit-elegance.svg"}
           alt={product.name}
           fill
+          draggable={false}
           quality={50}
           sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-          className="object-cover transition-transform duration-700 group-hover:scale-110"
+          className="object-contain p-3 transition-transform duration-700 group-hover:scale-105"
         />
       </Link>
 
-      <div className="flex flex-col flex-1 px-2 text-left">
-        <Link href={`/produto/${product.slug}`} className="mb-3 block">
-          <h3 className="min-h-[44px] text-base font-semibold leading-snug text-[#1A1A1A] line-clamp-2">
+      <div className="flex flex-1 flex-col px-2 pb-2 text-left">
+        <Link href={`/produto/${product.slug}`} className="mb-3 block min-h-[64px] select-none">
+          <h3 className="line-clamp-2 font-serif text-[clamp(1.08rem,1.45vw,1.24rem)] font-medium leading-[1.1] tracking-[-0.015em] text-[#1A1A1A]">
             {product.name}
           </h3>
         </Link>
         
-        <div className="flex flex-col items-start justify-end mt-auto space-y-1">
+        <div className="mt-auto flex flex-col items-start justify-end gap-1">
           {hasDiscount && (
-            <span className="text-sm text-[#E5E5E5] line-through decoration-zinc-400/50 font-medium">
+            <span className="text-sm font-medium text-zinc-400 line-through decoration-zinc-400/80">
               {formatCurrency(oldPrice)}
             </span>
           )}
           
-          <span className="text-2xl font-medium font-serif tracking-tight text-[#1A1A1A] leading-none mb-1">
+          <span className="mb-1 text-[1.65rem] font-semibold leading-none tracking-tight text-[#1A1A1A]">
             {formatCurrency(product.price)}
           </span>
           
-          <span className="text-xs font-medium text-[#1A1A1A] mb-3">
+          <span className="mb-3 text-xs font-medium text-[#1A1A1A]">
             até {parcelas}x de {formatCurrency(valorParcela)} sem juros
           </span>
 
-          <div className="w-full pt-3 border-t border-zinc-100 flex items-start justify-center gap-1.5 mt-2">
-            <PixIcon className="w-[14px] h-[14px] text-[#32BCAD] shrink-0" />
-            <span className="text-sm font-medium font-serif text-[#1A1A1A]">
+          <div className="mt-2 flex w-full items-center gap-2 border-t border-zinc-200 pt-3 text-left">
+            <PixIcon className="h-[13px] w-[13px] shrink-0 translate-y-px text-[#32BCAD]" />
+            <span className="text-sm font-medium leading-none text-[#1A1A1A]">
               ou {formatCurrency(pixPrice)} via Pix
             </span>
           </div>

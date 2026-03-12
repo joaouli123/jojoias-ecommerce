@@ -72,7 +72,7 @@ export function FavoriteButton({
           : "border-[#c93737]/35 bg-white text-[#c93737] hover:border-[#c93737] hover:bg-[#c93737] hover:text-white"
       } touch-manipulation disabled:opacity-60 ${className}`}
     >
-      <Heart className={`relative -translate-y-px h-4 w-4 ${isFavorite ? "fill-current" : ""}`} />
+      <Heart className={`relative -translate-y-px h-4 w-4 stroke-[2.3] ${isFavorite ? "fill-current" : ""}`} />
     </button>
   );
 }

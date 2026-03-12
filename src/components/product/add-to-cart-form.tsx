@@ -173,11 +173,11 @@ export function AddToCartForm({
           setIsSubmitting(false);
         }
       }}
-      className="flex flex-col gap-3"
+      className="flex flex-col gap-4"
     >
       {normalizedVariants.length ? (
-        <div className="space-y-2">
-          <label className="text-sm font-semibold text-[#1A1A1A]">
+        <div className="space-y-3">
+          <label className="text-[11px] font-medium uppercase tracking-[0.16em] text-[#8A7F72]">
             {sharedType === "cor"
               ? "Escolha a cor"
               : sharedType === "tamanho"
@@ -249,7 +249,7 @@ export function AddToCartForm({
       ) : null}
 
       <div className="flex flex-row items-center gap-2">
-        <div className="h-[50px] w-[110px] rounded-[10px] border border-zinc-300 bg-[#FFFFFF] flex items-center justify-center px-3 shrink-0">
+        <div className="flex h-[52px] w-[96px] shrink-0 items-center justify-center rounded-[12px] border border-zinc-300 bg-[#FFFFFF] px-3">
           <input
             type="number"
             name="quantity"
@@ -260,11 +260,11 @@ export function AddToCartForm({
               const nextQuantity = Number(event.target.value);
               setQuantity(Number.isFinite(nextQuantity) && nextQuantity > 0 ? Math.floor(nextQuantity) : 1);
             }}
-            className="w-full text-center text-[20px] font-semibold text-[#1A1A1A] bg-transparent outline-none"
+            className="w-full bg-transparent text-center text-[18px] font-semibold text-[#1A1A1A] outline-none"
           />
         </div>
 
-        <Button type="submit" disabled={isSubmitting || (normalizedVariants.length > 0 && !hasAvailableVariant)} className="flex-1 h-[50px] text-[16px] font-medium font-serif tracking-tight bg-[#111827] hover:bg-[#111827]/90 text-white shadow-none rounded-[10px] transition-colors uppercase disabled:opacity-70">
+        <Button type="submit" disabled={isSubmitting || (normalizedVariants.length > 0 && !hasAvailableVariant)} className="h-[52px] flex-1 rounded-[12px] bg-[#111827] text-[15px] font-semibold tracking-[0.05em] text-white uppercase transition-colors hover:bg-[#0f172a] shadow-none disabled:opacity-70">
           <ShoppingCart className="mr-2 h-5 w-5" /> Comprar Agora
         </Button>
       </div>

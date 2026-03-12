@@ -73,7 +73,7 @@ export function ProductShippingEstimator({ subtotal }: ProductShippingEstimatorP
 
   return (
     <div className="flex flex-col gap-3">
-      <span className="text-[15px] font-medium font-serif text-[#111827]">Calcular Frete</span>
+      <span className="text-[11px] font-medium uppercase tracking-[0.16em] text-[#8A7F72]">Calcular Frete</span>
       <div className="flex flex-row gap-2 w-full">
         <input
           type="text"
@@ -81,13 +81,13 @@ export function ProductShippingEstimator({ subtotal }: ProductShippingEstimatorP
           value={zipcode}
           onChange={(event) => setZipcode(formatZipcode(event.target.value))}
           placeholder="00000-000"
-          className="h-[52px] flex-1 min-w-0 rounded-[8px] border border-zinc-200 outline-none focus:border-[#111827] text-[15px] text-[#111111] placeholder:text-[#E5E5E5] px-4"
+          className="h-[52px] min-w-0 flex-1 rounded-[12px] border border-zinc-200 px-4 text-[15px] text-[#111111] outline-none focus:border-[#111827] placeholder:text-[#B8B0A4]"
         />
         <Button
           type="button"
           onClick={handleSubmit}
           disabled={isLoading}
-          className="w-[52px] h-[52px] shrink-0 bg-[#111827] hover:bg-[#111827]/90 text-white shadow-none rounded-[8px] transition-colors p-0 flex items-center justify-center disabled:opacity-60"
+          className="flex h-[52px] w-[52px] shrink-0 items-center justify-center rounded-[12px] bg-[#111827] p-0 text-white transition-colors hover:bg-[#111827]/90 shadow-none disabled:opacity-60"
         >
           <Truck className="w-5 h-5" />
         </Button>

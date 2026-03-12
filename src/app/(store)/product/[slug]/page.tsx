@@ -116,7 +116,7 @@ export default async function ProductPage({
   const description =
     product.description ||
     "Produto exclusivo Luxijóias com acabamento refinado, compra segura e envio para todo o Brasil.";
-  const { descriptionBody, infoItems } = extractProductInfoFromDescription(description)
+  const { descriptionBody, infoItems, specItems } = extractProductInfoFromDescription(description)
     
   const imageEntries = product.images.length
     ? product.images.map((image, index) => ({
@@ -124,7 +124,7 @@ export default async function ProductPage({
         alt: image.alt || (index === 0 ? `${product.name} da Luxijóias` : `${product.name} da Luxijóias - imagem ${index + 1}`),
       }))
     : [{
-        url: product.image || "https://images.unsplash.com/photo-1611095567219-79caa80c5980?q=80&w=800",
+        url: product.image || "/demo-products/kit-elegance.svg",
         alt: `${product.name} da Luxijóias`,
       }];
   const images = imageEntries.map((image) => image.url)
@@ -304,6 +304,7 @@ export default async function ProductPage({
       <ProductDetailsTabs
         description={descriptionBody || description}
         infoItems={infoItems}
+        specItems={specItems}
         sku={sku}
         brand={brand}
         category={product.category}
