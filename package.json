@@ -33,7 +33,8 @@
     "coupon:ensure": "tsx scripts/ensure-default-coupon.ts",
     "ga4:ensure": "tsx scripts/ensure-ga4.ts",
     "seed:demo": "tsx scripts/seed-demo-catalog.ts",
-    "import:luna:pilot": "tsx scripts/import-luna-pilot.ts"
+    "import:luna:pilot": "tsx scripts/import-luna-pilot.ts",
+    "import:luna:all": "tsx scripts/import-luna-pilot.ts"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.11.1",

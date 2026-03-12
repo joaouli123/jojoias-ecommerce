@@ -168,7 +168,7 @@ export function ProductCard({ product }: ProductCardProps) {
       <Link
         href={`/produto/${product.slug}`}
         aria-label={`Ver detalhes de ${product.name}`}
-        className="relative mb-4 block aspect-[4/3] w-full overflow-hidden rounded-[20px]"
+        className="relative mb-4 block aspect-square w-full overflow-hidden rounded-[20px]"
       >
         <Image
           src={product.image || "/demo-products/kit-elegance.svg"}

@@ -76,7 +76,7 @@ export function ProductPurchasePanel({
   return (
     <>
       <div className="flex flex-col gap-3 md:gap-4 lg:col-span-3">
-        <div className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl border border-zinc-200 bg-zinc-50">
+        <div className="relative aspect-square w-full overflow-hidden rounded-2xl border border-zinc-200 bg-zinc-50">
           <Image
             src={activeImage?.url || images[0]?.url || ""}
             alt={activeImage?.alt || product.name}
@@ -98,7 +98,7 @@ export function ProductPurchasePanel({
                 type="button"
                 aria-label={`Ver imagem ${index + 1} de ${product.name}`}
                 onClick={() => setActiveImageUrl(image.url)}
-                className={`relative aspect-[4/3] overflow-hidden rounded-xl border bg-zinc-50 transition-all ${isActive ? "border-[#D4AF37] opacity-100 ring-1 ring-[#D4AF37]/40" : "border-zinc-200 opacity-80 hover:border-[#D4AF37] hover:opacity-100"}`}
+                className={`relative aspect-square overflow-hidden rounded-xl border bg-zinc-50 transition-all ${isActive ? "border-[#D4AF37] opacity-100 ring-1 ring-[#D4AF37]/40" : "border-zinc-200 opacity-80 hover:border-[#D4AF37] hover:opacity-100"}`}
               >
                 <Image
                   src={image.url}

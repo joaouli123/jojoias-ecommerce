@@ -30,7 +30,7 @@ export function HomeProductCard({ product }: HomeProductCardProps) {
         </div>
       ) : null}
 
-      <div className="relative mb-4 aspect-[4/3] w-full overflow-hidden rounded-[20px]">
+      <div className="relative mb-4 aspect-square w-full overflow-hidden rounded-[20px]">
         <Image
           src={product.image || "/demo-products/kit-elegance.svg"}
           alt={product.name}
