@@ -119,32 +119,17 @@ export async function Footer() {
             <div className="pt-4 md:col-span-3 lg:pt-2">
               <h3 className="mb-5 font-serif text-[clamp(2rem,3vw,2.45rem)] font-medium uppercase tracking-[0.14em] text-zinc-900" style={{ color: "#1A1A1A" }}>Fale com a gente</h3>
               <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 lg:gap-x-10">
-                <div className="flex items-start gap-4 rounded-[22px] border border-zinc-200/80 bg-white/90 p-5 shadow-[0_18px_32px_-28px_rgba(26,26,26,0.5)]">
-                  <div className="w-10 h-10 rounded-full bg-white border border-zinc-200 flex items-center justify-center flex-shrink-0">
-                    <Phone className="w-4 h-4 stroke-[1.8] text-zinc-600" style={{ color: "#666666" }} />
-                  </div>
-                  <div>
-                    <h4 className="text-base font-medium text-zinc-900 md:text-[1.1rem]" style={{ color: "#1A1A1A" }}>Telefone / WhatsApp</h4>
-                    <p className="mt-1 text-base text-zinc-600 transition-colors cursor-pointer hover:text-[#D4AF37]" style={{ color: "#666666" }}>{settings.supportPhone}</p>
-                  </div>
+                <div>
+                  <h4 className="text-base font-medium text-zinc-900 md:text-[1.1rem]" style={{ color: "#1A1A1A" }}>Telefone / WhatsApp</h4>
+                  <p className="mt-2 text-base text-zinc-600 transition-colors cursor-pointer hover:text-[#D4AF37]" style={{ color: "#666666" }}>{settings.supportPhone}</p>
                 </div>
-                <div className="flex items-start gap-4 rounded-[22px] border border-zinc-200/80 bg-white/90 p-5 shadow-[0_18px_32px_-28px_rgba(26,26,26,0.5)]">
-                  <div className="w-10 h-10 rounded-full bg-white border border-zinc-200 flex items-center justify-center flex-shrink-0">
-                    <Mail className="w-4 h-4 stroke-[1.8] text-zinc-600" style={{ color: "#666666" }} />
-                  </div>
-                  <div>
-                    <h4 className="text-base font-medium text-zinc-900 md:text-[1.1rem]" style={{ color: "#1A1A1A" }}>E-mail</h4>
-                    <Link href="/contato" className="mt-1 inline-flex text-base text-zinc-600 transition-colors hover:text-[#D4AF37]" style={{ color: "#666666" }}>Abrir atendimento por e-mail</Link>
-                  </div>
+                <div>
+                  <h4 className="text-base font-medium text-zinc-900 md:text-[1.1rem]" style={{ color: "#1A1A1A" }}>E-mail</h4>
+                  <Link href="/contato" className="mt-2 inline-flex text-base text-zinc-600 transition-colors hover:text-[#D4AF37]" style={{ color: "#666666" }}>Abrir atendimento por e-mail</Link>
                 </div>
-                <div className="flex items-start gap-4 rounded-[22px] border border-zinc-200/80 bg-white/90 p-5 shadow-[0_18px_32px_-28px_rgba(26,26,26,0.5)]">
-                  <div className="w-10 h-10 rounded-full bg-white border border-zinc-200 flex items-center justify-center flex-shrink-0">
-                    <MapPin className="w-4 h-4 stroke-[1.8] text-zinc-600" style={{ color: "#666666" }} />
-                  </div>
-                  <div>
-                    <h4 className="text-base font-medium text-zinc-900 md:text-[1.1rem]" style={{ color: "#1A1A1A" }}>Escritório</h4>
-                    <p className="mt-1 text-base text-zinc-600" style={{ color: "#666666" }}>{settings.addressLine}<br />{settings.businessHours}</p>
-                  </div>
+                <div>
+                  <h4 className="text-base font-medium text-zinc-900 md:text-[1.1rem]" style={{ color: "#1A1A1A" }}>Escritório</h4>
+                  <p className="mt-2 text-base text-zinc-600" style={{ color: "#666666" }}>{settings.addressLine}<br />{settings.businessHours}</p>
                 </div>
               </div>
             </div>

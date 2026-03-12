@@ -66,7 +66,7 @@ export function FavoriteButton({
       onClick={handleToggle}
       disabled={isLoading}
       aria-label={isFavorite ? "Remover dos favoritos" : "Adicionar aos favoritos"}
-      className={`inline-flex items-center justify-center rounded-full border transition-colors ${
+      className={`inline-flex items-center justify-center rounded-full border shadow-none transition-colors ${
         isFavorite
           ? "border-[#c93737] bg-[#c93737] text-white"
           : "border-[#c93737]/35 bg-white text-[#c93737] hover:border-[#c93737] hover:bg-[#c93737] hover:text-white"

@@ -135,7 +135,7 @@ export function ProductCard({ product }: ProductCardProps) {
       
       
       <div className="absolute right-3 top-3 z-20" onClick={stopCardAction}>
-        <FavoriteButton productId={product.id} className="h-9 w-9 bg-white/92 shadow-sm backdrop-blur" />
+        <FavoriteButton productId={product.id} className="h-9 w-9 bg-white/92 shadow-none backdrop-blur" />
       </div>
 
       {/* Badges de Destaque */}

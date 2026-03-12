@@ -283,7 +283,7 @@ function NewsletterEditorialSection() {
         <h2 className="font-serif text-[clamp(2.2rem,4vw,3.35rem)] leading-[1.1] tracking-[-0.03em] text-[#1A1A1A] mb-4">
           Fique por dentro das promoções
         </h2>
-        <p className="text-[#666666] mb-8 text-sm md:text-base leading-relaxed">
+        <p className="mb-8 text-sm leading-relaxed text-[#4b5563] md:text-base">
           Receba novidades, campanhas sazonais, acesso antecipado a seleções especiais e condições pensadas para quem acompanha a marca de perto.
         </p>
         
@@ -291,7 +291,7 @@ function NewsletterEditorialSection() {
           <NewsletterSubscribeForm />
         </div>
 
-        <div className="mt-8 flex flex-wrap justify-center gap-4 text-[11px] font-medium uppercase tracking-[0.18em] text-[#8A7F72]">
+        <div className="mt-8 flex flex-wrap justify-center gap-4 text-[11px] font-medium uppercase tracking-[0.18em] text-[#6b7280]">
           <span>Lançamentos exclusivos</span>
           <span className="hidden sm:inline">•</span>
           <span>Cupons especiais</span>

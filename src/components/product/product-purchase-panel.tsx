@@ -166,7 +166,7 @@ export function ProductPurchasePanel({
 
         <div className="mb-4 flex items-start justify-between gap-3">
           <h1 className="max-w-[19ch] text-[clamp(1.32rem,1.35vw,1.72rem)] font-medium leading-[1.16] tracking-[-0.015em] text-[#111827] font-serif">{product.name}</h1>
-          <FavoriteButton productId={product.id} className="h-10 w-10 shrink-0" />
+          <FavoriteButton productId={product.id} className="h-10 w-10 shrink-0 shadow-none" />
         </div>
 
         <div className="mb-6 grid grid-cols-1 gap-3 border-b border-zinc-200 pb-5 sm:grid-cols-2">

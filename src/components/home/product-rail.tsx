@@ -50,10 +50,10 @@ export function ProductRail({ products, size = "regular" }: ProductRailProps) {
   const { isDragging, dragProps } = useDragScroll();
 
   const itemClassName = size === "compact"
-    ? "min-w-[220px] max-w-[220px] sm:min-w-[250px] sm:max-w-[250px]"
+    ? "snap-start min-w-[220px] max-w-[220px] sm:min-w-[250px] sm:max-w-[250px]"
     : size === "spacious"
-      ? "min-w-[280px] max-w-[280px] sm:min-w-[320px] sm:max-w-[320px]"
-      : "min-w-[260px] max-w-[260px] sm:min-w-[290px] sm:max-w-[290px]";
+      ? "snap-start min-w-[280px] max-w-[280px] sm:min-w-[320px] sm:max-w-[320px]"
+      : "snap-start min-w-[260px] max-w-[260px] sm:min-w-[290px] sm:max-w-[290px]";
 
   function scroll(direction: "left" | "right") {
     const container = scrollRef.current;
@@ -72,7 +72,7 @@ export function ProductRail({ products, size = "regular" }: ProductRailProps) {
     <div className="relative group/rail">
       <div
         ref={scrollRef}
-        className={`-mx-4 flex overflow-x-auto px-4 pb-12 pt-4 no-scrollbar sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8 ${isDragging ? "cursor-grabbing" : "cursor-grab"}`}
+        className={`-mx-4 flex overflow-x-auto snap-x snap-proximity px-4 pb-12 pt-4 no-scrollbar sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8 ${isDragging ? "cursor-grabbing" : "cursor-grab"}`}
         style={{ touchAction: "pan-x pan-y pinch-zoom", WebkitOverflowScrolling: "touch", overscrollBehaviorX: "contain" }}
         {...dragProps}
       >
