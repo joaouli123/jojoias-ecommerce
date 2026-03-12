@@ -7,8 +7,8 @@ import Link from "next/link";
 import { ShieldCheck, Truck, CreditCard, Map } from "lucide-react";
 import type { StoreBanner, StoreCategory } from "@/lib/store-data";
 
-const HERO_PRIMARY_FALLBACK = "/banner 1.png";
-const HERO_SECONDARY_FALLBACK = "/banner-home-secundario-luxijoias.avif";
+const HERO_PRIMARY_FALLBACK = "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?q=80&w=2000&auto=format&fit=crop";
+const HERO_SECONDARY_FALLBACK = "https://images.unsplash.com/photo-1599643478524-fb66f4cedbcd?q=80&w=2000&auto=format&fit=crop";
 
 function resolveBannerImageUrl(imageUrl: string | null | undefined, fallbackUrl: string) {
   if (!imageUrl) return fallbackUrl;
@@ -343,12 +343,14 @@ export function CategoriesCarousel({ categories = [] }: { categories?: StoreCate
   ];
 
   const categoryImages = [
-    "/demo-products/kit-elegance.svg",
-    "/demo-products/colar-constelacao.svg",
-    "/demo-products/anel-aura.svg",
-    "/demo-products/pulseira-elos.svg",
-    "/demo-products/brinco-gota.svg",
-    "/demo-products/mix-aneis.svg",
+    "https://images.unsplash.com/photo-1599643478524-fb66f4cedbcd?q=80&w=600&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1605100804763-247f67b2548e?q=80&w=600&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?q=80&w=600&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?q=80&w=600&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1535632787350-4e68ef0ac584?q=80&w=600&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1549465220-1a8b9238cd48?q=80&w=600&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1599643477877-530eb83abc8e?q=80&w=600&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?q=80&w=600&auto=format&fit=crop"
   ];
 
   const items = (categories.length ? categories : fallbackCategories).slice(0, 8);
@@ -370,17 +372,22 @@ export function CategoriesCarousel({ categories = [] }: { categories?: StoreCate
           className="flex overflow-x-auto snap-x snap-mandatory gap-5 no-scrollbar pb-2 xl:justify-center"
         >
           {items.map((cat, i) => (
-            <Link key={i} href={"/categoria/" + cat.slug} className="min-w-[132px] snap-center block shrink-0 text-center group/cat">
-              <div className="w-[132px] h-[132px] rounded-full overflow-hidden relative border border-zinc-200 bg-white">
+            <Link key={i} href={"/categoria/" + cat.slug} className="min-w-[150px] sm:min-w-[180px] snap-center block shrink-0 group/cat">
+              <div className="w-[150px] h-[180px] sm:w-[180px] sm:h-[220px] rounded-2xl overflow-hidden relative border border-zinc-200 bg-zinc-100 shadow-sm transition-all duration-300 group-hover/cat:shadow-md">
                 <Image
                   src={categoryImages[i % categoryImages.length]}
-                  alt=""
+                  alt={cat.name}
                   fill
-                  sizes="132px"
+                  sizes="(max-width: 640px) 150px, 180px"
                   className="object-cover transform group-hover/cat:scale-110 transition-transform duration-700"
                 />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent transition-opacity duration-300 group-hover/cat:opacity-90" />
+                <div className="absolute inset-0 p-4 flex flex-col items-center justify-end text-center">
+                  <span className="text-[17px] sm:text-lg text-white font-medium font-serif tracking-wide drop-shadow-lg leading-tight uppercase">
+                    {cat.name}
+                  </span>
+                </div>
               </div>
-              <span className="mt-4 block text-[17px] text-[#1A1A1A] font-medium font-serif tracking-tight">{cat.name}</span>
             </Link>
           ))}
         </div>

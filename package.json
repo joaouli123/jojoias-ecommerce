@@ -35,6 +35,7 @@
     "seed:demo": "tsx scripts/seed-demo-catalog.ts",
     "import:luna:pilot": "tsx scripts/import-luna-pilot.ts",
     "import:luna:all": "tsx scripts/import-luna-pilot.ts",
+    "import:lunoze": "tsx scripts/import-lunoze.ts",
     "import:rdcarvalho": "tsx scripts/import-rd-carvalho.ts",
     "import:dmanu": "tsx scripts/import-dmanu.ts"
   },

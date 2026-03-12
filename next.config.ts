@@ -31,6 +31,10 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "www.lunaacessorios.com.br",
       },
+      {
+        protocol: "https",
+        hostname: "acdn-us.mitiendanube.com",
+      },
     ],
   },
   async headers() {
