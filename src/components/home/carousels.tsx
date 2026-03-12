@@ -22,6 +22,41 @@ const CATEGORY_FALLBACK_IMAGES = [
   "/demo-products/pulseira-zirconia.svg",
 ];
 
+const CATEGORY_EDITORIAL_IMAGES: Record<string, string> = {
+  acessorios: "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?auto=format&fit=crop&w=900&q=80",
+  colares: "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?auto=format&fit=crop&w=900&q=80",
+  aneis: "https://images.unsplash.com/photo-1602173574767-37ac01994b2a?auto=format&fit=crop&w=900&q=80",
+  pulseiras: "https://images.unsplash.com/photo-1588444837495-c6cfeb53f32d?auto=format&fit=crop&w=900&q=80",
+  brincos: "https://images.unsplash.com/photo-1630019852942-f89202989a59?auto=format&fit=crop&w=900&q=80",
+  presentes: "https://images.unsplash.com/photo-1611652022419-a9419f74343d?auto=format&fit=crop&w=900&q=80",
+  promocoes: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?auto=format&fit=crop&w=900&q=80",
+};
+
+const SLIDE_EASE = "cubic-bezier(0.22, 1, 0.36, 1)";
+
+function animateHorizontalScroll(container: HTMLDivElement, targetLeft: number, duration = 820) {
+  const startLeft = container.scrollLeft;
+  const delta = targetLeft - startLeft;
+
+  if (Math.abs(delta) < 1) return;
+
+  const startTime = performance.now();
+
+  const easeOutQuint = (progress: number) => 1 - Math.pow(1 - progress, 5);
+
+  const step = (currentTime: number) => {
+    const elapsed = currentTime - startTime;
+    const progress = Math.min(elapsed / duration, 1);
+    container.scrollLeft = startLeft + delta * easeOutQuint(progress);
+
+    if (progress < 1) {
+      window.requestAnimationFrame(step);
+    }
+  };
+
+  window.requestAnimationFrame(step);
+}
+
 function useDragScroll() {
   const [isDragging, setIsDragging] = useState(false);
   const dragState = useRef({
@@ -161,7 +196,7 @@ export function BenefitsCarousel() {
     const container = scrollRef.current;
     const child = container?.children[activeIndex] as HTMLElement | undefined;
     if (!container || !child) return;
-    container.scrollTo({ left: child.offsetLeft, behavior: "smooth" });
+    animateHorizontalScroll(container, child.offsetLeft, 760);
   }, [activeIndex]);
 
   const scroll = (direction: "left" | "right") => {
@@ -181,7 +216,7 @@ export function BenefitsCarousel() {
           {...dragProps}
         >
           {benefits.map((benefit, i) => (
-            <div key={i} className="min-w-[85vw] snap-center rounded-2xl border border-zinc-200 bg-white p-6">
+            <div key={i} className="min-w-[85vw] snap-center rounded-2xl border border-zinc-200 bg-white p-6 transition-transform duration-500 ease-out will-change-transform">
               <div className="flex items-center gap-4">
                 <benefit.icon className="h-8 w-8 shrink-0 stroke-[1.75] text-[#1A1A1A]" />
                 <div className="flex flex-col text-left">
@@ -231,6 +266,7 @@ export function BannerCarousel({ banners = [] }: { banners?: StoreBanner[] }) {
   const secondaryBannerImage = HERO_SECONDARY_FALLBACK;
   const secondaryMobileBannerImage = HERO_SECONDARY_MOBILE_FALLBACK;
   const pointerState = useRef({ startX: 0, pointerId: -1, hasMoved: false });
+  const [isAutoPaused, setIsAutoPaused] = useState(false);
 
   const fallbackBanners: StoreBanner[] = [
     { id: "hero-1", title: "Banner principal", subtitle: null, imageUrl: HERO_PRIMARY_FALLBACK, mobileUrl: HERO_PRIMARY_MOBILE_FALLBACK, href: null, placement: "hero", position: 0 },
@@ -342,21 +378,24 @@ export function BannerCarousel({ banners = [] }: { banners?: StoreBanner[] }) {
 
   useEffect(() => {
     if (baseItems.length <= 1) return;
+    if (isAutoPaused) return;
 
     const intervalId = window.setInterval(() => {
       moveSlide("right");
-    }, 5000);
+    }, 6800);
 
     return () => {
       window.clearInterval(intervalId);
     };
-  }, [baseItems.length]);
+  }, [baseItems.length, isAutoPaused]);
 
   return (
     <section className="group relative mt-4 w-full max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 md:mt-6">
       <div
-        className="relative overflow-hidden rounded-2xl shadow-sm md:rounded-3xl"
+        className="relative overflow-hidden rounded-[28px] border border-white/70 shadow-[0_22px_60px_-34px_rgba(26,26,26,0.45)] md:rounded-[36px]"
         style={{ touchAction: "pan-y pinch-zoom" }}
+        onMouseEnter={() => setIsAutoPaused(true)}
+        onMouseLeave={() => setIsAutoPaused(false)}
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
         onPointerUp={onPointerUp}
@@ -364,13 +403,17 @@ export function BannerCarousel({ banners = [] }: { banners?: StoreBanner[] }) {
         onClickCapture={onClickCapture}
       >
         <div
-          className={`flex ease-out ${isAnimating ? "transition-transform duration-500" : "transition-none"}`}
-          style={{ transform: `translateX(-${activeIndex * 100}%)` }}
+          className={`flex will-change-transform ${isAnimating ? "transition-transform duration-[1100ms]" : "transition-none"}`}
+          style={{
+            transform: `translateX(-${activeIndex * 100}%)`,
+            transitionTimingFunction: isAnimating ? SLIDE_EASE : undefined,
+          }}
           onTransitionEnd={onTransitionEnd}
         >
           {loopedItems.map((banner, index) => {
             const realIndex = baseItems.length > 1 ? (index - 1 + baseItems.length) % baseItems.length : index;
             const isFirstBanner = realIndex === 0;
+            const isActiveSlide = realIndex === logicalIndex;
             const desktopImage = resolveBannerImageUrl(
               banner.imageUrl,
               isFirstBanner ? HERO_PRIMARY_FALLBACK : secondaryBannerImage,
@@ -390,7 +433,7 @@ export function BannerCarousel({ banners = [] }: { banners?: StoreBanner[] }) {
                     priority={isFirstBanner}
                     fetchPriority={isFirstBanner ? "high" : undefined}
                     loading={isFirstBanner ? "eager" : "lazy"}
-                    className="object-cover"
+                    className={`object-cover transition-transform duration-[1400ms] ${isActiveSlide ? "scale-100" : "scale-[1.035]"}`}
                   />
                 </div>
                 <div className="absolute inset-0 md:hidden">
@@ -401,7 +444,7 @@ export function BannerCarousel({ banners = [] }: { banners?: StoreBanner[] }) {
                     priority={isFirstBanner}
                     fetchPriority={isFirstBanner ? "high" : undefined}
                     loading={isFirstBanner ? "eager" : "lazy"}
-                    className="object-cover"
+                    className={`object-cover transition-transform duration-[1400ms] ${isActiveSlide ? "scale-100" : "scale-[1.03]"}`}
                   />
                 </div>
               </>
@@ -412,6 +455,18 @@ export function BannerCarousel({ banners = [] }: { banners?: StoreBanner[] }) {
             return (
               <Link key={banner.id} href={href} draggable={false} className="relative block h-[50vh] min-w-full select-none cursor-grab active:cursor-grabbing md:h-[480px]" onDragStart={(event) => event.preventDefault()}>
                 {content}
+                <div className={`absolute inset-0 bg-gradient-to-t from-[#120f0b]/20 via-transparent to-transparent transition-opacity duration-[1000ms] ${isActiveSlide ? "opacity-100" : "opacity-70"}`} />
+                <div className="absolute inset-x-0 bottom-0 hidden md:flex items-end justify-between p-6 lg:p-8">
+                  <div className={`max-w-md rounded-[24px] border border-white/35 bg-white/12 px-5 py-4 text-white backdrop-blur-md transition-all duration-[1100ms] ${isActiveSlide ? "translate-y-0 opacity-100" : "translate-y-3 opacity-0"}`}>
+                    <p className="text-[11px] font-medium uppercase tracking-[0.28em] text-white/80">Coleção em destaque</p>
+                    <p className="mt-2 font-serif text-[clamp(1.2rem,1.6vw,1.7rem)] leading-tight text-white">
+                      {banner.title || "Brilho autoral para ocasiões especiais"}
+                    </p>
+                  </div>
+                  <span className={`rounded-full border border-white/40 bg-black/20 px-4 py-2 text-[11px] font-medium uppercase tracking-[0.22em] text-white backdrop-blur-sm transition-all duration-[1100ms] ${isActiveSlide ? "translate-y-0 opacity-100" : "translate-y-2 opacity-0"}`}>
+                    Deslize para ver mais
+                  </span>
+                </div>
               </Link>
             );
           })}
@@ -464,7 +519,7 @@ export function SecondaryBanners({ banners = [] }: { banners?: StoreBanner[] }) 
     const container = scrollRef.current;
     const child = container?.children[activeIndex] as HTMLElement | undefined;
     if (!container || !child) return;
-    container.scrollTo({ left: child.offsetLeft, behavior: "smooth" });
+    animateHorizontalScroll(container, child.offsetLeft, 800);
   }, [activeIndex]);
 
   return (
@@ -479,7 +534,7 @@ export function SecondaryBanners({ banners = [] }: { banners?: StoreBanner[] }) 
           const imageUrl = resolveBannerImageUrl(banner.imageUrl, fallbackImages[index] || fallbackImages[0]);
 
           return (
-          <Link key={banner.id} href={banner.href || "/"} draggable={false} className="relative block h-[220px] min-w-[85vw] snap-center overflow-hidden rounded-xl bg-white select-none md:h-[250px] md:min-w-0">
+          <Link key={banner.id} href={banner.href || "/"} draggable={false} className="relative block h-[220px] min-w-[85vw] snap-center overflow-hidden rounded-[24px] border border-zinc-200/80 bg-white select-none shadow-[0_18px_38px_-30px_rgba(26,26,26,0.4)] transition-transform duration-500 ease-out will-change-transform md:h-[250px] md:min-w-0">
             <Image
               src={imageUrl}
               alt={banner.title || "Banner promocional da Luxijóias"}
@@ -487,8 +542,13 @@ export function SecondaryBanners({ banners = [] }: { banners?: StoreBanner[] }) 
               draggable={false}
               quality={55}
               sizes="(max-width: 768px) 85vw, 33vw"
-              className="object-cover transition-transform duration-500 hover:scale-[1.02]"
+              className="object-cover transition-transform duration-[900ms] ease-out hover:scale-[1.03]"
             />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#111111]/40 via-transparent to-transparent" />
+            <div className="absolute inset-x-0 bottom-0 p-5 text-white">
+              <p className="text-[11px] font-medium uppercase tracking-[0.24em] text-white/70">Seleção especial</p>
+              <p className="mt-2 max-w-[18ch] font-serif text-xl leading-tight">{banner.title || "Descubra novos detalhes"}</p>
+            </div>
           </Link>
           );
         })}
@@ -541,12 +601,15 @@ export function CategoriesCarousel({ categories = [] }: { categories?: StoreCate
     const container = scrollRef.current;
     const child = container?.children[activeIndex] as HTMLElement | undefined;
     if (!container || !child) return;
-    container.scrollTo({ left: child.offsetLeft - 12, behavior: "smooth" });
+    animateHorizontalScroll(container, child.offsetLeft - 12, 860);
   }, [activeIndex]);
 
   return (
     <section className="max-w-[1440px] mx-auto w-full px-4 sm:px-6 lg:px-8 py-8 md:py-10 relative">
-      <h2 className="mb-8 text-center font-serif text-[clamp(2.2rem,3.6vw,3rem)] font-medium tracking-[-0.03em] text-[#1A1A1A]">Compre por Categoria</h2>
+      <div className="mb-8 text-center">
+        <p className="text-xs font-medium uppercase tracking-[0.32em] text-[#D4AF37]">Categorias em destaque</p>
+        <h2 className="mt-3 text-center font-serif text-[clamp(2.2rem,3.6vw,3rem)] font-medium tracking-[-0.03em] text-[#1A1A1A]">Compre por Categoria</h2>
+      </div>
       
       <div className="relative group">
         <div 
@@ -556,22 +619,22 @@ export function CategoriesCarousel({ categories = [] }: { categories?: StoreCate
           {...dragProps}
         >
           {items.map((cat, i) => (
-            <Link key={i} href={"/categoria/" + cat.slug} draggable={false} onDragStart={(event) => event.preventDefault()} className="block min-w-[150px] shrink-0 snap-start select-none group/cat sm:min-w-[180px]">
-              <div className="relative h-[180px] w-[150px] overflow-hidden rounded-[22px] border border-zinc-200 bg-zinc-100 shadow-sm transition-all duration-300 group-hover/cat:shadow-md sm:h-[220px] sm:w-[180px]">
-                <Image
-                  src={CATEGORY_FALLBACK_IMAGES[i % CATEGORY_FALLBACK_IMAGES.length]}
-                  alt={cat.name}
-                  fill
-                  draggable={false}
-                  sizes="(max-width: 640px) 150px, 180px"
-                  className="object-cover transform group-hover/cat:scale-110 transition-transform duration-700"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent transition-opacity duration-300 group-hover/cat:opacity-90" />
-                <div className="absolute inset-0 flex flex-col items-center justify-end p-4 text-center">
-                  <span className="text-[15px] font-medium leading-tight text-white drop-shadow-lg sm:text-[18px]">
-                    {cat.name}
-                  </span>
+            <Link key={i} href={"/categoria/" + cat.slug} draggable={false} onDragStart={(event) => event.preventDefault()} className="block min-w-[124px] shrink-0 snap-start select-none group/cat sm:min-w-[156px]">
+              <div className="flex flex-col items-center gap-3">
+                <div className="relative h-[124px] w-[124px] overflow-hidden rounded-full border-[3px] border-[#D4AF37] bg-[#f7f1e7] p-[3px] shadow-[0_18px_35px_-26px_rgba(26,26,26,0.55)] transition-all duration-500 ease-out group-hover/cat:-translate-y-1 group-hover/cat:shadow-[0_24px_42px_-24px_rgba(26,26,26,0.65)] sm:h-[156px] sm:w-[156px]">
+                  <div className="relative h-full w-full overflow-hidden rounded-full">
+                    <Image
+                      src={CATEGORY_EDITORIAL_IMAGES[cat.slug] || CATEGORY_FALLBACK_IMAGES[i % CATEGORY_FALLBACK_IMAGES.length]}
+                      alt={cat.name}
+                      fill
+                      draggable={false}
+                      sizes="(max-width: 640px) 124px, 156px"
+                      className="object-cover transform transition-transform duration-[1100ms] ease-out group-hover/cat:scale-[1.08]"
+                    />
+                    <div className="absolute inset-0 rounded-full ring-1 ring-white/40" />
+                  </div>
                 </div>
+                <span className="sr-only">{cat.name}</span>
               </div>
             </Link>
           ))}

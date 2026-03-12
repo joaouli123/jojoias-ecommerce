@@ -98,7 +98,7 @@ export function ProductCard({ product }: ProductCardProps) {
   }
 
   return (
-    <div className="group relative flex h-full select-none flex-col rounded-[18px] border border-zinc-200 bg-white p-2 transition-colors hover:border-zinc-300 sm:p-3">
+    <div className="group relative flex h-full select-none flex-col rounded-[24px] border border-zinc-200/90 bg-white/95 p-2 shadow-[0_18px_38px_-34px_rgba(26,26,26,0.45)] transition-all hover:-translate-y-1 hover:border-[#d4af37]/40 hover:shadow-[0_28px_48px_-34px_rgba(26,26,26,0.6)] sm:p-3">
       {showCartNotice ? (
         <div className="absolute inset-x-2 bottom-2 z-40 rounded-2xl border border-emerald-200 bg-white/95 p-3 backdrop-blur">
           <div className="flex items-start gap-2">
@@ -131,10 +131,14 @@ export function ProductCard({ product }: ProductCardProps) {
 
       
       
+      <div className="absolute right-3 top-3 z-20" onClick={stopCardAction}>
+        <FavoriteButton productId={product.id} className="h-9 w-9 bg-white/92 shadow-sm backdrop-blur" />
+      </div>
+
       {/* Badges de Destaque */}
       {hasDiscount && (
         <div className="absolute left-2 top-2 z-20">
-          <span className="rounded-full bg-[#D4AF37] px-2 py-1 text-[10px] font-medium tracking-wide text-[#111111]">
+          <span className="rounded-full bg-[#D4AF37] px-2.5 py-1 text-[10px] font-medium tracking-[0.16em] text-[#111111] shadow-sm">
             {discountPercent}% OFF
           </span>
         </div>
@@ -144,7 +148,7 @@ export function ProductCard({ product }: ProductCardProps) {
       <Link
         href={`/produto/${product.slug}`}
         aria-label={`Ver detalhes de ${product.name}`}
-        className="relative mb-3 block aspect-square w-full overflow-hidden rounded-[14px] bg-[#F7F5F2] select-none"
+        className="relative mb-3 block aspect-square w-full overflow-hidden rounded-[18px] bg-[#F7F5F2] select-none"
       >
         <Image
           src={product.image || "/demo-products/kit-elegance.svg"}
@@ -158,6 +162,9 @@ export function ProductCard({ product }: ProductCardProps) {
       </Link>
 
       <div className="flex flex-1 flex-col px-2 pb-2 text-left">
+        <p className="mb-2 text-[10px] font-medium uppercase tracking-[0.2em] text-[#8A7F72]">
+          {product.category}
+        </p>
         <Link href={`/produto/${product.slug}`} className="mb-3 block min-h-[64px] select-none">
           <h3 className="line-clamp-2 font-serif text-[clamp(1.08rem,1.45vw,1.24rem)] font-medium leading-[1.1] tracking-[-0.015em] text-[#1A1A1A]">
             {product.name}
@@ -184,6 +191,27 @@ export function ProductCard({ product }: ProductCardProps) {
             <span className="text-sm font-medium leading-none text-[#1A1A1A]">
               ou {formatCurrency(pixPrice)} via Pix
             </span>
+          </div>
+
+          <div className="mt-4 grid w-full grid-cols-[1fr_auto] gap-2" onClick={stopCardAction}>
+            <button
+              type="button"
+              onClick={() => void handleAddToCart()}
+              disabled={isPending}
+              className="inline-flex h-11 items-center justify-center gap-2 rounded-[14px] bg-[#111111] px-4 text-sm font-medium text-white transition-colors hover:bg-[#1c1c1c] disabled:cursor-not-allowed disabled:opacity-70"
+            >
+              <ShoppingCart className="h-4 w-4" />
+              {isPending ? "Adicionando" : canAddDirectly ? "Comprar" : "Escolher"}
+            </button>
+            <Link
+              href={whatsappHref}
+              target={product.whatsappBaseUrl ? "_blank" : undefined}
+              rel={product.whatsappBaseUrl ? "noreferrer" : undefined}
+              className="inline-flex h-11 w-11 items-center justify-center rounded-[14px] border border-zinc-200 bg-white text-[#1A1A1A] transition-colors hover:border-[#25D366] hover:text-[#25D366]"
+              aria-label={`Falar sobre ${product.name} no WhatsApp`}
+            >
+              <WhatsAppIcon className="h-4 w-4" />
+            </Link>
           </div>
         </div>
       </div>

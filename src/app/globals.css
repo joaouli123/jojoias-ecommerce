@@ -27,6 +27,7 @@
   --foreground: var(--color-brand);
   --muted-foreground: #5f5a52;
   --surface-elevated: #f4f1eb;
+  color-scheme: light;
 }
 
 html {
@@ -34,7 +35,9 @@ html {
 }
 
 body {
-  background-color: var(--background);
+  background:
+    radial-gradient(circle at top, rgba(193, 155, 84, 0.08), transparent 32%),
+    linear-gradient(180deg, #fffdfa 0%, #ffffff 24%, #fbfaf7 100%);
   color: var(--foreground);
   font-family: var(--font-montserrat), sans-serif;
   min-height: 100vh;
@@ -47,20 +50,6 @@ h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-playfair), serif;
 }
 
-/* Dark mode (se solicitado pelo sistema ou via classe dark no root) */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #171411;
-    --foreground: #f5f1ea;
-    --muted-foreground: #d4cdc2;
-    --surface-elevated: #221d18;
-  }
-  body {
-    background-color: var(--background);
-    color: var(--foreground);
-  }
-}
-
 /* Tipografia Fluida */
 h1 { font-size: clamp(1.8rem, 4.4vw, 3rem); line-height: 1.08; }
 h2 { font-size: clamp(1.45rem, 3.4vw, 2.2rem); line-height: 1.14; }
@@ -69,6 +58,18 @@ h3 { font-size: clamp(1.2rem, 2.4vw, 1.55rem); line-height: 1.22; }
 ::selection {
   background: rgba(193, 155, 84, 0.24);
   color: inherit;
+}
+
+a,
+button,
+input,
+textarea,
+select {
+  -webkit-tap-highlight-color: transparent;
+}
+
+img {
+  image-rendering: auto;
 }
 
 

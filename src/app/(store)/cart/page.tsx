@@ -11,7 +11,7 @@ export default async function CartPage() {
   const { items, subtotal } = cart;
 
   return (
-    <div className="flex flex-col w-full max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 gap-8 pb-16">
+    <div className="flex w-full max-w-[1440px] flex-col gap-8 mx-auto px-4 sm:px-6 lg:px-8 py-8 pb-16 md:py-12">
       <CartViewTracker
         items={items.map((item) => ({
           item_id: item.variantId ? `${item.productId}:${item.variantId}` : item.productId,
@@ -30,7 +30,7 @@ export default async function CartPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
         <div className="lg:col-span-8 flex flex-col gap-6">
-          <div className="hidden sm:grid grid-cols-12 gap-4 text-sm font-semibold text-[#E5E5E5] border-b border-zinc-200 pb-4 px-2">
+          <div className="hidden sm:grid grid-cols-12 gap-4 rounded-[20px] border border-zinc-200/80 bg-white/80 px-5 py-4 text-sm font-semibold text-[#8A7F72] shadow-[0_20px_40px_-36px_rgba(26,26,26,0.55)]">
             <div className="col-span-6">Produto</div>
             <div className="col-span-3 text-center">Quantidade</div>
             <div className="col-span-3 text-right">Subtotal</div>
@@ -38,14 +38,14 @@ export default async function CartPage() {
 
           <div className="flex flex-col mb-4">
             {items.length === 0 ? (
-              <div className="rounded-xl border border-zinc-200 bg-white p-8 text-center text-[#666666]">
+              <div className="rounded-[24px] border border-zinc-200 bg-white p-8 text-center text-[#666666] shadow-[0_24px_44px_-38px_rgba(26,26,26,0.6)]">
                 Seu carrinho está vazio no momento.
               </div>
             ) : (
               items.map((item) => (
-                <div key={`${item.productId}-${item.variantId ?? "base"}`} className="grid grid-cols-1 sm:grid-cols-12 gap-4 items-center py-6 border-b border-zinc-100 last:border-0 group">
-                  <div className="col-span-1 border-b border-zinc-100 pb-4 sm:border-0 sm:pb-0 sm:col-span-6 flex gap-4">
-                    <div className="h-24 w-24 rounded-lg bg-[#FFFFFF] border border-zinc-100 flex items-center justify-center shrink-0 overflow-hidden">
+                <div key={`${item.productId}-${item.variantId ?? "base"}`} className="group mb-4 grid grid-cols-1 items-center gap-4 rounded-[24px] border border-zinc-200/80 bg-white p-5 shadow-[0_22px_40px_-36px_rgba(26,26,26,0.55)] last:mb-0 sm:grid-cols-12">
+                  <div className="col-span-1 border-b border-zinc-100 pb-4 sm:col-span-6 sm:border-0 sm:pb-0 flex gap-4">
+                    <div className="h-24 w-24 rounded-[18px] bg-[#FFFFFF] border border-zinc-100 flex items-center justify-center shrink-0 overflow-hidden">
                       <div
                         className="w-full h-full bg-cover bg-center"
                         style={{ backgroundImage: `url(${item.image || "https://images.unsplash.com/photo-1611095567219-79caa80c5980?q=80&w=400"})` }}
@@ -62,7 +62,7 @@ export default async function CartPage() {
                         <span className="mt-1 text-xs uppercase tracking-wide text-[#E5E5E5]">SKU: {item.sku}</span>
                       ) : null}
                       <div className="mt-3 flex items-center justify-between gap-3 sm:hidden">
-                        <div className="flex items-center rounded-[20px] border border-zinc-200 bg-white">
+                        <div className="flex items-center rounded-[20px] border border-zinc-200 bg-[#fcfbf8]">
                           <form
                             action={async () => {
                               "use server";
@@ -105,7 +105,7 @@ export default async function CartPage() {
                   </div>
 
                   <div className="col-span-1 hidden justify-between items-center sm:col-span-3 sm:flex sm:justify-center">
-                    <div className="flex items-center rounded-lg border border-zinc-200 bg-white">
+                    <div className="flex items-center rounded-[18px] border border-zinc-200 bg-[#fcfbf8]">
                       <form
                         action={async () => {
                           "use server";

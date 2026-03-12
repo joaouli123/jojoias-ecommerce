@@ -99,7 +99,7 @@ export function CartSummary({ subtotal, itemsCount }: CartSummaryProps) {
   }
 
   return (
-    <div className="rounded-2xl border border-zinc-200 bg-[#FFFFFF] p-6">
+    <div className="rounded-[28px] border border-zinc-200/90 bg-white p-6 shadow-[0_28px_55px_-42px_rgba(26,26,26,0.7)] md:p-7">
       <h2 className="mb-6 text-xl font-medium font-serif text-[#1A1A1A]">Resumo do Pedido</h2>
 
       <dl className="flex flex-col gap-4 text-sm">
@@ -117,7 +117,7 @@ export function CartSummary({ subtotal, itemsCount }: CartSummaryProps) {
         </div>
       </dl>
 
-      <div className="mt-5 rounded-xl border border-zinc-200 bg-white p-4">
+      <div className="mt-5 rounded-[22px] border border-zinc-200 bg-[#fcfbf8] p-4">
         <p className="text-sm font-semibold text-[#1A1A1A]">Calcular frete no carrinho</p>
         <div className="mt-3 flex gap-2">
           <input
@@ -141,7 +141,7 @@ export function CartSummary({ subtotal, itemsCount }: CartSummaryProps) {
         {options.length ? (
           <div className="mt-4 space-y-2">
             {options.map((option) => (
-              <label key={option.id} className={`block cursor-pointer rounded-xl border p-3 transition-colors ${selectedOptionId === option.id ? "border-[#D4AF37] bg-[#FFFFFF]" : "border-zinc-200"}`}>
+              <label key={option.id} className={`block cursor-pointer rounded-[18px] border p-3 transition-colors ${selectedOptionId === option.id ? "border-[#D4AF37] bg-[#FFFFFF]" : "border-zinc-200 bg-white"}`}>
                 <div className="flex items-start gap-3">
                   <input
                     type="radio"
