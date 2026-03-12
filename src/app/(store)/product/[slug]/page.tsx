@@ -8,6 +8,7 @@ import { ProductDetailsTabs } from "@/components/product/product-details-tabs"
 import { ProductCard } from "@/components/product/product-card"
 import { ProductPurchasePanel } from "@/components/product/product-purchase-panel"
 import { ProductViewTracker } from "@/components/analytics/ecommerce-trackers"
+import { extractProductInfoFromDescription } from "@/lib/product-content"
 import { buildProductMetaDescription, buildProductSeoTitle } from "@/lib/product-seo"
 import { getStoreSettings } from "@/lib/store-settings"
 
@@ -115,6 +116,7 @@ export default async function ProductPage({
   const description =
     product.description ||
     "Produto exclusivo Luxijóias com acabamento refinado, compra segura e envio para todo o Brasil.";
+  const { descriptionBody, infoItems } = extractProductInfoFromDescription(description)
     
   const imageEntries = product.images.length
     ? product.images.map((image, index) => ({
@@ -285,6 +287,7 @@ export default async function ProductPage({
           oldPrice={oldPrice}
           pixPrice={pixPrice}
           images={imageEntries}
+          infoItems={infoItems}
           variants={variants.map((variant) => ({
             id: variant.id,
             name: variant.name,
@@ -299,7 +302,8 @@ export default async function ProductPage({
       </div>
 
       <ProductDetailsTabs
-        description={description}
+        description={descriptionBody || description}
+        infoItems={infoItems}
         sku={sku}
         brand={brand}
         category={product.category}

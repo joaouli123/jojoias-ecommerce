@@ -362,7 +362,7 @@ export function CategoriesCarousel({ categories = [] }: { categories?: StoreCate
 
   return (
     <section className="max-w-[1440px] mx-auto w-full px-4 sm:px-6 lg:px-8 py-8 md:py-10 relative">
-      <h2 className="text-3xl font-black text-zinc-950 tracking-tight mb-8 text-center">Compre por Categoria</h2>
+      <h2 className="text-3xl font-medium text-[#1A1A1A] font-serif tracking-tight mb-8 text-center">Compre por Categoria</h2>
       
       <div className="relative group">
         <div 

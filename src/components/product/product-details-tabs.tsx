@@ -3,10 +3,12 @@
 import { useEffect, useMemo, useState } from "react";
 import { Star } from "lucide-react";
 import { ProductReviewForm } from "@/components/product/product-review-form";
+import type { ProductInfoItem } from "@/lib/product-content";
 import type { ProductReview } from "@/lib/store-data";
 
 type ProductDetailsTabsProps = {
   description: string;
+  infoItems: ProductInfoItem[];
   sku: string;
   brand: string;
   category: string;
@@ -28,6 +30,7 @@ const tabLabels: Record<TabKey, string> = {
 
 export function ProductDetailsTabs({
   description,
+  infoItems,
   sku,
   brand,
   category,
@@ -83,7 +86,7 @@ export function ProductDetailsTabs({
     { label: "Marca", value: brand },
     { label: "Categoria", value: category },
     { label: "Disponibilidade", value: quantity > 0 ? `${quantity} em estoque` : "Sob consulta" },
-    { label: "Garantia", value: "12 meses contra defeitos de fabricação" },
+    ...infoItems,
     { label: "Envio", value: "Cálculo automático por CEP no checkout" },
   ];
 

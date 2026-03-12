@@ -71,12 +71,12 @@ export default async function Home() {
           <div className="mb-8 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
             <div>
               <p className="text-xs font-bold uppercase tracking-[0.3em] text-[#D4AF37]">Vitrines por marca</p>
-              <h2 className="mt-2 text-3xl font-black tracking-tight text-zinc-950">Explore marcas do catálogo</h2>
+              <h2 className="mt-2 text-3xl font-medium text-[#1A1A1A] tracking-tight font-serif">Explore marcas do catálogo</h2>
               <p className="mt-2 max-w-2xl text-sm text-zinc-500">
                 Descubra coleções por estilo, acabamento e curadoria com páginas dedicadas para cada marca da loja.
               </p>
             </div>
-            <Link href="/marcas" className="inline-flex h-11 items-center justify-center rounded-xl border border-zinc-200 px-5 text-sm font-bold text-zinc-900 hover:border-[#D4AF37] hover:text-[#D4AF37]">
+            <Link href="/marcas" className="inline-flex h-11 items-center justify-center rounded-xl border border-zinc-200 px-5 text-sm font-medium text-[#1A1A1A] font-serif hover:border-[#D4AF37] hover:text-[#D4AF37]">
               Ver todas as marcas
             </Link>
           </div>
@@ -88,7 +88,7 @@ export default async function Home() {
       <section id="produtos" className="max-w-[1440px] mx-auto w-full px-4 sm:px-6 lg:px-8 py-12 md:py-16 scroll-mt-24 border-t border-zinc-100">
         <div className="flex items-end justify-between mb-8">
           <div>
-            <h2 className="text-3xl font-black text-zinc-950 tracking-tight">Lançamentos Exclusivos</h2>
+            <h2 className="text-3xl font-medium text-[#1A1A1A] font-serif tracking-tight">Lançamentos Exclusivos</h2>
           </div>
         </div>
 

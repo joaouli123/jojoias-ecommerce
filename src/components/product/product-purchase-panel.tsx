@@ -3,12 +3,13 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useMemo, useState } from "react";
-import { ShieldCheck, Star, Truck } from "lucide-react";
+import { Droplets, Gem, ShieldCheck, Star, Truck } from "lucide-react";
 import { formatCurrency } from "@/lib/utils";
 import { PixIcon } from "@/components/ui/icons";
 import { FavoriteButton } from "@/components/product/favorite-button";
 import { ProductShippingEstimator } from "@/components/product/product-shipping-estimator";
 import { AddToCartForm } from "@/components/product/add-to-cart-form";
+import type { ProductInfoItem } from "@/lib/product-content";
 
 type ProductVariantOption = {
   id: string;
@@ -36,6 +37,7 @@ type ProductPurchasePanelProps = {
   oldPrice: number;
   pixPrice: number;
   images: Array<{ url: string; alt: string }>;
+  infoItems: ProductInfoItem[];
   variants: ProductVariantOption[];
   totalAvailableQuantity: number;
   whatsappHref: string;
@@ -51,6 +53,7 @@ export function ProductPurchasePanel({
   oldPrice,
   pixPrice,
   images,
+  infoItems,
   variants,
   totalAvailableQuantity,
   whatsappHref,
@@ -72,6 +75,29 @@ export function ProductPurchasePanel({
       : images;
     return orderedImages.slice(0, Math.max(orderedImages.length, 4));
   }, [activeImage, images]);
+
+  const sidebarInfoItems = infoItems.length > 0
+    ? infoItems
+    : [
+        { label: "Entrega", value: "Frete grátis para todo o Brasil" },
+        { label: "Garantia", value: "Garantia de 12 meses" },
+      ];
+
+  function getInfoIcon(item: ProductInfoItem) {
+    if (item.label === "Entrega") {
+      return Truck;
+    }
+
+    if (item.label === "Garantia") {
+      return ShieldCheck;
+    }
+
+    if (item.label === "Proteção") {
+      return Droplets;
+    }
+
+    return Gem;
+  }
 
   return (
     <>
@@ -199,14 +225,16 @@ export function ProductPurchasePanel({
         </div>
 
         <div className="mb-6 flex flex-col gap-4 border-y border-zinc-100 py-5">
-          <div className="flex items-center gap-3 text-[#4b5563]">
-            <Truck className="h-[22px] w-[22px] stroke-[1.5]" />
-            <span className="text-[14px]">Frete grátis para todo o Brasil</span>
-          </div>
-          <div className="flex items-center gap-3 text-[#4b5563]">
-            <ShieldCheck className="h-[22px] w-[22px] stroke-[1.5]" />
-            <span className="text-[14px]">Garantia de 12 meses</span>
-          </div>
+          {sidebarInfoItems.map((item) => {
+            const Icon = getInfoIcon(item);
+
+            return (
+              <div key={`${item.label}-${item.value}`} className="flex items-center gap-3 text-[#4b5563]">
+                <Icon className="h-[22px] w-[22px] stroke-[1.5]" />
+                <span className="text-[14px]">{item.value}</span>
+              </div>
+            );
+          })}
         </div>
 
         <ProductShippingEstimator subtotal={product.price} />
