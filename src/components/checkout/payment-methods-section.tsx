@@ -35,7 +35,7 @@ function InputWithIcon({
 }: InputHTMLAttributes<HTMLInputElement> & { icon: IconType }) {
   return (
     <div className={`relative ${className ?? ""}`}>
-      <Icon className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-400" />
+      <Icon className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#E5E5E5]" />
       <input
         {...props}
         className="h-11 w-full rounded-[20px] border border-zinc-200 pl-10 pr-3 text-sm outline-none focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37]"
@@ -91,13 +91,13 @@ export function PaymentMethodsSection({ pixDiscountPercent }: PaymentMethodsSect
 
   return (
     <section className="rounded-[20px] border border-zinc-200 bg-white p-5 md:p-6" aria-labelledby="checkout-payment-heading" aria-describedby={paymentStatusId}>
-      <h2 id="checkout-payment-heading" className="text-xl font-bold text-zinc-900 mb-4">Pagamento</h2>
-      <p className="mb-4 text-sm text-zinc-500">O pagamento é finalizado no próprio site. Pix, cartão e boleto seguem sem redirecionar o cliente para fora da loja.</p>
+      <h2 id="checkout-payment-heading" className="text-xl font-medium font-serif text-[#1A1A1A] mb-4">Pagamento</h2>
+      <p className="mb-4 text-sm text-[#666666]">O pagamento é finalizado no próprio site. Pix, cartão e boleto seguem sem redirecionar o cliente para fora da loja.</p>
       <p id={paymentStatusId} className="sr-only" aria-live="polite" aria-atomic="true">
         {pixSelected ? `Pix selecionado com ${pixDiscountPercent}% de desconto.` : cardSelected ? "Cartão de crédito selecionado." : "Boleto bancário selecionado."}
       </p>
       <div className="space-y-3" role="radiogroup" aria-label="Métodos de pagamento">
-        <label className="block rounded-[20px] border border-zinc-200 bg-zinc-50 p-3 cursor-pointer hover:border-[#D4AF37] transition-colors">
+        <label className="block rounded-[20px] border border-zinc-200 bg-[#FFFFFF] p-3 cursor-pointer hover:border-[#D4AF37] transition-colors">
           <div className="flex items-center justify-between gap-3">
             <div className="flex items-center gap-3">
               <input
@@ -110,20 +110,20 @@ export function PaymentMethodsSection({ pixDiscountPercent }: PaymentMethodsSect
                 className="accent-[#111111]"
               />
               <PixIcon className="h-5 w-5 text-[#32BCAD]" />
-              <span className="text-sm font-semibold text-zinc-800">Pix</span>
+              <span className="text-sm font-semibold text-[#1A1A1A]">Pix</span>
             </div>
-            <span className="inline-flex h-6 items-center rounded-md bg-[#32BCAD] px-3 text-[11px] font-bold uppercase tracking-wide text-white">{pixDiscountPercent}% OFF</span>
+            <span className="inline-flex h-6 items-center rounded-md bg-[#32BCAD] px-3 text-[11px] font-medium font-serif uppercase tracking-wide text-white">{pixDiscountPercent}% OFF</span>
           </div>
 
           {pixSelected && (
-            <div id="checkout-payment-pix-panel" className="mt-3 rounded-[20px] border border-[#32BCAD]/40 bg-white p-3 text-sm text-zinc-700">
-              <p className="font-semibold text-zinc-900 flex items-center gap-2"><QrCode className="h-4 w-4 text-[#32BCAD]" /> QR Code na próxima tela</p>
-              <p className="mt-1 text-zinc-600">Após clicar em Finalizar compra, o QR Code Pix e o código copia e cola serão exibidos no próprio domínio com atualização automática do status.</p>
+            <div id="checkout-payment-pix-panel" className="mt-3 rounded-[20px] border border-[#32BCAD]/40 bg-white p-3 text-sm text-[#666666]">
+              <p className="font-semibold text-[#1A1A1A] flex items-center gap-2"><QrCode className="h-4 w-4 text-[#32BCAD]" /> QR Code na próxima tela</p>
+              <p className="mt-1 text-[#666666]">Após clicar em Finalizar compra, o QR Code Pix e o código copia e cola serão exibidos no próprio domínio com atualização automática do status.</p>
             </div>
           )}
         </label>
 
-        <label className="block rounded-[20px] border border-zinc-200 bg-zinc-50 p-3 cursor-pointer hover:border-[#D4AF37] transition-colors">
+        <label className="block rounded-[20px] border border-zinc-200 bg-[#FFFFFF] p-3 cursor-pointer hover:border-[#D4AF37] transition-colors">
           <div className="flex items-center gap-3">
             <input
               type="radio"
@@ -134,8 +134,8 @@ export function PaymentMethodsSection({ pixDiscountPercent }: PaymentMethodsSect
               aria-describedby={cardSelected ? "checkout-payment-card-panel" : undefined}
               className="accent-[#111111]"
             />
-            <CreditCard className="h-5 w-5 text-zinc-700" />
-            <span className="text-sm font-semibold text-zinc-800">Cartão de crédito</span>
+            <CreditCard className="h-5 w-5 text-[#666666]" />
+            <span className="text-sm font-semibold text-[#1A1A1A]">Cartão de crédito</span>
           </div>
 
           {cardSelected && (
@@ -187,7 +187,7 @@ export function PaymentMethodsSection({ pixDiscountPercent }: PaymentMethodsSect
                 name="cardInstallments"
                 defaultValue="1"
                 aria-label="Parcelamento do cartão"
-                className="h-11 w-full rounded-[20px] border border-zinc-200 bg-white px-3 text-sm text-zinc-900 outline-none focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37]"
+                className="h-11 w-full rounded-[20px] border border-zinc-200 bg-white px-3 text-sm text-[#1A1A1A] outline-none focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37]"
               >
                 {installments.map((item, index) => (
                   <option key={item} value={String(index === 0 ? 1 : index === 1 ? 2 : index === 2 ? 3 : index === 3 ? 6 : index === 4 ? 10 : 12)}>
@@ -195,12 +195,12 @@ export function PaymentMethodsSection({ pixDiscountPercent }: PaymentMethodsSect
                   </option>
                 ))}
               </select>
-              <p className="text-xs text-zinc-500 flex items-center gap-2"><ShieldCheck className="h-4 w-4" /> A aprovação é consultada na hora e, se recusada, o cliente pode corrigir os dados e tentar novamente.</p>
+              <p className="text-xs text-[#666666] flex items-center gap-2"><ShieldCheck className="h-4 w-4" /> A aprovação é consultada na hora e, se recusada, o cliente pode corrigir os dados e tentar novamente.</p>
             </div>
           )}
         </label>
 
-        <label className="block rounded-[20px] border border-zinc-200 bg-zinc-50 p-3 cursor-pointer hover:border-[#D4AF37] transition-colors">
+        <label className="block rounded-[20px] border border-zinc-200 bg-[#FFFFFF] p-3 cursor-pointer hover:border-[#D4AF37] transition-colors">
           <div className="flex items-center gap-3">
             <input
               type="radio"
@@ -211,14 +211,14 @@ export function PaymentMethodsSection({ pixDiscountPercent }: PaymentMethodsSect
               aria-describedby={boletoSelected ? "checkout-payment-boleto-panel" : undefined}
               className="accent-[#111111]"
             />
-            <Barcode className="h-5 w-5 text-zinc-700" />
-            <span className="text-sm font-semibold text-zinc-800">Boleto bancário</span>
+            <Barcode className="h-5 w-5 text-[#666666]" />
+            <span className="text-sm font-semibold text-[#1A1A1A]">Boleto bancário</span>
           </div>
 
           {boletoSelected && (
-            <div id="checkout-payment-boleto-panel" className="mt-3 rounded-[20px] border border-zinc-200 bg-white p-3 text-sm text-zinc-700">
-              <p className="font-semibold text-zinc-900">Boleto exibido no próprio site</p>
-              <p className="mt-1 text-zinc-600">Após finalizar a compra, o boleto será mostrado com instruções, visualização e opção de download.</p>
+            <div id="checkout-payment-boleto-panel" className="mt-3 rounded-[20px] border border-zinc-200 bg-white p-3 text-sm text-[#666666]">
+              <p className="font-semibold text-[#1A1A1A]">Boleto exibido no próprio site</p>
+              <p className="mt-1 text-[#666666]">Após finalizar a compra, o boleto será mostrado com instruções, visualização e opção de download.</p>
             </div>
           )}
         </label>

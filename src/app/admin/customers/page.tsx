@@ -35,7 +35,7 @@ export default async function AdminCustomersPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-gray-900">Clientes</h1>
+          <h1 className="text-3xl font-medium font-serif tracking-tight text-gray-900">Clientes</h1>
           <p className="mt-1 text-sm text-gray-500">Acompanhe histórico de compras, contatos e endereços cadastrados.</p>
         </div>
         <div className="rounded-2xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-600 shadow-sm">
@@ -46,19 +46,19 @@ export default async function AdminCustomersPage() {
       <div className="grid gap-4 md:grid-cols-3">
         <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
           <p className="text-sm text-gray-500">Clientes ativos</p>
-          <p className="mt-2 text-3xl font-black text-gray-900">
+          <p className="mt-2 text-3xl font-medium font-serif text-gray-900">
             {customers.filter((customer) => customer._count.orders > 0).length}
           </p>
         </div>
         <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
           <p className="text-sm text-gray-500">Com endereço salvo</p>
-          <p className="mt-2 text-3xl font-black text-gray-900">
+          <p className="mt-2 text-3xl font-medium font-serif text-gray-900">
             {customers.filter((customer) => customer._count.addresses > 0).length}
           </p>
         </div>
         <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
           <p className="text-sm text-gray-500">Receita acumulada</p>
-          <p className="mt-2 text-3xl font-black text-gray-900">
+          <p className="mt-2 text-3xl font-medium font-serif text-gray-900">
             {formatCurrency(
               customers.reduce(
                 (sum, customer) => sum + customer.orders.reduce((customerSum, order) => customerSum + order.total, 0),

@@ -87,31 +87,31 @@ export default async function AccountOrderDetailsPage({
       <section className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm sm:p-8">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           <div>
-            <p className="text-sm text-zinc-500">Detalhe do pedido</p>
-            <h1 className="text-2xl font-black tracking-tight text-zinc-950 mt-1">#{order.id.slice(-8).toUpperCase()}</h1>
+            <p className="text-sm text-[#666666]">Detalhe do pedido</p>
+            <h1 className="text-2xl font-medium font-serif tracking-tight text-[#1A1A1A] mt-1">#{order.id.slice(-8).toUpperCase()}</h1>
           </div>
-          <Link href="/account/orders" className="inline-flex h-11 items-center justify-center rounded-xl border border-zinc-200 px-4 text-sm font-bold text-zinc-900 hover:bg-zinc-50">
+          <Link href="/account/orders" className="inline-flex h-11 items-center justify-center rounded-xl border border-zinc-200 px-4 text-sm font-medium font-serif text-[#1A1A1A] hover:bg-[#FFFFFF]">
             Voltar para pedidos
           </Link>
         </div>
 
         <div className="mt-6 grid gap-4 md:grid-cols-3">
-          <div className="rounded-xl border border-zinc-100 bg-zinc-50 p-4">
-            <p className="text-sm text-zinc-500">Status</p>
-            <p className="mt-2 text-lg font-bold text-zinc-950">{order.status}</p>
+          <div className="rounded-xl border border-zinc-100 bg-[#FFFFFF] p-4">
+            <p className="text-sm text-[#666666]">Status</p>
+            <p className="mt-2 text-lg font-medium font-serif text-[#1A1A1A]">{order.status}</p>
           </div>
-          <div className="rounded-xl border border-zinc-100 bg-zinc-50 p-4">
-            <p className="text-sm text-zinc-500">Pagamento</p>
-            <p className="mt-2 text-lg font-bold text-zinc-950">{order.paymentMethod || "Não informado"}</p>
+          <div className="rounded-xl border border-zinc-100 bg-[#FFFFFF] p-4">
+            <p className="text-sm text-[#666666]">Pagamento</p>
+            <p className="mt-2 text-lg font-medium font-serif text-[#1A1A1A]">{order.paymentMethod || "Não informado"}</p>
           </div>
-          <div className="rounded-xl border border-zinc-100 bg-zinc-50 p-4">
-            <p className="text-sm text-zinc-500">Total</p>
-            <p className="mt-2 text-lg font-bold text-zinc-950">{formatCurrency(order.total)}</p>
+          <div className="rounded-xl border border-zinc-100 bg-[#FFFFFF] p-4">
+            <p className="text-sm text-[#666666]">Total</p>
+            <p className="mt-2 text-lg font-medium font-serif text-[#1A1A1A]">{formatCurrency(order.total)}</p>
           </div>
         </div>
 
-        <div className="mt-6 rounded-2xl border border-zinc-100 bg-zinc-50 p-5">
-          <h2 className="text-lg font-bold text-zinc-950">Acompanhamento do pedido</h2>
+        <div className="mt-6 rounded-2xl border border-zinc-100 bg-[#FFFFFF] p-5">
+          <h2 className="text-lg font-medium font-serif text-[#1A1A1A]">Acompanhamento do pedido</h2>
           <div className="mt-4">
             <OrderTimeline status={order.status} />
           </div>
@@ -119,33 +119,33 @@ export default async function AccountOrderDetailsPage({
       </section>
 
       <section className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm sm:p-8">
-        <h2 className="text-xl font-bold text-zinc-950">Itens do pedido</h2>
+        <h2 className="text-xl font-medium font-serif text-[#1A1A1A]">Itens do pedido</h2>
 
         <div className="mt-6 space-y-4">
           {order.items.map((item) => (
-            <div key={item.id} className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 rounded-xl border border-zinc-100 bg-zinc-50 p-4">
+            <div key={item.id} className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 rounded-xl border border-zinc-100 bg-[#FFFFFF] p-4">
               <div>
-                <Link href={`/produto/${item.product.slug}`} className="font-bold text-zinc-950 hover:text-[#D4AF37]">
+                <Link href={`/produto/${item.product.slug}`} className="font-medium font-serif text-[#1A1A1A] hover:text-[#D4AF37]">
                   {item.product.name}
                 </Link>
-                {item.variant ? <p className="mt-1 text-sm text-zinc-500">Variação: {item.variant.name}</p> : null}
-                <p className="mt-1 text-sm text-zinc-500">Quantidade: {item.quantity}</p>
+                {item.variant ? <p className="mt-1 text-sm text-[#666666]">Variação: {item.variant.name}</p> : null}
+                <p className="mt-1 text-sm text-[#666666]">Quantidade: {item.quantity}</p>
               </div>
-              <p className="text-sm font-semibold text-zinc-900">{formatCurrency(item.price * item.quantity)}</p>
+              <p className="text-sm font-semibold text-[#1A1A1A]">{formatCurrency(item.price * item.quantity)}</p>
             </div>
           ))}
         </div>
 
         <div className="mt-6 border-t border-zinc-100 pt-4 space-y-2 text-sm">
-          <div className="flex items-center justify-between text-zinc-600">
+          <div className="flex items-center justify-between text-[#666666]">
             <span>Subtotal</span>
             <span>{formatCurrency(order.subtotal)}</span>
           </div>
-          <div className="flex items-center justify-between text-zinc-600">
+          <div className="flex items-center justify-between text-[#666666]">
             <span>Frete</span>
             <span>{formatCurrency(order.shipping)}</span>
           </div>
-          <div className="flex items-center justify-between font-bold text-zinc-950 text-base pt-2 border-t border-zinc-100">
+          <div className="flex items-center justify-between font-medium font-serif text-[#1A1A1A] text-base pt-2 border-t border-zinc-100">
             <span>Total</span>
             <span>{formatCurrency(order.total)}</span>
           </div>
@@ -154,8 +154,8 @@ export default async function AccountOrderDetailsPage({
 
       <section className="grid gap-6 lg:grid-cols-2">
         <div className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm sm:p-8">
-          <h2 className="text-xl font-bold text-zinc-950">Endereço de entrega</h2>
-          <div className="mt-4 space-y-1 text-sm text-zinc-600">
+          <h2 className="text-xl font-medium font-serif text-[#1A1A1A]">Endereço de entrega</h2>
+          <div className="mt-4 space-y-1 text-sm text-[#666666]">
             <p>{order.addressStreet}, {order.addressNumber}</p>
             {order.addressComplement ? <p>{order.addressComplement}</p> : null}
             <p>{order.addressDistrict}</p>
@@ -165,22 +165,22 @@ export default async function AccountOrderDetailsPage({
         </div>
 
         <div className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm sm:p-8">
-          <h2 className="text-xl font-bold text-zinc-950">Frete e pagamento</h2>
-          <div className="mt-4 space-y-2 text-sm text-zinc-600">
-            <p>Serviço: <span className="font-semibold text-zinc-900">{order.shippingService || "A definir"}</span></p>
-            <p>Prazo estimado: <span className="font-semibold text-zinc-900">{order.shippingEstimatedDays ? `${order.shippingEstimatedDays} dia(s) úteis` : "A definir"}</span></p>
-            <p>Status do pagamento: <span className="font-semibold text-zinc-900">{order.paymentStatus || "Pendente"}</span></p>
+          <h2 className="text-xl font-medium font-serif text-[#1A1A1A]">Frete e pagamento</h2>
+          <div className="mt-4 space-y-2 text-sm text-[#666666]">
+            <p>Serviço: <span className="font-semibold text-[#1A1A1A]">{order.shippingService || "A definir"}</span></p>
+            <p>Prazo estimado: <span className="font-semibold text-[#1A1A1A]">{order.shippingEstimatedDays ? `${order.shippingEstimatedDays} dia(s) úteis` : "A definir"}</span></p>
+            <p>Status do pagamento: <span className="font-semibold text-[#1A1A1A]">{order.paymentStatus || "Pendente"}</span></p>
             {order.trackingCode ? (
               <p>
-                Rastreio: <span className="font-semibold text-zinc-900">{order.trackingCode}</span>
+                Rastreio: <span className="font-semibold text-[#1A1A1A]">{order.trackingCode}</span>
                 {order.trackingUrl ? (
-                  <Link href={order.trackingUrl} target="_blank" rel="noreferrer" className="ml-2 font-bold text-[#D4AF37] hover:opacity-80">
+                  <Link href={order.trackingUrl} target="_blank" rel="noreferrer" className="ml-2 font-medium font-serif text-[#D4AF37] hover:opacity-80">
                     acompanhar
                   </Link>
                 ) : null}
               </p>
             ) : (
-              <p>Rastreio: <span className="font-semibold text-zinc-900">Será disponibilizado após a postagem.</span></p>
+              <p>Rastreio: <span className="font-semibold text-[#1A1A1A]">Será disponibilizado após a postagem.</span></p>
             )}
           </div>
         </div>
@@ -189,8 +189,8 @@ export default async function AccountOrderDetailsPage({
       <section className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm sm:p-8">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
           <div>
-            <h2 className="text-xl font-bold text-zinc-950">Trocas, devolução e reembolso</h2>
-            <p className="mt-2 text-sm text-zinc-500">Acompanhe o status do pós-venda e abra uma solicitação quando o pedido já tiver sido enviado ou entregue.</p>
+            <h2 className="text-xl font-medium font-serif text-[#1A1A1A]">Trocas, devolução e reembolso</h2>
+            <p className="mt-2 text-sm text-[#666666]">Acompanhe o status do pós-venda e abra uma solicitação quando o pedido já tiver sido enviado ou entregue.</p>
           </div>
           <span className="inline-flex w-fit rounded-full border border-amber-200 bg-amber-50 px-3 py-1 text-xs font-semibold text-amber-800">
             {getRefundStatusLabel(order.refundStatus)}
@@ -198,27 +198,27 @@ export default async function AccountOrderDetailsPage({
         </div>
 
         <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-          <div className="rounded-xl border border-zinc-100 bg-zinc-50 p-4">
-            <p className="text-sm text-zinc-500">Status</p>
-            <p className="mt-2 font-bold text-zinc-950">{getRefundStatusLabel(order.refundStatus)}</p>
+          <div className="rounded-xl border border-zinc-100 bg-[#FFFFFF] p-4">
+            <p className="text-sm text-[#666666]">Status</p>
+            <p className="mt-2 font-medium font-serif text-[#1A1A1A]">{getRefundStatusLabel(order.refundStatus)}</p>
           </div>
-          <div className="rounded-xl border border-zinc-100 bg-zinc-50 p-4">
-            <p className="text-sm text-zinc-500">Valor registrado</p>
-            <p className="mt-2 font-bold text-zinc-950">{order.refundAmount != null ? formatCurrency(order.refundAmount) : "A definir"}</p>
+          <div className="rounded-xl border border-zinc-100 bg-[#FFFFFF] p-4">
+            <p className="text-sm text-[#666666]">Valor registrado</p>
+            <p className="mt-2 font-medium font-serif text-[#1A1A1A]">{order.refundAmount != null ? formatCurrency(order.refundAmount) : "A definir"}</p>
           </div>
-          <div className="rounded-xl border border-zinc-100 bg-zinc-50 p-4">
-            <p className="text-sm text-zinc-500">Solicitado em</p>
-            <p className="mt-2 font-bold text-zinc-950">{order.refundRequestedAt ? new Intl.DateTimeFormat("pt-BR", { dateStyle: "short", timeStyle: "short" }).format(order.refundRequestedAt) : "Ainda não solicitado"}</p>
+          <div className="rounded-xl border border-zinc-100 bg-[#FFFFFF] p-4">
+            <p className="text-sm text-[#666666]">Solicitado em</p>
+            <p className="mt-2 font-medium font-serif text-[#1A1A1A]">{order.refundRequestedAt ? new Intl.DateTimeFormat("pt-BR", { dateStyle: "short", timeStyle: "short" }).format(order.refundRequestedAt) : "Ainda não solicitado"}</p>
           </div>
-          <div className="rounded-xl border border-zinc-100 bg-zinc-50 p-4">
-            <p className="text-sm text-zinc-500">Reembolsado em</p>
-            <p className="mt-2 font-bold text-zinc-950">{order.refundedAt ? new Intl.DateTimeFormat("pt-BR", { dateStyle: "short", timeStyle: "short" }).format(order.refundedAt) : "Sem conclusão"}</p>
+          <div className="rounded-xl border border-zinc-100 bg-[#FFFFFF] p-4">
+            <p className="text-sm text-[#666666]">Reembolsado em</p>
+            <p className="mt-2 font-medium font-serif text-[#1A1A1A]">{order.refundedAt ? new Intl.DateTimeFormat("pt-BR", { dateStyle: "short", timeStyle: "short" }).format(order.refundedAt) : "Sem conclusão"}</p>
           </div>
         </div>
 
-        <div className="mt-6 rounded-2xl border border-zinc-100 bg-zinc-50 p-5">
-          <p className="text-sm font-semibold text-zinc-900">Motivo e histórico registrado</p>
-          <p className="mt-2 whitespace-pre-wrap text-sm leading-7 text-zinc-600">{order.returnReason || "Nenhuma observação de pós-venda foi registrada até o momento."}</p>
+        <div className="mt-6 rounded-2xl border border-zinc-100 bg-[#FFFFFF] p-5">
+          <p className="text-sm font-semibold text-[#1A1A1A]">Motivo e histórico registrado</p>
+          <p className="mt-2 whitespace-pre-wrap text-sm leading-7 text-[#666666]">{order.returnReason || "Nenhuma observação de pós-venda foi registrada até o momento."}</p>
         </div>
 
         {postSaleEligible ? (
@@ -228,7 +228,7 @@ export default async function AccountOrderDetailsPage({
             Sua solicitação já está registrada. Acompanhe as próximas atualizações nesta página.
           </div>
         ) : (
-          <div className="mt-4 rounded-2xl border border-zinc-200 bg-zinc-50 p-4 text-sm text-zinc-600">
+          <div className="mt-4 rounded-2xl border border-zinc-200 bg-[#FFFFFF] p-4 text-sm text-[#666666]">
             A abertura da solicitação fica disponível quando o pedido já foi enviado ou entregue e o pagamento foi confirmado.
           </div>
         )}

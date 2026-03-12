@@ -121,7 +121,7 @@ export function Sidebar({ role }: SidebarProps) {
     return (
       <div className="flex h-full flex-col">
         <div className="flex h-16 items-center justify-between border-b border-white/10 px-6">
-          <Link href="/admin" className="text-xl font-bold font-serif italic tracking-tighter text-white">
+          <Link href="/admin" className="text-xl font-medium font-serif font-serif italic tracking-tighter text-white">
             STORE<span className="text-primary-400 font-sans not-italic">Admin</span>
           </Link>
           <button
@@ -201,7 +201,7 @@ export function Sidebar({ role }: SidebarProps) {
   return (
     <>
       <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-gray-200 bg-white/95 px-4 backdrop-blur md:hidden">
-        <span className="font-bold font-serif italic tracking-tighter text-xl text-gray-950">
+        <span className="font-medium font-serif font-serif italic tracking-tighter text-xl text-gray-950">
           STORE<span className="text-primary-500 font-sans not-italic">Admin</span>
         </span>
         <button

@@ -73,7 +73,7 @@ export default function RegisterPage() {
     >
       <form className="space-y-4" onSubmit={onSubmit}>
         <div className="space-y-1.5">
-          <label htmlFor="register-name" className="text-sm font-semibold text-zinc-900">Nome completo</label>
+          <label htmlFor="register-name" className="text-sm font-semibold text-[#1A1A1A]">Nome completo</label>
           <Input
             id="register-name"
             type="text"
@@ -86,7 +86,7 @@ export default function RegisterPage() {
         </div>
 
         <div className="space-y-1.5">
-          <label htmlFor="register-email" className="text-sm font-semibold text-zinc-900">E-mail principal</label>
+          <label htmlFor="register-email" className="text-sm font-semibold text-[#1A1A1A]">E-mail principal</label>
           <Input
             id="register-email"
             type="email"
@@ -96,11 +96,11 @@ export default function RegisterPage() {
             onChange={(event) => setEmail(event.target.value)}
             required
           />
-          <p className="text-xs leading-5 text-zinc-500">Usaremos esse e-mail para login, recuperação de senha, pedidos e mensagens importantes da compra.</p>
+          <p className="text-xs leading-5 text-[#666666]">Usaremos esse e-mail para login, recuperação de senha, pedidos e mensagens importantes da compra.</p>
         </div>
 
         <div className="space-y-1.5">
-          <label htmlFor="register-password" className="text-sm font-semibold text-zinc-900">Senha</label>
+          <label htmlFor="register-password" className="text-sm font-semibold text-[#1A1A1A]">Senha</label>
           <Input
             id="register-password"
             type="password"
@@ -111,11 +111,11 @@ export default function RegisterPage() {
             minLength={6}
             required
           />
-          <p className="text-xs leading-5 text-zinc-500">Use pelo menos 6 caracteres. Se puder, combine letras e números para aumentar a segurança.</p>
+          <p className="text-xs leading-5 text-[#666666]">Use pelo menos 6 caracteres. Se puder, combine letras e números para aumentar a segurança.</p>
         </div>
 
         <div className="space-y-1.5">
-          <label htmlFor="register-phone" className="text-sm font-semibold text-zinc-900">Telefone</label>
+          <label htmlFor="register-phone" className="text-sm font-semibold text-[#1A1A1A]">Telefone</label>
           <Input
             id="register-phone"
             type="tel"
@@ -128,7 +128,7 @@ export default function RegisterPage() {
 
         {error ? <p className="rounded-[18px] border border-rose-200 bg-rose-50 px-4 py-3 text-sm font-medium text-rose-700">{error}</p> : null}
 
-        <div className="rounded-[20px] border border-[#eadfce] bg-[#fffaf1] px-4 py-3 text-xs leading-5 text-zinc-600">
+        <div className="rounded-[20px] border border-[#eadfce] bg-[#fffaf1] px-4 py-3 text-xs leading-5 text-[#666666]">
           Ao criar sua conta, você poderá acompanhar pedidos, recuperar acesso por e-mail e receber comunicações transacionais da loja quando necessário.
         </div>
 
@@ -137,7 +137,7 @@ export default function RegisterPage() {
         </Button>
       </form>
 
-      <p className="mt-5 border-t border-[#e7ddce] pt-5 text-sm text-zinc-600">
+      <p className="mt-5 border-t border-[#e7ddce] pt-5 text-sm text-[#666666]">
         Já possui conta?{" "}
         <Link href="/login" className="font-semibold text-[#111111] underline decoration-[#D4AF37] decoration-2 underline-offset-4 hover:text-[#8a6e1e]">
           Entrar

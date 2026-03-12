@@ -84,7 +84,7 @@ export function NewsletterSubscribeForm() {
             type="submit"
             aria-label={showNameField ? "Confirmar inscrição" : "Continuar inscrição"}
             disabled={isPending}
-            className="absolute right-1 flex h-10 w-10 items-center justify-center rounded-full bg-zinc-950 text-white transition-colors hover:bg-[#D4AF37] disabled:cursor-not-allowed disabled:opacity-70"
+            className="absolute right-1 flex h-10 w-10 items-center justify-center rounded-full bg-[#1A1A1A] text-white transition-colors hover:bg-[#D4AF37] disabled:cursor-not-allowed disabled:opacity-70"
           >
             <ArrowRight className="h-5 w-5" />
           </button>
@@ -110,7 +110,7 @@ export function NewsletterSubscribeForm() {
               ? "font-medium text-emerald-600"
               : message.tone === "error"
               ? "text-red-600"
-              : "text-zinc-500"
+              : "text-[#666666]"
           }`}
         >
           {message.tone === "success" ? <CheckCircle2 className="h-4 w-4 shrink-0" /> : null}

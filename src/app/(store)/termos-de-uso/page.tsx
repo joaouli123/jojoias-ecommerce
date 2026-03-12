@@ -35,7 +35,7 @@ export default async function TermsPage() {
 
       <section className="mx-auto max-w-5xl px-6 py-8 sm:px-8 lg:px-10 lg:py-10">
         <div className="max-w-4xl">
-          <article className="whitespace-pre-line text-base leading-7 text-zinc-900">
+          <article className="whitespace-pre-line text-base leading-7 text-[#1A1A1A]">
             {settings.termsContent}
           </article>
         </div>

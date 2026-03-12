@@ -17,28 +17,28 @@ export async function Footer() {
           <div className="lg:col-span-5 flex flex-col space-y-8">
             <div>
               <Image src="/logo-oficial.avif" alt="Luxijóias Semijoias" width={220} height={66} quality={50} sizes="(max-width: 640px) 180px, 220px" className="h-auto w-[180px] sm:w-[220px]" />
-              <p className="mt-4 text-[15px] leading-relaxed text-zinc-600 max-w-sm">
+              <p className="mt-4 text-[15px] leading-relaxed text-[#666666] max-w-sm">
                 {settings.tagline}
               </p>
             </div>
 
             <div className="space-y-4">
-              <h3 className="font-semibold text-lg text-zinc-900 font-serif">Acompanhe as Novidades</h3>
-              <p className="text-sm text-zinc-500 max-w-sm">Inscreva-se para receber tendências, lançamentos e ofertas exclusivas no seu e-mail.</p>
+              <h3 className="font-semibold text-lg text-[#1A1A1A] font-serif">Acompanhe as Novidades</h3>
+              <p className="text-sm text-[#666666] max-w-sm">Inscreva-se para receber tendências, lançamentos e ofertas exclusivas no seu e-mail.</p>
               <NewsletterSubscribeForm />
             </div>
 
             <div className="flex gap-3 pt-2">
-              <Link href={settings.instagramUrl} target="_blank" aria-label="Instagram" className="w-10 h-10 rounded-full border border-zinc-300 bg-white flex items-center justify-center text-zinc-700 hover:text-white hover:bg-[#D4AF37] hover:border-[#D4AF37] transition-all shadow-sm">
+              <Link href={settings.instagramUrl} target="_blank" aria-label="Instagram" className="w-10 h-10 rounded-full border border-zinc-300 bg-white flex items-center justify-center text-[#666666] hover:text-white hover:bg-[#D4AF37] hover:border-[#D4AF37] transition-all shadow-sm">
                 <Instagram className="w-4 h-4" />
               </Link>
-              <Link href={settings.facebookUrl} target="_blank" aria-label="Facebook" className="w-10 h-10 rounded-full border border-zinc-300 bg-white flex items-center justify-center text-zinc-700 hover:text-white hover:bg-[#D4AF37] hover:border-[#D4AF37] transition-all shadow-sm">
+              <Link href={settings.facebookUrl} target="_blank" aria-label="Facebook" className="w-10 h-10 rounded-full border border-zinc-300 bg-white flex items-center justify-center text-[#666666] hover:text-white hover:bg-[#D4AF37] hover:border-[#D4AF37] transition-all shadow-sm">
                 <Facebook className="w-4 h-4" />
               </Link>
-              <Link href={settings.youtubeUrl} target="_blank" aria-label="YouTube" className="w-10 h-10 rounded-full border border-zinc-300 bg-white flex items-center justify-center text-zinc-700 hover:text-white hover:bg-[#D4AF37] hover:border-[#D4AF37] transition-all shadow-sm">
+              <Link href={settings.youtubeUrl} target="_blank" aria-label="YouTube" className="w-10 h-10 rounded-full border border-zinc-300 bg-white flex items-center justify-center text-[#666666] hover:text-white hover:bg-[#D4AF37] hover:border-[#D4AF37] transition-all shadow-sm">
                 <Youtube className="w-4 h-4" />
               </Link>
-              <Link href={settings.whatsappUrl} target="_blank" aria-label="WhatsApp" className="w-10 h-10 rounded-full border border-zinc-300 bg-white flex items-center justify-center text-zinc-700 hover:text-white hover:bg-[#D4AF37] hover:border-[#D4AF37] transition-all shadow-sm">
+              <Link href={settings.whatsappUrl} target="_blank" aria-label="WhatsApp" className="w-10 h-10 rounded-full border border-zinc-300 bg-white flex items-center justify-center text-[#666666] hover:text-white hover:bg-[#D4AF37] hover:border-[#D4AF37] transition-all shadow-sm">
                 <WhatsAppIcon className="w-4 h-4" />
               </Link>
             </div>
@@ -47,67 +47,67 @@ export async function Footer() {
           <div className="lg:col-span-7 grid grid-cols-2 md:grid-cols-3 gap-8 sm:gap-10">
             {/* Links Columns */}
             <div>
-              <h3 className="font-semibold text-zinc-950 mb-6 uppercase tracking-wider text-xs">A Luxijóias</h3>
+              <h3 className="font-semibold text-[#1A1A1A] mb-6 uppercase tracking-wider text-xs">A Luxijóias</h3>
               <ul className="space-y-4">
-                <li><Link href="/quem-somos" className="text-[15px] text-zinc-500 hover:text-[#D4AF37] hover:pl-1 transition-all">Quem Somos</Link></li>
-                <li><Link href="/marcas" className="text-[15px] text-zinc-500 hover:text-[#D4AF37] hover:pl-1 transition-all">Marcas</Link></li>
-                <li><Link href="/blog" className="text-[15px] text-zinc-500 hover:text-[#D4AF37] hover:pl-1 transition-all">Blog</Link></li>
-                <li><Link href="/search?q=lancamentos" className="text-[15px] text-zinc-500 hover:text-[#D4AF37] hover:pl-1 transition-all">Lançamentos</Link></li>
-                <li><Link href="/categoria/ofertas" className="text-[15px] text-zinc-500 hover:text-[#D4AF37] hover:pl-1 transition-all">Ofertas</Link></li>
-                <li><Link href="/favorites" className="text-[15px] text-zinc-500 hover:text-[#D4AF37] hover:pl-1 transition-all">Favoritos</Link></li>
-                <li><Link href="/account" className="text-[15px] text-zinc-500 hover:text-[#D4AF37] hover:pl-1 transition-all">Minha Conta</Link></li>
+                <li><Link href="/quem-somos" className="text-[15px] text-[#666666] hover:text-[#D4AF37] hover:pl-1 transition-all">Quem Somos</Link></li>
+                <li><Link href="/marcas" className="text-[15px] text-[#666666] hover:text-[#D4AF37] hover:pl-1 transition-all">Marcas</Link></li>
+                <li><Link href="/blog" className="text-[15px] text-[#666666] hover:text-[#D4AF37] hover:pl-1 transition-all">Blog</Link></li>
+                <li><Link href="/search?q=lancamentos" className="text-[15px] text-[#666666] hover:text-[#D4AF37] hover:pl-1 transition-all">Lançamentos</Link></li>
+                <li><Link href="/categoria/ofertas" className="text-[15px] text-[#666666] hover:text-[#D4AF37] hover:pl-1 transition-all">Ofertas</Link></li>
+                <li><Link href="/favorites" className="text-[15px] text-[#666666] hover:text-[#D4AF37] hover:pl-1 transition-all">Favoritos</Link></li>
+                <li><Link href="/account" className="text-[15px] text-[#666666] hover:text-[#D4AF37] hover:pl-1 transition-all">Minha Conta</Link></li>
               </ul>
             </div>
 
             <div>
-              <h3 className="font-semibold text-zinc-950 mb-6 uppercase tracking-wider text-xs">Suporte</h3>
+              <h3 className="font-semibold text-[#1A1A1A] mb-6 uppercase tracking-wider text-xs">Suporte</h3>
               <ul className="space-y-4">
-                <li><Link href="/contato" className="text-[15px] text-zinc-500 hover:text-[#D4AF37] hover:pl-1 transition-all">Central de Ajuda</Link></li>
-                <li><Link href="/trocas-e-devolucoes" className="text-[15px] text-zinc-500 hover:text-[#D4AF37] hover:pl-1 transition-all">Trocas e Devoluções</Link></li>
-                <li><Link href="/rastreio" className="text-[15px] text-zinc-500 hover:text-[#D4AF37] hover:pl-1 transition-all">Rastrear Pedido</Link></li>
-                <li><Link href="/checkout" className="text-[15px] text-zinc-500 hover:text-[#D4AF37] hover:pl-1 transition-all">Entregas</Link></li>
-                <li><Link href="/faq" className="text-[15px] text-zinc-500 hover:text-[#D4AF37] hover:pl-1 transition-all">FAQ</Link></li>
+                <li><Link href="/contato" className="text-[15px] text-[#666666] hover:text-[#D4AF37] hover:pl-1 transition-all">Central de Ajuda</Link></li>
+                <li><Link href="/trocas-e-devolucoes" className="text-[15px] text-[#666666] hover:text-[#D4AF37] hover:pl-1 transition-all">Trocas e Devoluções</Link></li>
+                <li><Link href="/rastreio" className="text-[15px] text-[#666666] hover:text-[#D4AF37] hover:pl-1 transition-all">Rastrear Pedido</Link></li>
+                <li><Link href="/checkout" className="text-[15px] text-[#666666] hover:text-[#D4AF37] hover:pl-1 transition-all">Entregas</Link></li>
+                <li><Link href="/faq" className="text-[15px] text-[#666666] hover:text-[#D4AF37] hover:pl-1 transition-all">FAQ</Link></li>
               </ul>
             </div>
 
             <div>
-              <h3 className="font-semibold text-zinc-950 mb-6 uppercase tracking-wider text-xs">Legal</h3>
+              <h3 className="font-semibold text-[#1A1A1A] mb-6 uppercase tracking-wider text-xs">Legal</h3>
               <ul className="space-y-4">
-                <li><Link href="/termos-de-uso" className="text-[15px] text-zinc-500 hover:text-[#D4AF37] hover:pl-1 transition-all">Termos de Uso</Link></li>
-                <li><Link href="/privacidade" className="text-[15px] text-zinc-500 hover:text-[#D4AF37] hover:pl-1 transition-all">Privacidade</Link></li>
-                <li><Link href="/trocas-e-devolucoes" className="text-[15px] text-zinc-500 hover:text-[#D4AF37] hover:pl-1 transition-all">Políticas de Compras</Link></li>
-                <li><Link href="/privacidade" className="text-[15px] text-zinc-500 hover:text-[#D4AF37] hover:pl-1 transition-all">Cookies</Link></li>
+                <li><Link href="/termos-de-uso" className="text-[15px] text-[#666666] hover:text-[#D4AF37] hover:pl-1 transition-all">Termos de Uso</Link></li>
+                <li><Link href="/privacidade" className="text-[15px] text-[#666666] hover:text-[#D4AF37] hover:pl-1 transition-all">Privacidade</Link></li>
+                <li><Link href="/trocas-e-devolucoes" className="text-[15px] text-[#666666] hover:text-[#D4AF37] hover:pl-1 transition-all">Políticas de Compras</Link></li>
+                <li><Link href="/privacidade" className="text-[15px] text-[#666666] hover:text-[#D4AF37] hover:pl-1 transition-all">Cookies</Link></li>
               </ul>
             </div>
             
             <div className="col-span-2 md:col-span-3 pt-6 lg:pt-2">
-              <h3 className="font-semibold text-zinc-950 mb-5 uppercase tracking-wider text-xs">Fale com a gente</h3>
+              <h3 className="font-semibold text-[#1A1A1A] mb-5 uppercase tracking-wider text-xs">Fale com a gente</h3>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
                 <div className="flex items-start gap-4">
                   <div className="w-10 h-10 rounded-full bg-white border border-zinc-200 flex items-center justify-center flex-shrink-0">
-                    <Phone className="w-4 h-4 text-zinc-600" />
+                    <Phone className="w-4 h-4 text-[#666666]" />
                   </div>
                   <div>
-                    <h4 className="text-sm font-medium text-zinc-900">Telefone / WhatsApp</h4>
-                    <p className="text-sm text-zinc-500 mt-1 hover:text-[#D4AF37] transition-colors cursor-pointer">{settings.supportPhone}</p>
+                    <h4 className="text-sm font-medium text-[#1A1A1A]">Telefone / WhatsApp</h4>
+                    <p className="text-sm text-[#666666] mt-1 hover:text-[#D4AF37] transition-colors cursor-pointer">{settings.supportPhone}</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-4">
                   <div className="w-10 h-10 rounded-full bg-white border border-zinc-200 flex items-center justify-center flex-shrink-0">
-                    <Mail className="w-4 h-4 text-zinc-600" />
+                    <Mail className="w-4 h-4 text-[#666666]" />
                   </div>
                   <div>
-                    <h4 className="text-sm font-medium text-zinc-900">E-mail</h4>
-                    <Link href="/contato" className="mt-1 inline-flex text-sm text-zinc-500 transition-colors hover:text-[#D4AF37]">Abrir atendimento por e-mail</Link>
+                    <h4 className="text-sm font-medium text-[#1A1A1A]">E-mail</h4>
+                    <Link href="/contato" className="mt-1 inline-flex text-sm text-[#666666] transition-colors hover:text-[#D4AF37]">Abrir atendimento por e-mail</Link>
                   </div>
                 </div>
                 <div className="flex items-start gap-4">
                   <div className="w-10 h-10 rounded-full bg-white border border-zinc-200 flex items-center justify-center flex-shrink-0">
-                    <MapPin className="w-4 h-4 text-zinc-600" />
+                    <MapPin className="w-4 h-4 text-[#666666]" />
                   </div>
                   <div>
-                    <h4 className="text-sm font-medium text-zinc-900">Escritório</h4>
-                    <p className="text-sm text-zinc-500 mt-1">{settings.addressLine}<br />{settings.businessHours}</p>
+                    <h4 className="text-sm font-medium text-[#1A1A1A]">Escritório</h4>
+                    <p className="text-sm text-[#666666] mt-1">{settings.addressLine}<br />{settings.businessHours}</p>
                   </div>
                 </div>
               </div>
@@ -119,7 +119,7 @@ export async function Footer() {
         <div className="pt-10 flex flex-col xl:flex-row items-center xl:items-start justify-between gap-8">
           <div className="flex flex-col sm:flex-row items-center sm:items-start gap-8 md:gap-14">
             <div>
-              <span className="block text-[11px] font-bold uppercase tracking-widest text-zinc-500 mb-4 text-center sm:text-left">Pagamento Seguro</span>
+              <span className="block text-[11px] font-medium font-serif uppercase tracking-widest text-[#666666] mb-4 text-center sm:text-left">Pagamento Seguro</span>
               <div className="flex items-center justify-center sm:justify-start">
                 <Image
                   src="/formas-pagamento-luxijoias.avif"
@@ -133,7 +133,7 @@ export async function Footer() {
             </div>
 
             <div>
-              <span className="block text-[11px] font-bold uppercase tracking-widest text-zinc-500 mb-4 text-center sm:text-left">Compra Garantida</span>
+              <span className="block text-[11px] font-medium font-serif uppercase tracking-widest text-[#666666] mb-4 text-center sm:text-left">Compra Garantida</span>
               <div className="flex items-center justify-center sm:justify-start">
                 <Image
                   src="/selos-seguranca-google.avif"
@@ -147,7 +147,7 @@ export async function Footer() {
             </div>
           </div>
 
-          <p className="text-sm text-zinc-500">
+          <p className="text-sm text-[#666666]">
             © {new Date().getFullYear()} Luxijóias. Todos os direitos reservados.
           </p>
         </div>

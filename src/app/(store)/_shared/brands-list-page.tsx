@@ -29,9 +29,9 @@ export async function BrandsListPage() {
 
       <div className="rounded-3xl border border-zinc-200 bg-gradient-to-br from-white to-zinc-50 px-6 py-10 md:px-10 md:py-12">
         <div className="max-w-3xl">
-          <p className="text-xs font-bold uppercase tracking-[0.3em] text-[#D4AF37]">Curadoria Luxijóias</p>
-          <h1 className="mt-4 text-3xl md:text-5xl font-black tracking-tight text-zinc-950">Marcas em destaque</h1>
-          <p className="mt-4 text-sm md:text-base leading-7 text-zinc-600">
+          <p className="text-xs font-medium font-serif uppercase tracking-[0.3em] text-[#D4AF37]">Curadoria Luxijóias</p>
+          <h1 className="mt-4 text-3xl md:text-5xl font-medium font-serif tracking-tight text-[#1A1A1A]">Marcas em destaque</h1>
+          <p className="mt-4 text-sm md:text-base leading-7 text-[#666666]">
             Navegue por todas as marcas disponíveis no catálogo e encontre coleções, estilos e faixas de preço com páginas dedicadas para cada vitrine.
           </p>
         </div>

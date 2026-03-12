@@ -70,9 +70,9 @@ export default async function Home() {
         <section className="max-w-[1440px] mx-auto w-full px-4 sm:px-6 lg:px-8 py-10 md:py-14 border-t border-zinc-100">
           <div className="mb-8 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
             <div>
-              <p className="text-xs font-bold uppercase tracking-[0.3em] text-[#D4AF37]">Vitrines por marca</p>
+              <p className="text-xs font-medium font-serif uppercase tracking-[0.3em] text-[#D4AF37]">Vitrines por marca</p>
               <h2 className="mt-2 text-3xl font-medium text-[#1A1A1A] tracking-tight font-serif">Explore marcas do catálogo</h2>
-              <p className="mt-2 max-w-2xl text-sm text-zinc-500">
+              <p className="mt-2 max-w-2xl text-sm text-[#666666]">
                 Descubra coleções por estilo, acabamento e curadoria com páginas dedicadas para cada marca da loja.
               </p>
             </div>

@@ -18,27 +18,27 @@ export default async function AccountAddressesPage() {
   return (
     <div className="space-y-6">
       <section className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm sm:p-8">
-        <h1 className="text-2xl font-black tracking-tight text-zinc-950">Meus endereços</h1>
-        <p className="mt-2 text-sm text-zinc-500">Cadastre e remova endereços para agilizar futuras compras.</p>
+        <h1 className="text-2xl font-medium font-serif tracking-tight text-[#1A1A1A]">Meus endereços</h1>
+        <p className="mt-2 text-sm text-[#666666]">Cadastre e remova endereços para agilizar futuras compras.</p>
 
         {addresses.length ? (
           <div className="mt-6 grid gap-4 lg:grid-cols-2">
             {addresses.map((address) => (
-              <div key={address.id} className="rounded-2xl border border-zinc-100 bg-zinc-50 p-5">
+              <div key={address.id} className="rounded-2xl border border-zinc-100 bg-[#FFFFFF] p-5">
                 <div className="flex items-start justify-between gap-3">
                   <div>
-                    <p className="text-sm text-zinc-500">{address.label || "Endereço salvo"}</p>
-                    <h2 className="mt-1 text-lg font-bold text-zinc-950">{address.recipient}</h2>
+                    <p className="text-sm text-[#666666]">{address.label || "Endereço salvo"}</p>
+                    <h2 className="mt-1 text-lg font-medium font-serif text-[#1A1A1A]">{address.recipient}</h2>
                   </div>
                   <form action={deleteAddressAction}>
                     <input type="hidden" name="id" value={address.id} />
-                    <button type="submit" className="text-sm font-bold text-rose-600 hover:text-rose-700">
+                    <button type="submit" className="text-sm font-medium font-serif text-rose-600 hover:text-rose-700">
                       Remover
                     </button>
                   </form>
                 </div>
 
-                <div className="mt-4 space-y-1 text-sm text-zinc-600">
+                <div className="mt-4 space-y-1 text-sm text-[#666666]">
                   <p>{address.street}, {address.number}</p>
                   <p>{address.district} • {address.city}/{address.state}</p>
                   <p>CEP {address.zipcode}</p>
@@ -48,14 +48,14 @@ export default async function AccountAddressesPage() {
             ))}
           </div>
         ) : (
-          <div className="mt-6 rounded-xl border border-dashed border-zinc-300 bg-zinc-50 p-8 text-center text-zinc-500">
+          <div className="mt-6 rounded-xl border border-dashed border-zinc-300 bg-[#FFFFFF] p-8 text-center text-[#666666]">
             Você ainda não possui endereços cadastrados.
           </div>
         )}
       </section>
 
       <section className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm sm:p-8">
-        <h2 className="text-xl font-bold text-zinc-950">Adicionar novo endereço</h2>
+        <h2 className="text-xl font-medium font-serif text-[#1A1A1A]">Adicionar novo endereço</h2>
 
         <form action={createAddressAction} className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
           <input name="label" placeholder="Apelido (ex.: Casa, Trabalho)" className="h-11 rounded-xl border border-zinc-200 px-4 text-sm outline-none focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37]" />
@@ -69,7 +69,7 @@ export default async function AccountAddressesPage() {
           <input name="complement" placeholder="Complemento (opcional)" className="h-11 rounded-xl border border-zinc-200 px-4 text-sm outline-none focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37] md:col-span-2" />
 
           <div className="md:col-span-2 flex justify-end">
-            <button type="submit" className="inline-flex h-11 items-center justify-center rounded-xl bg-[#111111] px-5 text-sm font-bold text-white hover:bg-[#111111]/90">
+            <button type="submit" className="inline-flex h-11 items-center justify-center rounded-xl bg-[#111111] px-5 text-sm font-medium font-serif text-white hover:bg-[#111111]/90">
               Salvar endereço
             </button>
           </div>

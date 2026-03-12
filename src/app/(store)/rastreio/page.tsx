@@ -32,14 +32,14 @@ export default async function TrackingPage({
   return (
     <div className="mx-auto w-full max-w-5xl px-4 py-10 sm:px-6 lg:px-8">
       <div className="rounded-[20px] border border-zinc-200 bg-white p-6 shadow-sm md:p-8">
-        <p className="text-xs font-bold uppercase tracking-[0.35em] text-[#D4AF37]">Rastreio público</p>
-        <h1 className="mt-3 text-3xl font-black tracking-tight text-zinc-950">Acompanhe seu pedido</h1>
-        <p className="mt-3 max-w-2xl text-sm leading-6 text-zinc-600">Informe o número completo do pedido ou o código de rastreio junto com o e-mail usado na compra.</p>
+        <p className="text-xs font-medium font-serif uppercase tracking-[0.35em] text-[#D4AF37]">Rastreio público</p>
+        <h1 className="mt-3 text-3xl font-medium font-serif tracking-tight text-[#1A1A1A]">Acompanhe seu pedido</h1>
+        <p className="mt-3 max-w-2xl text-sm leading-6 text-[#666666]">Informe o número completo do pedido ou o código de rastreio junto com o e-mail usado na compra.</p>
 
         <form className="mt-6 grid gap-4 md:grid-cols-[1.2fr_1fr_auto]" method="get">
           <input name="pedido" defaultValue={pedido} placeholder="Pedido ou código de rastreio" className="h-12 rounded-[20px] border border-zinc-300 px-4 text-sm outline-none focus:border-zinc-900 focus:ring-1 focus:ring-zinc-900" />
           <input name="email" type="email" defaultValue={email} placeholder="E-mail da compra" className="h-12 rounded-[20px] border border-zinc-300 px-4 text-sm outline-none focus:border-zinc-900 focus:ring-1 focus:ring-zinc-900" />
-          <button type="submit" className="inline-flex h-12 items-center justify-center gap-2 rounded-[20px] bg-zinc-950 px-5 text-sm font-semibold text-white hover:bg-zinc-800">
+          <button type="submit" className="inline-flex h-12 items-center justify-center gap-2 rounded-[20px] bg-[#1A1A1A] px-5 text-sm font-semibold text-white hover:bg-[#666666]">
             <Search className="h-4 w-4" />
             Consultar
           </button>
@@ -55,41 +55,41 @@ export default async function TrackingPage({
           <section className="rounded-[20px] border border-zinc-200 bg-white p-6 shadow-sm">
             <div className="flex items-start justify-between gap-4">
               <div>
-                <p className="text-sm text-zinc-500">Pedido</p>
-                <h2 className="text-2xl font-black tracking-tight text-zinc-950">#{order.id.slice(-8).toUpperCase()}</h2>
+                <p className="text-sm text-[#666666]">Pedido</p>
+                <h2 className="text-2xl font-medium font-serif tracking-tight text-[#1A1A1A]">#{order.id.slice(-8).toUpperCase()}</h2>
               </div>
-              <span className="inline-flex rounded-full bg-zinc-100 px-3 py-1 text-xs font-semibold text-zinc-700">{order.status}</span>
+              <span className="inline-flex rounded-full bg-[#F9F8F6] px-3 py-1 text-xs font-semibold text-[#666666]">{order.status}</span>
             </div>
 
             <div className="mt-6 grid gap-4 sm:grid-cols-2">
-              <div className="rounded-[20px] border border-zinc-100 bg-zinc-50 p-4">
-                <p className="text-xs uppercase tracking-wide text-zinc-400">Pagamento</p>
-                <p className="mt-2 font-semibold text-zinc-900">{order.paymentStatus || "Pendente"}</p>
+              <div className="rounded-[20px] border border-zinc-100 bg-[#FFFFFF] p-4">
+                <p className="text-xs uppercase tracking-wide text-[#E5E5E5]">Pagamento</p>
+                <p className="mt-2 font-semibold text-[#1A1A1A]">{order.paymentStatus || "Pendente"}</p>
               </div>
-              <div className="rounded-[20px] border border-zinc-100 bg-zinc-50 p-4">
-                <p className="text-xs uppercase tracking-wide text-zinc-400">Frete</p>
-                <p className="mt-2 font-semibold text-zinc-900">{order.shippingService || "A definir"}</p>
+              <div className="rounded-[20px] border border-zinc-100 bg-[#FFFFFF] p-4">
+                <p className="text-xs uppercase tracking-wide text-[#E5E5E5]">Frete</p>
+                <p className="mt-2 font-semibold text-[#1A1A1A]">{order.shippingService || "A definir"}</p>
               </div>
-              <div className="rounded-[20px] border border-zinc-100 bg-zinc-50 p-4">
-                <p className="text-xs uppercase tracking-wide text-zinc-400">Código</p>
-                <p className="mt-2 font-semibold text-zinc-900">{order.trackingCode || "Ainda não gerado"}</p>
+              <div className="rounded-[20px] border border-zinc-100 bg-[#FFFFFF] p-4">
+                <p className="text-xs uppercase tracking-wide text-[#E5E5E5]">Código</p>
+                <p className="mt-2 font-semibold text-[#1A1A1A]">{order.trackingCode || "Ainda não gerado"}</p>
               </div>
-              <div className="rounded-[20px] border border-zinc-100 bg-zinc-50 p-4">
-                <p className="text-xs uppercase tracking-wide text-zinc-400">Total</p>
-                <p className="mt-2 font-semibold text-zinc-900">{formatCurrency(order.total)}</p>
+              <div className="rounded-[20px] border border-zinc-100 bg-[#FFFFFF] p-4">
+                <p className="text-xs uppercase tracking-wide text-[#E5E5E5]">Total</p>
+                <p className="mt-2 font-semibold text-[#1A1A1A]">{formatCurrency(order.total)}</p>
               </div>
             </div>
 
             <div className="mt-6">
-              <p className="text-sm font-semibold text-zinc-900">Itens</p>
+              <p className="text-sm font-semibold text-[#1A1A1A]">Itens</p>
               <div className="mt-3 space-y-3">
                 {order.items.map((item) => (
                   <div key={item.id} className="flex items-center justify-between rounded-[20px] border border-zinc-100 px-4 py-3 text-sm">
                     <div>
-                      <p className="font-semibold text-zinc-900">{item.product.name}</p>
-                      {item.variant ? <p className="text-zinc-500">Variação: {item.variant.name}</p> : null}
+                      <p className="font-semibold text-[#1A1A1A]">{item.product.name}</p>
+                      {item.variant ? <p className="text-[#666666]">Variação: {item.variant.name}</p> : null}
                     </div>
-                    <span className="text-zinc-600">{item.quantity}x</span>
+                    <span className="text-[#666666]">{item.quantity}x</span>
                   </div>
                 ))}
               </div>
@@ -101,19 +101,19 @@ export default async function TrackingPage({
               <div className="flex items-center gap-3">
                 <div className="rounded-[20px] bg-[#D4AF37]/15 p-3 text-[#B18D14]"><Truck className="h-5 w-5" /></div>
                 <div>
-                  <p className="text-sm font-semibold text-zinc-900">Entrega</p>
-                  <p className="text-sm text-zinc-500">Prazo estimado: {order.shippingEstimatedDays ? `${order.shippingEstimatedDays} dia(s) úteis` : "a confirmar"}</p>
+                  <p className="text-sm font-semibold text-[#1A1A1A]">Entrega</p>
+                  <p className="text-sm text-[#666666]">Prazo estimado: {order.shippingEstimatedDays ? `${order.shippingEstimatedDays} dia(s) úteis` : "a confirmar"}</p>
                 </div>
               </div>
               {order.trackingUrl ? (
-                <Link href={order.trackingUrl} target="_blank" className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-zinc-900 hover:text-[#D4AF37]">
+                <Link href={order.trackingUrl} target="_blank" className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-[#1A1A1A] hover:text-[#D4AF37]">
                   Abrir rastreio da transportadora <ExternalLink className="h-4 w-4" />
                 </Link>
               ) : null}
             </section>
 
-            <section className="rounded-[20px] border border-zinc-200 bg-white p-6 shadow-sm text-sm text-zinc-600">
-              <p className="font-semibold text-zinc-900">Endereço</p>
+            <section className="rounded-[20px] border border-zinc-200 bg-white p-6 shadow-sm text-sm text-[#666666]">
+              <p className="font-semibold text-[#1A1A1A]">Endereço</p>
               <p className="mt-3">{order.addressStreet}, {order.addressNumber}{order.addressComplement ? ` • ${order.addressComplement}` : ""}</p>
               <p>{order.addressDistrict}</p>
               <p>{order.addressCity}/{order.addressState} • CEP {order.addressZipcode}</p>

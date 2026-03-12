@@ -16,7 +16,7 @@ export default async function AdminOrdersPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-gray-900">Pedidos</h1>
+          <h1 className="text-3xl font-medium font-serif tracking-tight text-gray-900">Pedidos</h1>
           <p className="mt-1 text-sm text-gray-500">Gerencie a operação diária e exporte relatórios rápidos para financeiro e expedição.</p>
         </div>
         <Link

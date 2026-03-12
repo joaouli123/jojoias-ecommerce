@@ -22,7 +22,7 @@ export default async function AdminHealthPage() {
     <div className="space-y-6">
       <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-gray-900">Saúde operacional</h1>
+          <h1 className="text-3xl font-medium font-serif tracking-tight text-gray-900">Saúde operacional</h1>
           <p className="mt-2 text-sm text-gray-600">Visão consolidada de banco, autenticação, integrações críticas e incidentes recentes.</p>
         </div>
         <div className={`rounded-2xl border px-4 py-3 text-sm font-semibold capitalize ${statusClasses[snapshot.status]}`}>

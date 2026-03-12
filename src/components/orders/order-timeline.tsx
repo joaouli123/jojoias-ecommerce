@@ -44,7 +44,7 @@ export function OrderTimeline({ status }: { status: OrderStatus }) {
   if (status === "CANCELLED") {
     return (
       <div className="rounded-2xl border border-rose-200 bg-rose-50 p-4 text-sm text-rose-700">
-        <p className="font-bold text-rose-800">Pedido cancelado</p>
+        <p className="font-medium font-serif text-rose-800">Pedido cancelado</p>
         <p className="mt-1">O fluxo foi interrompido antes da conclusão da entrega. O estoque já foi reajustado quando aplicável.</p>
       </div>
     );
@@ -63,7 +63,7 @@ export function OrderTimeline({ status }: { status: OrderStatus }) {
               {!isLast ? <span className={`mt-1 h-full w-px ${state === "pending" ? "bg-gray-200" : "bg-emerald-200"}`} /> : null}
             </div>
             <div className="pb-4">
-              <p className={`text-sm font-bold ${state === "pending" ? "text-gray-400" : state === "current" ? "text-amber-700" : "text-emerald-700"}`}>
+              <p className={`text-sm font-medium font-serif ${state === "pending" ? "text-gray-400" : state === "current" ? "text-amber-700" : "text-emerald-700"}`}>
                 {step.label}
               </p>
               <p className="mt-1 text-sm text-gray-500">{step.description}</p>

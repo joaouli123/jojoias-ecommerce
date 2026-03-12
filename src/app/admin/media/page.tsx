@@ -14,7 +14,7 @@ export default async function AdminMediaPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight text-gray-900">Biblioteca de mídia</h1>
+        <h1 className="text-3xl font-medium font-serif tracking-tight text-gray-900">Biblioteca de mídia</h1>
         <p className="mt-2 max-w-3xl text-sm text-gray-600">Gerencie os uploads nativos da plataforma e copie URLs prontas para produtos, banners e conteúdo.</p>
       </div>
 

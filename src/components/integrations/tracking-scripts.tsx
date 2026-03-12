@@ -60,8 +60,8 @@ export function TrackingScripts({ ga4Id, gtmId, clarityId }: TrackingScriptsProp
 
       {isHydrated && consent === null ? (
         <div className="fixed inset-x-4 bottom-4 z-[70] mx-auto max-w-xl rounded-[24px] border border-zinc-200 bg-white p-5 shadow-[0_20px_60px_-25px_rgba(0,0,0,0.35)]">
-          <p className="text-sm font-semibold text-zinc-950">Privacidade e medição</p>
-          <p className="mt-2 text-sm leading-6 text-zinc-600">
+          <p className="text-sm font-semibold text-[#1A1A1A]">Privacidade e medição</p>
+          <p className="mt-2 text-sm leading-6 text-[#666666]">
             Usamos analytics para medir navegação, checkout e conversão. Os scripts só são carregados se você aceitar.
           </p>
           <div className="mt-4 flex flex-wrap gap-3">
@@ -71,7 +71,7 @@ export function TrackingScripts({ ga4Id, gtmId, clarityId }: TrackingScriptsProp
                 setTrackingConsent("rejected");
                 setConsent("rejected");
               }}
-              className="inline-flex h-11 items-center justify-center rounded-[18px] border border-zinc-200 px-4 text-sm font-semibold text-zinc-700 transition-colors hover:bg-zinc-50"
+              className="inline-flex h-11 items-center justify-center rounded-[18px] border border-zinc-200 px-4 text-sm font-semibold text-[#666666] transition-colors hover:bg-[#FFFFFF]"
             >
               Recusar
             </button>

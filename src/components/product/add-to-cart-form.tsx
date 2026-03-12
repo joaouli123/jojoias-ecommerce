@@ -177,7 +177,7 @@ export function AddToCartForm({
     >
       {normalizedVariants.length ? (
         <div className="space-y-2">
-          <label className="text-sm font-semibold text-zinc-900">
+          <label className="text-sm font-semibold text-[#1A1A1A]">
             {sharedType === "cor"
               ? "Escolha a cor"
               : sharedType === "tamanho"
@@ -212,23 +212,23 @@ export function AddToCartForm({
                 >
                   {variant.type === "cor" ? (
                     <>
-                      <span className={`relative flex h-9 w-9 items-center justify-center rounded-full border p-[2px] transition ${selected ? "border-[#E7C96A] bg-[#FFF9E8]" : "border-zinc-200 bg-white hover:border-zinc-300"} ${unavailable ? "border-zinc-200 bg-zinc-100 opacity-50" : ""}`}>
+                      <span className={`relative flex h-9 w-9 items-center justify-center rounded-full border p-[2px] transition ${selected ? "border-[#E7C96A] bg-[#FFF9E8]" : "border-zinc-200 bg-white hover:border-zinc-300"} ${unavailable ? "border-zinc-200 bg-[#F9F8F6] opacity-50" : ""}`}>
                         <span
                           className={`h-full w-full rounded-full border ${selected ? "border-[#F4E5B1]" : "border-zinc-200"}`}
                           style={{ backgroundColor: swatchColor || "#ffffff" }}
                         />
                         {unavailable ? (
-                          <span className="absolute inset-0 flex items-center justify-center rounded-full bg-white/25 text-zinc-600">
+                          <span className="absolute inset-0 flex items-center justify-center rounded-full bg-white/25 text-[#666666]">
                             <X className="h-4 w-4 stroke-[2.4]" />
                           </span>
                         ) : null}
                       </span>
-                      <span className="pointer-events-none absolute left-1/2 top-full z-10 mt-2 hidden -translate-x-1/2 whitespace-nowrap rounded-full bg-zinc-950 px-2.5 py-1 text-[11px] font-medium text-white shadow-lg group-hover:block">
+                      <span className="pointer-events-none absolute left-1/2 top-full z-10 mt-2 hidden -translate-x-1/2 whitespace-nowrap rounded-full bg-[#1A1A1A] px-2.5 py-1 text-[11px] font-medium text-white shadow-lg group-hover:block">
                         {unavailable ? `${variant.label} indisponível` : variant.label}
                       </span>
                     </>
                   ) : (
-                    <span className={`inline-flex min-h-11 min-w-[72px] items-center justify-center gap-1 rounded-full border px-3 py-2 text-sm font-medium transition ${selected ? "border-[#D4AF37] bg-[#D4AF37] text-[#111827]" : "border-zinc-300 bg-white text-zinc-900 hover:border-zinc-500"} ${unavailable ? "border-zinc-200 bg-zinc-100 text-zinc-400 line-through opacity-70" : ""}`}>
+                    <span className={`inline-flex min-h-11 min-w-[72px] items-center justify-center gap-1 rounded-full border px-3 py-2 text-sm font-medium transition ${selected ? "border-[#D4AF37] bg-[#D4AF37] text-[#111827]" : "border-zinc-300 bg-white text-[#1A1A1A] hover:border-zinc-500"} ${unavailable ? "border-zinc-200 bg-[#F9F8F6] text-[#E5E5E5] line-through opacity-70" : ""}`}>
                       {unavailable ? <X className="h-3.5 w-3.5 shrink-0" /> : null}
                       <span>{variant.label}</span>
                     </span>
@@ -238,8 +238,8 @@ export function AddToCartForm({
             })}
           </div>
           {selectedVariant ? (
-            <p className="text-sm text-zinc-600">
-              Selecionado: <span className="font-semibold text-zinc-900">{selectedVariant.label}</span>
+            <p className="text-sm text-[#666666]">
+              Selecionado: <span className="font-semibold text-[#1A1A1A]">{selectedVariant.label}</span>
             </p>
           ) : !hasAvailableVariant ? (
             <p className="text-sm text-amber-700">Nenhuma variação disponível no momento.</p>
@@ -249,7 +249,7 @@ export function AddToCartForm({
       ) : null}
 
       <div className="flex flex-row items-center gap-2">
-        <div className="h-[50px] w-[110px] rounded-[10px] border border-zinc-300 bg-zinc-50 flex items-center justify-center px-3 shrink-0">
+        <div className="h-[50px] w-[110px] rounded-[10px] border border-zinc-300 bg-[#FFFFFF] flex items-center justify-center px-3 shrink-0">
           <input
             type="number"
             name="quantity"
@@ -260,11 +260,11 @@ export function AddToCartForm({
               const nextQuantity = Number(event.target.value);
               setQuantity(Number.isFinite(nextQuantity) && nextQuantity > 0 ? Math.floor(nextQuantity) : 1);
             }}
-            className="w-full text-center text-[20px] font-semibold text-zinc-900 bg-transparent outline-none"
+            className="w-full text-center text-[20px] font-semibold text-[#1A1A1A] bg-transparent outline-none"
           />
         </div>
 
-        <Button type="submit" disabled={isSubmitting || (normalizedVariants.length > 0 && !hasAvailableVariant)} className="flex-1 h-[50px] text-[16px] font-bold tracking-tight bg-[#111827] hover:bg-[#111827]/90 text-white shadow-none rounded-[10px] transition-colors uppercase disabled:opacity-70">
+        <Button type="submit" disabled={isSubmitting || (normalizedVariants.length > 0 && !hasAvailableVariant)} className="flex-1 h-[50px] text-[16px] font-medium font-serif tracking-tight bg-[#111827] hover:bg-[#111827]/90 text-white shadow-none rounded-[10px] transition-colors uppercase disabled:opacity-70">
           <ShoppingCart className="mr-2 h-5 w-5" /> Comprar Agora
         </Button>
       </div>

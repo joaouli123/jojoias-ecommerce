@@ -49,15 +49,15 @@ export default async function FavoritesPage() {
           <Heart className="w-5 h-5 text-[#D4AF37]" />
         </div>
         <div>
-          <h1 className="text-3xl sm:text-4xl font-black text-zinc-950 tracking-tight">Favoritos</h1>
-          <p className="text-zinc-500">Seus produtos salvos para comprar depois.</p>
+          <h1 className="text-3xl sm:text-4xl font-medium font-serif text-[#1A1A1A] tracking-tight">Favoritos</h1>
+          <p className="text-[#666666]">Seus produtos salvos para comprar depois.</p>
         </div>
       </div>
 
       {products.length === 0 ? (
         <div className="rounded-[20px] border border-zinc-200 bg-white p-10 text-center">
-          <p className="text-zinc-600 font-semibold">Você ainda não salvou nenhum produto.</p>
-          <Link href="/" className="mt-4 inline-flex h-11 px-6 rounded-[20px] bg-[#111111] text-white font-bold items-center justify-center hover:bg-[#111111]/90 transition-colors">
+          <p className="text-[#666666] font-semibold">Você ainda não salvou nenhum produto.</p>
+          <Link href="/" className="mt-4 inline-flex h-11 px-6 rounded-[20px] bg-[#111111] text-white font-medium font-serif items-center justify-center hover:bg-[#111111]/90 transition-colors">
             Ver produtos
           </Link>
         </div>

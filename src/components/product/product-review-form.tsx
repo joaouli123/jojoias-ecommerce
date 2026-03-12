@@ -32,15 +32,15 @@ export function ProductReviewForm({ productId, canReview, isAuthenticated }: Pro
   }
 
   if (!isAuthenticated) {
-    return <p className="text-sm text-zinc-500">Faça <Link href="/login" className="font-semibold text-[#D4AF37]">login</Link> para avaliar este produto.</p>;
+    return <p className="text-sm text-[#666666]">Faça <Link href="/login" className="font-semibold text-[#D4AF37]">login</Link> para avaliar este produto.</p>;
   }
 
   if (!canReview) {
-    return <p className="text-sm text-zinc-500">A avaliação fica disponível para clientes que já compraram este produto.</p>;
+    return <p className="text-sm text-[#666666]">A avaliação fica disponível para clientes que já compraram este produto.</p>;
   }
 
   return (
-    <form action={onSubmit} className="rounded-2xl border border-zinc-200 bg-zinc-50 p-5">
+    <form action={onSubmit} className="rounded-2xl border border-zinc-200 bg-[#FFFFFF] p-5">
       <input type="hidden" name="productId" value={productId} />
       <input type="hidden" name="rating" value={rating} />
 
@@ -64,7 +64,7 @@ export function ProductReviewForm({ productId, canReview, isAuthenticated }: Pro
       {message ? <p className="mt-3 text-sm font-medium text-emerald-700">{message}</p> : null}
       {error ? <p className="mt-3 text-sm font-medium text-red-600">{error}</p> : null}
 
-      <button type="submit" disabled={isPending} className="mt-4 inline-flex h-11 items-center justify-center rounded-xl bg-[#111111] px-5 text-sm font-bold text-white hover:bg-[#111111]/90 disabled:opacity-70">
+      <button type="submit" disabled={isPending} className="mt-4 inline-flex h-11 items-center justify-center rounded-xl bg-[#111111] px-5 text-sm font-medium font-serif text-white hover:bg-[#111111]/90 disabled:opacity-70">
         {isPending ? "Enviando..." : "Enviar avaliação"}
       </button>
     </form>

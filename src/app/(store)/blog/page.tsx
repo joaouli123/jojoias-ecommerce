@@ -23,8 +23,8 @@ export default async function BlogIndexPage() {
 
       <section className="mx-auto max-w-6xl px-6 py-14 sm:px-8 lg:px-10">
         {featuredPost ? (
-          <Link href={`/blog/${featuredPost.slug}`} className="grid gap-6 overflow-hidden rounded-3xl border border-zinc-200 bg-zinc-50 shadow-sm lg:grid-cols-[1.1fr_0.9fr]">
-            <div className="relative min-h-[280px] bg-zinc-100">
+          <Link href={`/blog/${featuredPost.slug}`} className="grid gap-6 overflow-hidden rounded-3xl border border-zinc-200 bg-[#FFFFFF] shadow-sm lg:grid-cols-[1.1fr_0.9fr]">
+            <div className="relative min-h-[280px] bg-[#F9F8F6]">
               {featuredPost.coverImage ? (
                 <Image src={featuredPost.coverImage} alt={featuredPost.title} fill className="object-cover" />
               ) : (
@@ -32,12 +32,12 @@ export default async function BlogIndexPage() {
               )}
             </div>
             <div className="flex flex-col justify-center p-8">
-              <div className="inline-flex w-fit items-center gap-2 rounded-full bg-[#D4AF37]/10 px-3 py-1 text-xs font-bold uppercase tracking-[0.2em] text-[#9a7b18]">
+              <div className="inline-flex w-fit items-center gap-2 rounded-full bg-[#D4AF37]/10 px-3 py-1 text-xs font-medium font-serif uppercase tracking-[0.2em] text-[#9a7b18]">
                 <Sparkles className="h-3.5 w-3.5" /> Destaque editorial
               </div>
-              <h2 className="mt-5 text-3xl font-black tracking-tight text-zinc-950">{featuredPost.title}</h2>
-              <p className="mt-4 text-base leading-8 text-zinc-600">{featuredPost.excerpt}</p>
-              <div className="mt-6 flex flex-wrap items-center gap-4 text-sm text-zinc-500">
+              <h2 className="mt-5 text-3xl font-medium font-serif tracking-tight text-[#1A1A1A]">{featuredPost.title}</h2>
+              <p className="mt-4 text-base leading-8 text-[#666666]">{featuredPost.excerpt}</p>
+              <div className="mt-6 flex flex-wrap items-center gap-4 text-sm text-[#666666]">
                 <span>{featuredPost.authorName || "Equipe Luxijóias"}</span>
                 <span>•</span>
                 <span>{featuredPost.publishedAt ? new Intl.DateTimeFormat("pt-BR", { dateStyle: "long" }).format(featuredPost.publishedAt) : "Em breve"}</span>
@@ -52,7 +52,7 @@ export default async function BlogIndexPage() {
           {otherPosts.map((post) => (
             <article key={post.id} className="overflow-hidden rounded-3xl border border-zinc-200 bg-white shadow-sm transition-all hover:-translate-y-1 hover:shadow-lg">
               <Link href={`/blog/${post.slug}`}>
-                <div className="relative aspect-[4/3] bg-zinc-100">
+                <div className="relative aspect-[4/3] bg-[#F9F8F6]">
                   {post.coverImage ? (
                     <Image src={post.coverImage} alt={post.title} fill className="object-cover" />
                   ) : (
@@ -63,14 +63,14 @@ export default async function BlogIndexPage() {
               <div className="p-6">
                 <div className="flex flex-wrap gap-2">
                   {post.tags.slice(0, 3).map((tag) => (
-                    <span key={tag} className="rounded-full bg-zinc-100 px-3 py-1 text-[11px] font-bold uppercase tracking-wide text-zinc-600">{tag}</span>
+                    <span key={tag} className="rounded-full bg-[#F9F8F6] px-3 py-1 text-[11px] font-medium font-serif uppercase tracking-wide text-[#666666]">{tag}</span>
                   ))}
                 </div>
-                <h2 className="mt-4 text-xl font-bold tracking-tight text-zinc-950">
+                <h2 className="mt-4 text-xl font-medium font-serif tracking-tight text-[#1A1A1A]">
                   <Link href={`/blog/${post.slug}`}>{post.title}</Link>
                 </h2>
-                <p className="mt-3 text-sm leading-7 text-zinc-600">{post.excerpt}</p>
-                <div className="mt-5 flex items-center justify-between text-xs font-semibold uppercase tracking-wide text-zinc-400">
+                <p className="mt-3 text-sm leading-7 text-[#666666]">{post.excerpt}</p>
+                <div className="mt-5 flex items-center justify-between text-xs font-semibold uppercase tracking-wide text-[#E5E5E5]">
                   <span>{post.authorName || "Equipe Luxijóias"}</span>
                   <span>{post.readingMinutes} min</span>
                 </div>

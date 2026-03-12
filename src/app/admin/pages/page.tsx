@@ -15,7 +15,7 @@ export default async function AdminPagesPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-gray-900">Páginas CMS</h1>
+          <h1 className="text-3xl font-medium font-serif tracking-tight text-gray-900">Páginas CMS</h1>
           <p className="mt-1 text-sm text-gray-500">Gerencie conteúdo institucional, landing pages e páginas de apoio da loja.</p>
         </div>
         <Link href="/admin/pages/new" className="inline-flex h-10 items-center justify-center rounded-md bg-primary-600 px-4 py-2 text-sm font-medium text-white hover:bg-primary-700">

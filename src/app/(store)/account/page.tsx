@@ -46,21 +46,21 @@ export default async function AccountPage() {
   return (
     <div className="space-y-6">
       <section className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm sm:p-8">
-        <h1 className="text-2xl font-black tracking-tight text-zinc-950">Minha conta</h1>
-        <p className="mt-2 text-sm text-zinc-500">Acompanhe pedidos, endereços cadastrados e o resumo do seu acesso.</p>
+        <h1 className="text-2xl font-medium font-serif tracking-tight text-[#1A1A1A]">Minha conta</h1>
+        <p className="mt-2 text-sm text-[#666666]">Acompanhe pedidos, endereços cadastrados e o resumo do seu acesso.</p>
 
         <div className="mt-6 grid gap-4 md:grid-cols-3">
-          <div className="rounded-xl border border-zinc-100 bg-zinc-50 p-4">
-            <p className="text-sm text-zinc-500">Pedidos realizados</p>
-            <p className="mt-2 text-3xl font-black text-zinc-950">{ordersCount}</p>
+          <div className="rounded-xl border border-zinc-100 bg-[#FFFFFF] p-4">
+            <p className="text-sm text-[#666666]">Pedidos realizados</p>
+            <p className="mt-2 text-3xl font-medium font-serif text-[#1A1A1A]">{ordersCount}</p>
           </div>
-          <div className="rounded-xl border border-zinc-100 bg-zinc-50 p-4">
-            <p className="text-sm text-zinc-500">Endereços salvos</p>
-            <p className="mt-2 text-3xl font-black text-zinc-950">{addressesCount}</p>
+          <div className="rounded-xl border border-zinc-100 bg-[#FFFFFF] p-4">
+            <p className="text-sm text-[#666666]">Endereços salvos</p>
+            <p className="mt-2 text-3xl font-medium font-serif text-[#1A1A1A]">{addressesCount}</p>
           </div>
-          <div className="rounded-xl border border-zinc-100 bg-zinc-50 p-4">
-            <p className="text-sm text-zinc-500">Perfil</p>
-            <p className="mt-2 text-lg font-bold text-zinc-950">{session.user.role ?? "CUSTOMER"}</p>
+          <div className="rounded-xl border border-zinc-100 bg-[#FFFFFF] p-4">
+            <p className="text-sm text-[#666666]">Perfil</p>
+            <p className="mt-2 text-lg font-medium font-serif text-[#1A1A1A]">{session.user.role ?? "CUSTOMER"}</p>
           </div>
         </div>
       </section>
@@ -68,10 +68,10 @@ export default async function AccountPage() {
       <section className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm sm:p-8">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           <div>
-            <h2 className="text-xl font-bold text-zinc-950">Últimos pedidos</h2>
-            <p className="text-sm text-zinc-500 mt-1">Resumo rápido das suas compras mais recentes.</p>
+            <h2 className="text-xl font-medium font-serif text-[#1A1A1A]">Últimos pedidos</h2>
+            <p className="text-sm text-[#666666] mt-1">Resumo rápido das suas compras mais recentes.</p>
           </div>
-          <Link href="/account/orders" className="inline-flex h-11 items-center justify-center rounded-xl border border-zinc-200 px-4 text-sm font-bold text-zinc-900 hover:bg-zinc-50">
+          <Link href="/account/orders" className="inline-flex h-11 items-center justify-center rounded-xl border border-zinc-200 px-4 text-sm font-medium font-serif text-[#1A1A1A] hover:bg-[#FFFFFF]">
             Ver todos
           </Link>
         </div>
@@ -79,14 +79,14 @@ export default async function AccountPage() {
         {latestOrders.length ? (
           <div className="mt-6 space-y-3">
             {latestOrders.map((order) => (
-              <Link key={order.id} href={`/account/orders/${order.id}`} className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 rounded-xl border border-zinc-100 bg-zinc-50 p-4 hover:bg-zinc-100/80 transition-colors">
+              <Link key={order.id} href={`/account/orders/${order.id}`} className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 rounded-xl border border-zinc-100 bg-[#FFFFFF] p-4 hover:bg-[#F9F8F6]/80 transition-colors">
                 <div>
-                  <p className="text-sm text-zinc-500">Pedido #{order.id.slice(-8).toUpperCase()}</p>
-                  <p className="font-bold text-zinc-950 mt-1">{new Intl.DateTimeFormat("pt-BR", { dateStyle: "medium", timeStyle: "short" }).format(order.createdAt)}</p>
+                  <p className="text-sm text-[#666666]">Pedido #{order.id.slice(-8).toUpperCase()}</p>
+                  <p className="font-medium font-serif text-[#1A1A1A] mt-1">{new Intl.DateTimeFormat("pt-BR", { dateStyle: "medium", timeStyle: "short" }).format(order.createdAt)}</p>
                 </div>
                 <div className="text-sm sm:text-right">
-                  <p className="font-semibold text-zinc-900">{formatCurrency(order.total)}</p>
-                  <p className="text-zinc-500 mt-1">{order.status}</p>
+                  <p className="font-semibold text-[#1A1A1A]">{formatCurrency(order.total)}</p>
+                  <p className="text-[#666666] mt-1">{order.status}</p>
                   {getRefundStatusLabel(order.refundStatus) ? (
                     <p className="mt-1 text-amber-700">{getRefundStatusLabel(order.refundStatus)}</p>
                   ) : null}
@@ -95,7 +95,7 @@ export default async function AccountPage() {
             ))}
           </div>
         ) : (
-          <div className="mt-6 rounded-xl border border-dashed border-zinc-300 bg-zinc-50 p-8 text-center text-zinc-500">
+          <div className="mt-6 rounded-xl border border-dashed border-zinc-300 bg-[#FFFFFF] p-8 text-center text-[#666666]">
             Você ainda não realizou pedidos. Assim que concluir uma compra, ela aparecerá aqui.
           </div>
         )}

@@ -58,7 +58,7 @@ export default async function OrderDetailsPage({
           <ArrowLeft className="w-5 h-5" />
         </Link>
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-gray-900">Pedido #{formatOrderCode(id)}</h1>
+          <h1 className="text-3xl font-medium font-serif tracking-tight text-gray-900">Pedido #{formatOrderCode(id)}</h1>
           <p className="mt-1 text-sm text-gray-500">Criado em {createdAt.date} às {createdAt.time}</p>
           <p className="text-xs text-gray-400 font-mono mt-1">{id}</p>
         </div>

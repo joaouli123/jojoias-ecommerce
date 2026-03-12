@@ -122,7 +122,7 @@ export function ProductDetailsTabs({
               aria-selected={isActive}
               aria-controls={`product-tab-panel-${tab}`}
               onClick={() => handleTabClick(tab)}
-              className={`pb-4 text-[16px] font-bold transition-colors relative top-[1px] ${
+              className={`pb-4 text-[16px] font-medium font-serif transition-colors relative top-[1px] ${
                 isActive
                   ? "text-[#D4AF37] border-b-2 border-[#D4AF37]"
                   : "text-[#6b7280] hover:text-[#111827]"
@@ -156,14 +156,14 @@ export function ProductDetailsTabs({
         <table className="w-full border-collapse text-left text-sm md:text-[15px]">
           <tbody className="divide-y divide-zinc-200">
             {specs.map((item, index) => (
-              <tr key={item.label} className={index % 2 === 0 ? "bg-white" : "bg-zinc-50/80"}>
+              <tr key={item.label} className={index % 2 === 0 ? "bg-white" : "bg-[#FFFFFF]/80"}>
                 <th
                   scope="row"
-                  className="w-[38%] px-4 py-4 align-top font-semibold text-zinc-900 md:px-6"
+                  className="w-[38%] px-4 py-4 align-top font-semibold text-[#1A1A1A] md:px-6"
                 >
                   {item.label}
                 </th>
-                <td className="px-4 py-4 align-top text-zinc-600 md:px-6">{item.value}</td>
+                <td className="px-4 py-4 align-top text-[#666666] md:px-6">{item.value}</td>
               </tr>
             ))}
           </tbody>
@@ -177,14 +177,14 @@ export function ProductDetailsTabs({
         hidden={activeTab !== "reviews"}
         className={`grid gap-6 lg:grid-cols-[260px_1fr] ${activeTab !== "reviews" ? "hidden" : "grid"}`}
       >
-        <div className="rounded-[20px] border border-zinc-200 bg-zinc-50 p-6 text-center">
-          <div className="text-5xl font-black text-zinc-900">{averageRating ? averageRating.toFixed(1) : "0.0"}</div>
+        <div className="rounded-[20px] border border-zinc-200 bg-[#FFFFFF] p-6 text-center">
+          <div className="text-5xl font-medium font-serif text-[#1A1A1A]">{averageRating ? averageRating.toFixed(1) : "0.0"}</div>
           <div className="mt-3 flex items-center justify-center gap-1 text-[#facc15]">
             {Array.from({ length: 5 }).map((_, index) => (
               <Star key={index} className={`h-4 w-4 ${index < Math.round(averageRating) ? "fill-current" : ""}`} />
             ))}
           </div>
-          <p className="mt-3 text-sm text-zinc-600">Baseado em {reviewsCount} avaliações verificadas.</p>
+          <p className="mt-3 text-sm text-[#666666]">Baseado em {reviewsCount} avaliações verificadas.</p>
         </div>
 
         <div className="space-y-4">
@@ -197,14 +197,14 @@ export function ProductDetailsTabs({
                   <Star key={starIndex} className={`h-4 w-4 ${starIndex < review.rating ? "fill-current" : ""}`} />
                 ))}
               </div>
-              {review.title ? <p className="mt-3 text-sm font-bold text-zinc-900">{review.title}</p> : null}
-              <p className="mt-2 text-sm leading-6 text-zinc-600">{review.content}</p>
-              <p className="mt-3 text-xs font-semibold uppercase tracking-wide text-zinc-400">
+              {review.title ? <p className="mt-3 text-sm font-medium font-serif text-[#1A1A1A]">{review.title}</p> : null}
+              <p className="mt-2 text-sm leading-6 text-[#666666]">{review.content}</p>
+              <p className="mt-3 text-xs font-semibold uppercase tracking-wide text-[#E5E5E5]">
                 {review.userName} • {new Intl.DateTimeFormat("pt-BR", { dateStyle: "medium" }).format(review.createdAt)}
               </p>
             </div>
           )) : (
-            <div className="rounded-[20px] border border-dashed border-zinc-300 p-5 text-sm text-zinc-500">
+            <div className="rounded-[20px] border border-dashed border-zinc-300 p-5 text-sm text-[#666666]">
               Ainda não há avaliações para este produto.
             </div>
           )}

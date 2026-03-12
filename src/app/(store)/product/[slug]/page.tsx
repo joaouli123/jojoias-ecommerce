@@ -341,10 +341,10 @@ function RelatedProductsSection({
     <section className="mt-14 md:mt-20">
       <div className="mb-6 flex items-end justify-between gap-4">
         <div>
-          <p className="text-xs font-black uppercase tracking-[0.3em] text-[#D4AF37]">Sugestões</p>
-          <h2 className="mt-2 text-2xl font-black tracking-tight text-zinc-900">Produtos relacionados</h2>
+          <p className="text-xs font-medium font-serif uppercase tracking-[0.3em] text-[#D4AF37]">Sugestões</p>
+          <h2 className="mt-2 text-2xl font-medium font-serif tracking-tight text-[#1A1A1A]">Produtos relacionados</h2>
         </div>
-        <Link href={`/categoria/${categorySlug}`} className="text-sm font-bold text-zinc-900 hover:text-[#D4AF37] transition-colors">
+        <Link href={`/categoria/${categorySlug}`} className="text-sm font-medium font-serif text-[#1A1A1A] hover:text-[#D4AF37] transition-colors">
           Ver categoria
         </Link>
       </div>
@@ -378,7 +378,7 @@ function RelatedProductsSkeleton() {
       <div className="mb-6 h-8 w-64 rounded bg-zinc-200" />
       <div className="grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-4">
         {Array.from({ length: 4 }).map((_, index) => (
-          <div key={index} className="aspect-[3/4] rounded-2xl border border-zinc-200 bg-zinc-50" />
+          <div key={index} className="aspect-[3/4] rounded-2xl border border-zinc-200 bg-[#FFFFFF]" />
         ))}
       </div>
     </section>

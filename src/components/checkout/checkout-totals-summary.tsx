@@ -55,29 +55,29 @@ export function CheckoutTotalsSummary({ subtotal, pixDiscountPercent }: Checkout
   return (
     <>
       <div className="flex items-center justify-between">
-        <dt className="text-zinc-500">Frete</dt>
-        <dd className={`font-semibold ${quote?.isFree ? "text-emerald-600" : "text-zinc-900"}`}>
+        <dt className="text-[#666666]">Frete</dt>
+        <dd className={`font-semibold ${quote?.isFree ? "text-emerald-600" : "text-[#1A1A1A]"}`}>
           {quote ? formatCurrency(quote.amount) : "A calcular"}
         </dd>
       </div>
 
       {coupon ? (
         <div className="flex items-center justify-between">
-          <dt className="text-zinc-500">Cupom ({coupon.code})</dt>
+          <dt className="text-[#666666]">Cupom ({coupon.code})</dt>
           <dd className="font-semibold text-emerald-700">- {formatCurrency(coupon.discount)}</dd>
         </div>
       ) : null}
 
       {paymentDiscount > 0 ? (
         <div className="flex items-center justify-between">
-          <dt className="text-zinc-500">Desconto Pix</dt>
+          <dt className="text-[#666666]">Desconto Pix</dt>
           <dd className="font-semibold text-emerald-700">- {formatCurrency(paymentDiscount)}</dd>
         </div>
       ) : null}
 
       {quote ? (
-        <div className="rounded-xl border border-zinc-200 bg-white px-3 py-3 text-xs text-zinc-600">
-          <p className="font-semibold text-zinc-900">{quote.service}</p>
+        <div className="rounded-xl border border-zinc-200 bg-white px-3 py-3 text-xs text-[#666666]">
+          <p className="font-semibold text-[#1A1A1A]">{quote.service}</p>
           <p className="mt-1">Entrega estimada em até {quote.estimatedDays} dias úteis para {quote.region}.</p>
           {!quote.isFree && quote.missingForFree > 0 ? (
             <p className="mt-1 text-emerald-700">Faltam {formatCurrency(quote.missingForFree)} para frete grátis.</p>
@@ -86,16 +86,16 @@ export function CheckoutTotalsSummary({ subtotal, pixDiscountPercent }: Checkout
           {paymentDiscount > 0 ? <p className="mt-1 text-emerald-700">Pagamento via Pix garante mais {formatCurrency(paymentDiscount)} de desconto.</p> : null}
         </div>
       ) : coupon || paymentDiscount > 0 ? (
-        <div className="rounded-xl border border-zinc-200 bg-white px-3 py-3 text-xs text-zinc-600">
-          <p className="font-semibold text-zinc-900">Descontos aplicados</p>
+        <div className="rounded-xl border border-zinc-200 bg-white px-3 py-3 text-xs text-[#666666]">
+          <p className="font-semibold text-[#1A1A1A]">Descontos aplicados</p>
           {coupon ? <p className="mt-1 text-emerald-700">Desconto de {formatCurrency(coupon.discount)} confirmado com {coupon.code}.</p> : null}
           {paymentDiscount > 0 ? <p className="mt-1 text-emerald-700">Pix ativo com redução de {formatCurrency(paymentDiscount)}.</p> : null}
         </div>
       ) : null}
 
       <div className="mt-2 flex items-center justify-between border-t border-zinc-200 pt-3">
-        <dt className="text-base font-bold text-zinc-900">Total</dt>
-        <dd className="text-2xl font-black text-zinc-950">{formatCurrency(total)}</dd>
+        <dt className="text-base font-medium font-serif text-[#1A1A1A]">Total</dt>
+        <dd className="text-2xl font-medium font-serif text-[#1A1A1A]">{formatCurrency(total)}</dd>
       </div>
     </>
   );

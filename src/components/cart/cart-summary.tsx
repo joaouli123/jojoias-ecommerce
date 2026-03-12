@@ -99,26 +99,26 @@ export function CartSummary({ subtotal, itemsCount }: CartSummaryProps) {
   }
 
   return (
-    <div className="rounded-2xl border border-zinc-200 bg-zinc-50 p-6">
-      <h2 className="mb-6 text-xl font-bold text-zinc-950">Resumo do Pedido</h2>
+    <div className="rounded-2xl border border-zinc-200 bg-[#FFFFFF] p-6">
+      <h2 className="mb-6 text-xl font-medium font-serif text-[#1A1A1A]">Resumo do Pedido</h2>
 
       <dl className="flex flex-col gap-4 text-sm">
         <div className="flex items-center justify-between">
-          <dt className="text-zinc-500">Subtotal ({itemsCount} itens)</dt>
-          <dd className="font-semibold text-zinc-900">{formatCurrency(subtotal)}</dd>
+          <dt className="text-[#666666]">Subtotal ({itemsCount} itens)</dt>
+          <dd className="font-semibold text-[#1A1A1A]">{formatCurrency(subtotal)}</dd>
         </div>
         <div className="flex items-center justify-between">
-          <dt className="text-zinc-500">Frete</dt>
-          <dd className="font-semibold text-zinc-900">{quote ? formatCurrency(quote.amount) : "A calcular"}</dd>
+          <dt className="text-[#666666]">Frete</dt>
+          <dd className="font-semibold text-[#1A1A1A]">{quote ? formatCurrency(quote.amount) : "A calcular"}</dd>
         </div>
         <div className="my-2 border-t border-zinc-200 pt-4 flex items-center justify-between">
-          <dt className="text-base font-bold text-zinc-900">Total a pagar</dt>
-          <dd className="text-2xl font-black text-zinc-950">{formatCurrency(total)}</dd>
+          <dt className="text-base font-medium font-serif text-[#1A1A1A]">Total a pagar</dt>
+          <dd className="text-2xl font-medium font-serif text-[#1A1A1A]">{formatCurrency(total)}</dd>
         </div>
       </dl>
 
       <div className="mt-5 rounded-xl border border-zinc-200 bg-white p-4">
-        <p className="text-sm font-semibold text-zinc-900">Calcular frete no carrinho</p>
+        <p className="text-sm font-semibold text-[#1A1A1A]">Calcular frete no carrinho</p>
         <div className="mt-3 flex gap-2">
           <input
             type="text"
@@ -141,7 +141,7 @@ export function CartSummary({ subtotal, itemsCount }: CartSummaryProps) {
         {options.length ? (
           <div className="mt-4 space-y-2">
             {options.map((option) => (
-              <label key={option.id} className={`block cursor-pointer rounded-xl border p-3 transition-colors ${selectedOptionId === option.id ? "border-[#D4AF37] bg-zinc-50" : "border-zinc-200"}`}>
+              <label key={option.id} className={`block cursor-pointer rounded-xl border p-3 transition-colors ${selectedOptionId === option.id ? "border-[#D4AF37] bg-[#FFFFFF]" : "border-zinc-200"}`}>
                 <div className="flex items-start gap-3">
                   <input
                     type="radio"
@@ -152,10 +152,10 @@ export function CartSummary({ subtotal, itemsCount }: CartSummaryProps) {
                   />
                   <div className="flex-1">
                     <div className="flex items-center justify-between gap-3">
-                      <span className="font-medium text-zinc-900">{option.service}</span>
-                      <span className="font-semibold text-zinc-900">{formatCurrency(option.amount)}</span>
+                      <span className="font-medium text-[#1A1A1A]">{option.service}</span>
+                      <span className="font-semibold text-[#1A1A1A]">{formatCurrency(option.amount)}</span>
                     </div>
-                    <p className="mt-1 text-xs text-zinc-500">{option.region} • até {option.estimatedDays} dias úteis.</p>
+                    <p className="mt-1 text-xs text-[#666666]">{option.region} • até {option.estimatedDays} dias úteis.</p>
                   </div>
                 </div>
               </label>
@@ -169,7 +169,7 @@ export function CartSummary({ subtotal, itemsCount }: CartSummaryProps) {
 
       <div className="mt-8 space-y-4">
         <Link href="/checkout">
-          <Button size="lg" className="w-full h-14 text-base font-bold bg-[#111111] hover:bg-[#111111]/90 shadow-none">
+          <Button size="lg" className="w-full h-14 text-base font-medium font-serif bg-[#111111] hover:bg-[#111111]/90 shadow-none">
             Finalizar Compra Segura <ArrowRight className="h-5 w-5 ml-2" />
           </Button>
         </Link>

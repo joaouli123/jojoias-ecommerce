@@ -42,16 +42,16 @@ export default async function ExchangesPage() {
       <section className="mx-auto max-w-5xl px-6 py-8 sm:px-8 lg:px-10 lg:py-10">
         <div className="grid gap-10 lg:grid-cols-[1fr_0.82fr]">
           <article>
-            <h2 className="text-2xl font-bold text-zinc-950">Política de trocas</h2>
-            <p className="mt-5 whitespace-pre-line text-base leading-7 text-zinc-900">{settings.exchangesContent}</p>
+            <h2 className="text-2xl font-medium font-serif text-[#1A1A1A]">Política de trocas</h2>
+            <p className="mt-5 whitespace-pre-line text-base leading-7 text-[#1A1A1A]">{settings.exchangesContent}</p>
           </article>
 
           <aside className="rounded-[24px] border border-zinc-200 bg-white p-8">
-            <h2 className="text-2xl font-bold text-zinc-950">Fluxo de atendimento</h2>
+            <h2 className="text-2xl font-medium font-serif text-[#1A1A1A]">Fluxo de atendimento</h2>
             <ol className="mt-6 space-y-4">
               {steps.map((step, index) => (
-                <li key={step} className="flex gap-4 text-sm leading-7 text-zinc-600">
-                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-zinc-200 bg-zinc-100 text-xs font-bold text-zinc-900">
+                <li key={step} className="flex gap-4 text-sm leading-7 text-[#666666]">
+                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-zinc-200 bg-[#F9F8F6] text-xs font-medium font-serif text-[#1A1A1A]">
                     {index + 1}
                   </span>
                   <span>{step}</span>

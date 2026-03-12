@@ -22,18 +22,18 @@ export function CheckoutSteps({ currentStep }: CheckoutStepsProps) {
           return (
             <div key={label} className="flex min-w-0 flex-1 items-center gap-3">
               <div
-                className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full border text-sm font-black ${
+                className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full border text-sm font-medium font-serif ${
                   isCompleted
                     ? "border-emerald-500 bg-emerald-500 text-white"
                     : isActive
                     ? "border-[#D4AF37] bg-[#D4AF37] text-white"
-                    : "border-zinc-200 bg-zinc-50 text-zinc-500"
+                    : "border-zinc-200 bg-[#FFFFFF] text-[#666666]"
                 }`}
               >
                 {step}
               </div>
               <div className="min-w-0">
-                <p className={`text-sm font-bold ${isActive ? "text-zinc-950" : "text-zinc-500"}`}>{label}</p>
+                <p className={`text-sm font-medium font-serif ${isActive ? "text-[#1A1A1A]" : "text-[#666666]"}`}>{label}</p>
               </div>
               {index < STEPS.length - 1 ? <div className="hidden h-px flex-1 bg-zinc-200 md:block" /> : null}
             </div>

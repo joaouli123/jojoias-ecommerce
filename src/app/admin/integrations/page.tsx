@@ -393,7 +393,7 @@ function renderStatsCard(title: string, value: string | number, description: str
   return (
     <section className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
       <p className="text-sm font-medium text-gray-500">{title}</p>
-      <p className="mt-2 text-3xl font-bold tracking-tight text-gray-900">{value}</p>
+      <p className="mt-2 text-3xl font-medium font-serif tracking-tight text-gray-900">{value}</p>
       <p className="mt-2 text-sm text-gray-600">{description}</p>
     </section>
   );
@@ -436,7 +436,7 @@ export default async function AdminIntegrationsPage({
     <div className="space-y-8">
       <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-gray-900">Integrações</h1>
+          <h1 className="text-3xl font-medium font-serif tracking-tight text-gray-900">Integrações</h1>
           <p className="mt-2 max-w-3xl text-sm text-gray-600">
             A página foi reduzida para os providers que o runtime realmente consome. Cada card agora pede só os campos reais e, quando existir, separa produção e teste no mesmo lugar.
           </p>

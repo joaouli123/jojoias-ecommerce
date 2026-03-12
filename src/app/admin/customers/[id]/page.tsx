@@ -69,14 +69,14 @@ export default async function AdminCustomerDetailPage({ params }: { params: Prom
         <section className="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm">
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div>
-              <p className="text-xs font-black uppercase tracking-[0.3em] text-amber-600">Perfil do cliente</p>
-              <h1 className="mt-2 text-3xl font-black tracking-tight text-gray-900">{customer.name}</h1>
+              <p className="text-xs font-medium font-serif uppercase tracking-[0.3em] text-amber-600">Perfil do cliente</p>
+              <h1 className="mt-2 text-3xl font-medium font-serif tracking-tight text-gray-900">{customer.name}</h1>
               <p className="mt-2 text-sm text-gray-500">Cliente desde {new Date(customer.createdAt).toLocaleDateString("pt-BR")}</p>
             </div>
 
             <div className="rounded-2xl bg-gray-50 px-4 py-3 text-right">
               <p className="text-xs uppercase tracking-wide text-gray-500">Lifetime value</p>
-              <p className="mt-1 text-2xl font-black text-gray-900">{formatCurrency(totalSpent)}</p>
+              <p className="mt-1 text-2xl font-medium font-serif text-gray-900">{formatCurrency(totalSpent)}</p>
             </div>
           </div>
 
@@ -98,15 +98,15 @@ export default async function AdminCustomerDetailPage({ params }: { params: Prom
           <div className="mt-6 grid gap-4 md:grid-cols-3">
             <div className="rounded-2xl border border-gray-200 p-4">
               <p className="text-sm text-gray-500">Pedidos</p>
-              <p className="mt-2 text-3xl font-black text-gray-900">{customer.orders.length}</p>
+              <p className="mt-2 text-3xl font-medium font-serif text-gray-900">{customer.orders.length}</p>
             </div>
             <div className="rounded-2xl border border-gray-200 p-4">
               <p className="text-sm text-gray-500">Endereços</p>
-              <p className="mt-2 text-3xl font-black text-gray-900">{customer.addresses.length}</p>
+              <p className="mt-2 text-3xl font-medium font-serif text-gray-900">{customer.addresses.length}</p>
             </div>
             <div className="rounded-2xl border border-gray-200 p-4">
               <p className="text-sm text-gray-500">Ticket médio</p>
-              <p className="mt-2 text-3xl font-black text-gray-900">
+              <p className="mt-2 text-3xl font-medium font-serif text-gray-900">
                 {formatCurrency(customer.orders.length ? totalSpent / customer.orders.length : 0)}
               </p>
             </div>
@@ -116,7 +116,7 @@ export default async function AdminCustomerDetailPage({ params }: { params: Prom
         <section className="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm">
           <div className="flex items-center gap-2">
             <MapPin className="h-5 w-5 text-amber-600" />
-            <h2 className="text-xl font-bold text-gray-900">Endereços</h2>
+            <h2 className="text-xl font-medium font-serif text-gray-900">Endereços</h2>
           </div>
 
           <div className="mt-5 space-y-4">
@@ -127,7 +127,7 @@ export default async function AdminCustomerDetailPage({ params }: { params: Prom
             ) : (
               customer.addresses.map((address) => (
                 <div key={address.id} className="rounded-2xl border border-gray-200 bg-gray-50 p-4 text-sm text-gray-700">
-                  <p className="font-bold text-gray-900">{address.label || "Endereço principal"}</p>
+                  <p className="font-medium font-serif text-gray-900">{address.label || "Endereço principal"}</p>
                   <p className="mt-2">{address.recipient}</p>
                   <p>
                     {address.street}, {address.number}
@@ -148,7 +148,7 @@ export default async function AdminCustomerDetailPage({ params }: { params: Prom
       <section className="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm">
         <div className="flex items-center gap-2">
           <Package className="h-5 w-5 text-amber-600" />
-          <h2 className="text-xl font-bold text-gray-900">Histórico de pedidos</h2>
+          <h2 className="text-xl font-medium font-serif text-gray-900">Histórico de pedidos</h2>
         </div>
 
         <div className="mt-5 overflow-hidden rounded-2xl border border-gray-200">

@@ -106,10 +106,10 @@ export function BenefitsCarousel() {
           {benefits.map((benefit, i) => (
             <div key={i} className="min-w-[85vw] snap-center rounded-2xl border border-zinc-200 bg-white p-6">
               <div className="flex items-center gap-4">
-                <benefit.icon className="w-8 h-8 stroke-[1.5] text-zinc-900 shrink-0" />
+                <benefit.icon className="w-8 h-8 stroke-[1.5] text-[#1A1A1A] shrink-0" />
                 <div className="flex flex-col text-left">
-                  <strong className="block text-sm font-bold text-zinc-950 leading-tight">{benefit.title}</strong>
-                  <span className="text-xs text-zinc-600">{benefit.subtitle}</span>
+                  <strong className="block text-sm font-medium font-serif text-[#1A1A1A] leading-tight">{benefit.title}</strong>
+                  <span className="text-xs text-[#666666]">{benefit.subtitle}</span>
                 </div>
               </div>
             </div>
@@ -119,7 +119,7 @@ export function BenefitsCarousel() {
           type="button"
           onClick={() => scroll("left")}
           aria-label="Ver benefícios anteriores"
-          className="hidden md:flex absolute left-2 top-1/2 -translate-y-1/2 h-11 w-11 items-center justify-center rounded-full bg-white shadow-md z-20 text-zinc-900"
+          className="hidden md:flex absolute left-2 top-1/2 -translate-y-1/2 h-11 w-11 items-center justify-center rounded-full bg-white shadow-md z-20 text-[#1A1A1A]"
         >
           <ChevronLeft className="w-6 h-6" />
         </button>
@@ -127,7 +127,7 @@ export function BenefitsCarousel() {
           type="button"
           onClick={() => scroll("right")}
           aria-label="Ver próximos benefícios"
-          className="hidden md:flex absolute right-2 top-1/2 -translate-y-1/2 h-11 w-11 items-center justify-center rounded-full bg-white shadow-md z-20 text-zinc-900"
+          className="hidden md:flex absolute right-2 top-1/2 -translate-y-1/2 h-11 w-11 items-center justify-center rounded-full bg-white shadow-md z-20 text-[#1A1A1A]"
         >
           <ChevronRight className="w-6 h-6" />
         </button>
@@ -137,10 +137,10 @@ export function BenefitsCarousel() {
         {benefits.map((benefit, i) => (
           <div key={i} className="p-6 lg:p-7 border-r border-zinc-200 last:border-r-0">
             <div className="flex items-center gap-4">
-              <benefit.icon className="w-8 h-8 stroke-[1.5] text-zinc-900 shrink-0" />
+              <benefit.icon className="w-8 h-8 stroke-[1.5] text-[#1A1A1A] shrink-0" />
               <div className="flex flex-col text-left">
-                <strong className="block text-[15px] font-bold text-zinc-950 leading-tight">{benefit.title}</strong>
-                <span className="text-[13px] text-zinc-600">{benefit.subtitle}</span>
+                <strong className="block text-[15px] font-medium font-serif text-[#1A1A1A] leading-tight">{benefit.title}</strong>
+                <span className="text-[13px] text-[#666666]">{benefit.subtitle}</span>
               </div>
             </div>
           </div>
@@ -230,7 +230,7 @@ export function BannerCarousel({ banners = [] }: { banners?: StoreBanner[] }) {
           type="button"
           onClick={() => scroll("left")}
           aria-label="Ver banner anterior"
-          className="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 w-11 h-11 hidden md:flex items-center justify-center bg-white/95 rounded-full shadow-lg z-20 text-zinc-900 md:opacity-0 md:group-hover:opacity-100 transition-opacity"
+          className="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 w-11 h-11 hidden md:flex items-center justify-center bg-white/95 rounded-full shadow-lg z-20 text-[#1A1A1A] md:opacity-0 md:group-hover:opacity-100 transition-opacity"
         >
           <ChevronLeft className="w-6 h-6" />
         </button>
@@ -238,7 +238,7 @@ export function BannerCarousel({ banners = [] }: { banners?: StoreBanner[] }) {
           type="button"
           onClick={() => scroll("right")}
           aria-label="Ver próximo banner"
-          className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 w-11 h-11 hidden md:flex items-center justify-center bg-white/95 rounded-full shadow-lg z-20 text-zinc-900 md:opacity-0 md:group-hover:opacity-100 transition-opacity"
+          className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 w-11 h-11 hidden md:flex items-center justify-center bg-white/95 rounded-full shadow-lg z-20 text-[#1A1A1A] md:opacity-0 md:group-hover:opacity-100 transition-opacity"
         >
           <ChevronRight className="w-6 h-6" />
         </button>
@@ -380,7 +380,7 @@ export function CategoriesCarousel({ categories = [] }: { categories?: StoreCate
                   className="object-cover transform group-hover/cat:scale-110 transition-transform duration-700"
                 />
               </div>
-              <span className="mt-4 block text-[17px] text-zinc-900 font-bold tracking-tight">{cat.name}</span>
+              <span className="mt-4 block text-[17px] text-[#1A1A1A] font-medium font-serif tracking-tight">{cat.name}</span>
             </Link>
           ))}
         </div>
@@ -389,7 +389,7 @@ export function CategoriesCarousel({ categories = [] }: { categories?: StoreCate
           type="button"
           onClick={() => scroll("left")}
           aria-label="Ver categorias anteriores"
-          className="hidden md:flex absolute -left-4 md:left-0 top-[33%] -translate-y-1/2 w-12 h-12 items-center justify-center bg-zinc-200/80 rounded-full z-10 text-zinc-700 xl:hidden"
+          className="hidden md:flex absolute -left-4 md:left-0 top-[33%] -translate-y-1/2 w-12 h-12 items-center justify-center bg-zinc-200/80 rounded-full z-10 text-[#666666] xl:hidden"
         >
           <ChevronLeft className="w-6 h-6" />
         </button>
@@ -397,7 +397,7 @@ export function CategoriesCarousel({ categories = [] }: { categories?: StoreCate
           type="button"
           onClick={() => scroll("right")}
           aria-label="Ver próximas categorias"
-          className="hidden md:flex absolute -right-4 md:right-0 top-[33%] -translate-y-1/2 w-12 h-12 items-center justify-center bg-zinc-200/80 rounded-full z-10 text-zinc-700 xl:hidden"
+          className="hidden md:flex absolute -right-4 md:right-0 top-[33%] -translate-y-1/2 w-12 h-12 items-center justify-center bg-zinc-200/80 rounded-full z-10 text-[#666666] xl:hidden"
         >
           <ChevronRight className="w-6 h-6" />
         </button>

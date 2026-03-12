@@ -121,32 +121,32 @@ export default async function AdminReportsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight text-gray-900">Relatórios</h1>
+        <h1 className="text-3xl font-medium font-serif tracking-tight text-gray-900">Relatórios</h1>
         <p className="mt-2 text-sm text-gray-600">Resumo executivo da operação nos últimos 30 dias e visão de clientes, pagamentos e categorias.</p>
       </div>
 
       <div className="grid gap-4 md:grid-cols-3">
         <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
           <p className="text-sm text-gray-500">Pedidos em 30 dias</p>
-          <p className="mt-2 text-3xl font-black text-gray-900">{ordersLast30Days}</p>
+          <p className="mt-2 text-3xl font-medium font-serif text-gray-900">{ordersLast30Days}</p>
         </div>
         <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
           <p className="text-sm text-gray-500">Faturamento em 30 dias</p>
-          <p className="mt-2 text-3xl font-black text-gray-900">{formatCurrency(revenueLast30Days._sum.total ?? 0)}</p>
+          <p className="mt-2 text-3xl font-medium font-serif text-gray-900">{formatCurrency(revenueLast30Days._sum.total ?? 0)}</p>
         </div>
         <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
           <p className="text-sm text-gray-500">Ticket médio</p>
-          <p className="mt-2 text-3xl font-black text-gray-900">{formatCurrency(revenueLast30Days._avg.total ?? 0)}</p>
+          <p className="mt-2 text-3xl font-medium font-serif text-gray-900">{formatCurrency(revenueLast30Days._avg.total ?? 0)}</p>
         </div>
         <div className="rounded-2xl border border-amber-200 bg-amber-50 p-5 shadow-sm md:col-span-3 xl:col-span-1">
           <p className="text-sm text-amber-700">Incidentes abertos em 7 dias</p>
-          <p className="mt-2 text-3xl font-black text-amber-950">{openIncidents}</p>
+          <p className="mt-2 text-3xl font-medium font-serif text-amber-950">{openIncidents}</p>
         </div>
         <a href="/admin/health" className={`rounded-2xl border p-5 shadow-sm md:col-span-3 xl:col-span-1 ${healthSnapshot.status === "healthy" ? "border-emerald-200 bg-emerald-50" : healthSnapshot.status === "degraded" ? "border-amber-200 bg-amber-50" : "border-rose-200 bg-rose-50"}`}>
           <p className={`text-sm ${healthSnapshot.status === "healthy" ? "text-emerald-700" : healthSnapshot.status === "degraded" ? "text-amber-700" : "text-rose-700"}`}>
             Saúde operacional
           </p>
-          <p className="mt-2 text-3xl font-black text-gray-950 capitalize">{healthSnapshot.status}</p>
+          <p className="mt-2 text-3xl font-medium font-serif text-gray-950 capitalize">{healthSnapshot.status}</p>
           <p className="mt-2 text-xs text-gray-600">{healthSnapshot.checks.filter((item) => item.status !== "healthy").length} check(s) exigindo atenção</p>
         </a>
       </div>

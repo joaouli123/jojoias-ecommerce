@@ -36,7 +36,7 @@ function InputWithIcon({
 }: InputHTMLAttributes<HTMLInputElement> & { icon: IconType }) {
   return (
     <div className={`relative ${className ?? ""}`}>
-      <Icon className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-400" />
+      <Icon className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#E5E5E5]" />
       <input
         {...props}
         className="h-12 w-full rounded-[20px] border border-zinc-200 pl-10 pr-4 text-sm outline-none focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37]"
@@ -259,7 +259,7 @@ export function CheckoutFormFields({ subtotal, itemsCount, savedAddresses = [] }
   return (
     <>
       <section className="rounded-[20px] border border-zinc-200 bg-white p-5 md:p-6" aria-labelledby="checkout-customer-heading">
-        <h2 id="checkout-customer-heading" className="mb-4 text-xl font-bold text-zinc-900">Dados do cliente</h2>
+        <h2 id="checkout-customer-heading" className="mb-4 text-xl font-medium font-serif text-[#1A1A1A]">Dados do cliente</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <InputWithIcon
             icon={User}
@@ -303,13 +303,13 @@ export function CheckoutFormFields({ subtotal, itemsCount, savedAddresses = [] }
       </section>
 
       <section className="rounded-[20px] border border-zinc-200 bg-white p-5 md:p-6" aria-labelledby="checkout-address-heading">
-        <h2 id="checkout-address-heading" className="mb-4 text-xl font-bold text-zinc-900">Endereço de entrega</h2>
+        <h2 id="checkout-address-heading" className="mb-4 text-xl font-medium font-serif text-[#1A1A1A]">Endereço de entrega</h2>
 
         {savedAddresses.length ? (
-          <div className="mb-5 space-y-3 rounded-[20px] border border-zinc-200 bg-zinc-50 p-4">
+          <div className="mb-5 space-y-3 rounded-[20px] border border-zinc-200 bg-[#FFFFFF] p-4">
             <div>
-              <p className="text-sm font-semibold text-zinc-900">Usar endereço salvo</p>
-              <p className="text-xs text-zinc-500">Selecione um endereço já cadastrado para preencher o checkout automaticamente.</p>
+              <p className="text-sm font-semibold text-[#1A1A1A]">Usar endereço salvo</p>
+              <p className="text-xs text-[#666666]">Selecione um endereço já cadastrado para preencher o checkout automaticamente.</p>
             </div>
             <div className="grid gap-3 md:grid-cols-2">
               {savedAddresses.map((address) => (
@@ -324,10 +324,10 @@ export function CheckoutFormFields({ subtotal, itemsCount, savedAddresses = [] }
                       className="mt-0.5 accent-[#111111]"
                     />
                     <div>
-                      <p className="font-semibold text-zinc-900">{address.label || address.recipient}</p>
-                      <p className="mt-1 text-zinc-600">{address.street}, {address.number}</p>
-                      <p className="text-zinc-600">{address.district} • {address.city}/{address.state}</p>
-                      <p className="text-zinc-500">CEP {address.zipcode}</p>
+                      <p className="font-semibold text-[#1A1A1A]">{address.label || address.recipient}</p>
+                      <p className="mt-1 text-[#666666]">{address.street}, {address.number}</p>
+                      <p className="text-[#666666]">{address.district} • {address.city}/{address.state}</p>
+                      <p className="text-[#666666]">CEP {address.zipcode}</p>
                     </div>
                   </div>
                 </label>
@@ -353,7 +353,7 @@ export function CheckoutFormFields({ subtotal, itemsCount, savedAddresses = [] }
         </div>
 
         {zipcodeDigits.length < 8 ? (
-          <p className="mt-3 text-sm text-zinc-500">Digite o CEP para carregar o endereço automaticamente e depois confirmar ou complementar os dados.</p>
+          <p className="mt-3 text-sm text-[#666666]">Digite o CEP para carregar o endereço automaticamente e depois confirmar ou complementar os dados.</p>
         ) : null}
 
         {shouldShowAddressFields ? (
@@ -427,19 +427,19 @@ export function CheckoutFormFields({ subtotal, itemsCount, savedAddresses = [] }
         ) : null}
 
         {(isLoadingZipcode || zipcodeMessage) && zipcodeDigits.length >= 8 ? (
-          <p id={zipcodeStatusId} className="mt-3 text-xs font-medium text-zinc-500" aria-live="polite" aria-atomic="true">
+          <p id={zipcodeStatusId} className="mt-3 text-xs font-medium text-[#666666]" aria-live="polite" aria-atomic="true">
             {isLoadingZipcode ? "Buscando endereço pelo CEP..." : zipcodeMessage}
           </p>
         ) : null}
 
         {(isLoadingShipping || shippingMessage || shippingQuote) && zipcodeDigits.length >= 8 ? (
-          <div className="mt-4 rounded-[20px] border border-zinc-200 bg-zinc-50 p-4 text-sm" aria-labelledby="checkout-shipping-heading" aria-describedby={shippingStatusId}>
-            <p id="checkout-shipping-heading" className="font-semibold text-zinc-900">Frete do pedido</p>
+          <div className="mt-4 rounded-[20px] border border-zinc-200 bg-[#FFFFFF] p-4 text-sm" aria-labelledby="checkout-shipping-heading" aria-describedby={shippingStatusId}>
+            <p id="checkout-shipping-heading" className="font-semibold text-[#1A1A1A]">Frete do pedido</p>
             <p id={shippingStatusId} className="sr-only" aria-live="polite" aria-atomic="true">
               {isLoadingShipping ? "Calculando frete para este CEP..." : shippingMessage || (shippingQuote ? `Frete selecionado: ${shippingQuote.service} por ${formatCurrency(shippingQuote.amount)}.` : "")}
             </p>
             {isLoadingShipping ? (
-              <p className="mt-1 text-zinc-500">Calculando frete para este CEP...</p>
+              <p className="mt-1 text-[#666666]">Calculando frete para este CEP...</p>
             ) : shippingOptions.length ? (
               <>
                 <input type="hidden" name="shippingOptionId" value={selectedShippingId} />
@@ -458,10 +458,10 @@ export function CheckoutFormFields({ subtotal, itemsCount, savedAddresses = [] }
                         />
                         <div className="flex-1">
                           <div className="flex flex-wrap items-center justify-between gap-3">
-                            <p className="font-semibold text-zinc-900">{option.service}</p>
-                            <p className="font-bold text-zinc-900">{formatCurrency(option.amount)}</p>
+                            <p className="font-semibold text-[#1A1A1A]">{option.service}</p>
+                            <p className="font-medium font-serif text-[#1A1A1A]">{formatCurrency(option.amount)}</p>
                           </div>
-                          <p className="mt-1 text-zinc-600">{option.region} • até {option.estimatedDays} dias úteis.</p>
+                          <p className="mt-1 text-[#666666]">{option.region} • até {option.estimatedDays} dias úteis.</p>
                         </div>
                       </div>
                     </label>

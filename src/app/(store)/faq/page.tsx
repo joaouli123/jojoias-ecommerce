@@ -71,16 +71,16 @@ export default function FaqPage() {
         <div className="grid gap-4">
           {faqs.map((item) => (
             <div key={item.question} className="rounded-[20px] border border-zinc-200 bg-white p-6 shadow-sm">
-              <h2 className="text-lg font-bold text-zinc-950">{item.question}</h2>
-              <p className="mt-3 text-sm leading-7 text-zinc-600">{item.answer}</p>
+              <h2 className="text-lg font-medium font-serif text-[#1A1A1A]">{item.question}</h2>
+              <p className="mt-3 text-sm leading-7 text-[#666666]">{item.answer}</p>
             </div>
           ))}
         </div>
 
-        <div className="mt-10 rounded-[20px] border border-zinc-200 bg-zinc-50 p-8">
-          <h2 className="text-2xl font-bold text-zinc-950">Não encontrou sua resposta?</h2>
-          <p className="mt-3 text-sm leading-7 text-zinc-600">Nossa central pode orientar sobre produtos, pedidos, pagamentos, trocas e prazos.</p>
-          <Link href="/contato" className="mt-5 inline-flex items-center gap-2 text-sm font-bold text-zinc-900 hover:text-[#D4AF37]">
+        <div className="mt-10 rounded-[20px] border border-zinc-200 bg-[#FFFFFF] p-8">
+          <h2 className="text-2xl font-medium font-serif text-[#1A1A1A]">Não encontrou sua resposta?</h2>
+          <p className="mt-3 text-sm leading-7 text-[#666666]">Nossa central pode orientar sobre produtos, pedidos, pagamentos, trocas e prazos.</p>
+          <Link href="/contato" className="mt-5 inline-flex items-center gap-2 text-sm font-medium font-serif text-[#1A1A1A] hover:text-[#D4AF37]">
             Falar com o atendimento <ChevronRight className="h-4 w-4" />
           </Link>
         </div>

@@ -38,7 +38,7 @@ export function FooterMenus() {
       <div className="border-b border-[#E5E5E5] md:border-none py-4 md:py-0">
         <button 
           onClick={() => toggleSection('luxi')}
-          className="w-full flex items-center justify-between font-bold text-[#1A1A1A] uppercase tracking-wider text-[13px] md:mb-6"
+          className="w-full flex items-center justify-between font-medium font-serif text-[#1A1A1A] uppercase tracking-wider text-[13px] md:mb-6"
         >
           A Luxijóias
           <ChevronDown className={`w-4 h-4 md:hidden transition-transform ${openSections.luxi ? 'rotate-180' : ''}`} />
@@ -60,7 +60,7 @@ export function FooterMenus() {
       <div className="border-b border-[#E5E5E5] md:border-none py-4 md:py-0">
         <button 
           onClick={() => toggleSection('suporte')}
-          className="w-full flex items-center justify-between font-bold text-[#1A1A1A] uppercase tracking-wider text-[13px] md:mb-6"
+          className="w-full flex items-center justify-between font-medium font-serif text-[#1A1A1A] uppercase tracking-wider text-[13px] md:mb-6"
         >
           Suporte
           <ChevronDown className={`w-4 h-4 md:hidden transition-transform ${openSections.suporte ? 'rotate-180' : ''}`} />
@@ -80,7 +80,7 @@ export function FooterMenus() {
       <div className="border-b border-[#E5E5E5] md:border-none py-4 md:py-0">
         <button 
           onClick={() => toggleSection('legal')}
-          className="w-full flex items-center justify-between font-bold text-[#1A1A1A] uppercase tracking-wider text-[13px] md:mb-6"
+          className="w-full flex items-center justify-between font-medium font-serif text-[#1A1A1A] uppercase tracking-wider text-[13px] md:mb-6"
         >
           Legal
           <ChevronDown className={`w-4 h-4 md:hidden transition-transform ${openSections.legal ? 'rotate-180' : ''}`} />

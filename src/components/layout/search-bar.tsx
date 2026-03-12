@@ -111,9 +111,9 @@ export function SearchBar() {
           onFocus={() => setIsOpen(true)}
           placeholder="Digite o que você procura..."
           aria-label="Buscar produtos"
-          className="h-[52px] w-full rounded-[20px] border border-zinc-500 lg:border-zinc-200 bg-white lg:bg-zinc-50/50 pl-4 pr-14 text-sm outline-none transition-all focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37] focus:bg-white placeholder:text-zinc-600 sm:h-12"
+          className="h-[52px] w-full rounded-[20px] border border-zinc-500 lg:border-zinc-200 bg-white lg:bg-[#FFFFFF]/50 pl-4 pr-14 text-sm outline-none transition-all focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37] focus:bg-white placeholder:text-[#666666] sm:h-12"
         />
-        <button type="submit" className="absolute right-1.5 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full text-zinc-900 transition-colors hover:text-[#D4AF37] lg:text-zinc-400 sm:h-10 sm:w-10" aria-label="Buscar produtos">
+        <button type="submit" className="absolute right-1.5 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full text-[#1A1A1A] transition-colors hover:text-[#D4AF37] lg:text-[#E5E5E5] sm:h-10 sm:w-10" aria-label="Buscar produtos">
           {isLoading ? <Loader2 className="h-5 w-5 animate-spin" /> : <Search className="h-5 w-5" />}
         </button>
       </form>
@@ -127,23 +127,23 @@ export function SearchBar() {
                   <Link
                     key={product.id}
                     href={`/produto/${product.slug}`}
-                    className="flex items-center justify-between gap-3 rounded-[20px] px-3 py-3 hover:bg-zinc-50"
+                    className="flex items-center justify-between gap-3 rounded-[20px] px-3 py-3 hover:bg-[#FFFFFF]"
                   >
                     <div>
-                      <p className="text-sm font-semibold text-zinc-900">{product.name}</p>
-                      <p className="text-xs text-zinc-500">{product.category}</p>
+                      <p className="text-sm font-semibold text-[#1A1A1A]">{product.name}</p>
+                      <p className="text-xs text-[#666666]">{product.category}</p>
                     </div>
-                    <span className="text-sm font-bold text-zinc-950">{formatCurrency(product.price)}</span>
+                    <span className="text-sm font-medium font-serif text-[#1A1A1A]">{formatCurrency(product.price)}</span>
                   </Link>
                 ))}
               </div>
 
               {results.categories.length ? (
                 <div className="border-t border-zinc-100 px-4 py-3">
-                  <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-zinc-400">Categorias</p>
+                  <p className="text-[11px] font-medium font-serif uppercase tracking-[0.2em] text-[#E5E5E5]">Categorias</p>
                   <div className="mt-2 flex flex-wrap gap-2">
                     {results.categories.map((category) => (
-                      <Link key={category.id} href={`/categoria/${category.slug}`} className="inline-flex items-center gap-2 rounded-full bg-zinc-100 px-3 py-1.5 text-xs font-medium text-zinc-700 hover:bg-zinc-200">
+                      <Link key={category.id} href={`/categoria/${category.slug}`} className="inline-flex items-center gap-2 rounded-full bg-[#F9F8F6] px-3 py-1.5 text-xs font-medium text-[#666666] hover:bg-zinc-200">
                         <Tag className="h-3.5 w-3.5" /> {category.name} ({category.productCount})
                       </Link>
                     ))}
@@ -153,10 +153,10 @@ export function SearchBar() {
 
               {results.brands.length ? (
                 <div className="border-t border-zinc-100 px-4 py-3">
-                  <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-zinc-400">Marcas</p>
+                  <p className="text-[11px] font-medium font-serif uppercase tracking-[0.2em] text-[#E5E5E5]">Marcas</p>
                   <div className="mt-2 flex flex-wrap gap-2">
                     {results.brands.map((brand) => (
-                      <Link key={brand.id} href={`/marca/${brand.slug}`} className="inline-flex rounded-full border border-zinc-200 px-3 py-1.5 text-xs font-medium text-zinc-700 hover:border-[#D4AF37] hover:text-[#D4AF37]">
+                      <Link key={brand.id} href={`/marca/${brand.slug}`} className="inline-flex rounded-full border border-zinc-200 px-3 py-1.5 text-xs font-medium text-[#666666] hover:border-[#D4AF37] hover:text-[#D4AF37]">
                         {brand.name} ({brand.productCount})
                       </Link>
                     ))}
@@ -171,7 +171,7 @@ export function SearchBar() {
               </div>
             </div>
           ) : (
-            <div className="px-4 py-5 text-sm text-zinc-500">
+            <div className="px-4 py-5 text-sm text-[#666666]">
               Nenhuma sugestão encontrada. Pressione Enter para buscar por “{query.trim()}”.
             </div>
           )}

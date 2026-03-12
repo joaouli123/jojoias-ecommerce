@@ -21,7 +21,7 @@ export default async function AdminCategoriesPage() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold tracking-tight text-gray-900">Categorias</h1>
+        <h1 className="text-3xl font-medium font-serif tracking-tight text-gray-900">Categorias</h1>
         <Link
           href="/admin/categories/new"
           className="inline-flex items-center justify-center rounded-md text-sm font-medium bg-primary-600 text-white hover:bg-primary-700 h-10 px-4 py-2"

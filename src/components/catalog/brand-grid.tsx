@@ -20,7 +20,7 @@ function getBrandInitials(name: string) {
 export function BrandGrid({ brands, compact = false, logoOnly = false }: BrandGridProps) {
   if (!brands.length) {
     return (
-      <div className="rounded-2xl border border-dashed border-zinc-300 bg-zinc-50 px-6 py-12 text-center text-zinc-500">
+      <div className="rounded-2xl border border-dashed border-zinc-300 bg-[#FFFFFF] px-6 py-12 text-center text-[#666666]">
         Ainda não há marcas públicas disponíveis no catálogo.
       </div>
     )
@@ -37,8 +37,8 @@ export function BrandGrid({ brands, compact = false, logoOnly = false }: BrandGr
             title={brand.name}
             className="group flex aspect-[1.5/1] items-center justify-center rounded-3xl border border-zinc-200 bg-white p-4 shadow-sm transition-all hover:-translate-y-0.5 hover:border-[#D4AF37]/40 hover:shadow-lg"
           >
-            <div className="flex h-full w-full items-center justify-center rounded-[1.5rem] bg-gradient-to-br from-zinc-50 via-white to-zinc-100 text-zinc-900 transition-colors group-hover:text-[#9a7b18]">
-              <span className="text-3xl font-black tracking-[0.22em] sm:text-4xl">{getBrandInitials(brand.name)}</span>
+            <div className="flex h-full w-full items-center justify-center rounded-[1.5rem] bg-gradient-to-br from-zinc-50 via-white to-zinc-100 text-[#1A1A1A] transition-colors group-hover:text-[#9a7b18]">
+              <span className="text-3xl font-medium font-serif tracking-[0.22em] sm:text-4xl">{getBrandInitials(brand.name)}</span>
               <span className="sr-only">{brand.name}</span>
             </div>
           </Link>
@@ -53,13 +53,13 @@ export function BrandGrid({ brands, compact = false, logoOnly = false }: BrandGr
                 <div className="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-[#D4AF37]/10 text-[#D4AF37]">
                   <BadgeCheck className="h-5 w-5" />
                 </div>
-                <h2 className="mt-4 text-2xl font-bold tracking-tight text-zinc-950">{brand.name}</h2>
-                <p className="mt-2 text-sm text-zinc-500">{brand.productCount} produto(s) ativos no catálogo.</p>
+                <h2 className="mt-4 text-2xl font-medium font-serif tracking-tight text-[#1A1A1A]">{brand.name}</h2>
+                <p className="mt-2 text-sm text-[#666666]">{brand.productCount} produto(s) ativos no catálogo.</p>
               </div>
               <ArrowRight className="h-5 w-5 text-zinc-300 transition-colors group-hover:text-[#D4AF37]" />
             </div>
 
-            <div className="mt-6 inline-flex items-center rounded-full bg-zinc-100 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-zinc-700">
+            <div className="mt-6 inline-flex items-center rounded-full bg-[#F9F8F6] px-3 py-1 text-xs font-semibold uppercase tracking-wide text-[#666666]">
               Ver vitrine da marca
             </div>
           </Link>

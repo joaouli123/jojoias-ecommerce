@@ -77,7 +77,7 @@ export default async function AdminDashboardPage() {
     <div className="space-y-6">
       <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 tracking-tight">Dashboard geral</h1>
+          <h1 className="text-3xl font-medium font-serif text-gray-900 tracking-tight">Dashboard geral</h1>
           <p className="mt-2 text-sm text-gray-600">Visão rápida da operação, vendas e pontos de atenção do ecommerce.</p>
         </div>
         <div className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800">
@@ -88,22 +88,22 @@ export default async function AdminDashboardPage() {
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-4">
         <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
           <h3 className="text-sm font-medium text-gray-500 mb-1">Total de Produtos</h3>
-          <p className="text-3xl font-bold text-gray-900">{totalProducts}</p>
+          <p className="text-3xl font-medium font-serif text-gray-900">{totalProducts}</p>
           <p className="mt-2 text-sm text-gray-500">{lowStockProducts} com estoque baixo</p>
         </div>
         <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
           <h3 className="text-sm font-medium text-gray-500 mb-1">Total de Pedidos</h3>
-          <p className="text-3xl font-bold text-gray-900">{totalOrders}</p>
+          <p className="text-3xl font-medium font-serif text-gray-900">{totalOrders}</p>
           <p className="mt-2 text-sm text-gray-500">{statusMap.get("PENDING") ?? 0} pendentes</p>
         </div>
         <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
           <h3 className="text-sm font-medium text-gray-500 mb-1">Total de Clientes</h3>
-          <p className="text-3xl font-bold text-gray-900">{totalUsers}</p>
+          <p className="text-3xl font-medium font-serif text-gray-900">{totalUsers}</p>
           <p className="mt-2 text-sm text-gray-500">Base ativa em crescimento</p>
         </div>
         <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
           <h3 className="text-sm font-medium text-gray-500 mb-1">Ticket médio</h3>
-          <p className="text-3xl font-bold text-gray-900">{formatCurrency(averageOrderValue)}</p>
+          <p className="text-3xl font-medium font-serif text-gray-900">{formatCurrency(averageOrderValue)}</p>
           <p className={`mt-2 text-sm ${revenueVariation >= 0 ? "text-emerald-600" : "text-rose-600"}`}>
             {revenueVariation >= 0 ? "+" : ""}{revenueVariation.toFixed(1)}% vs. mês anterior
           </p>
@@ -118,19 +118,19 @@ export default async function AdminDashboardPage() {
           <div className="grid gap-4 p-6 md:grid-cols-2">
             <div className="rounded-2xl border border-gray-100 bg-gray-50 p-5">
               <p className="text-sm text-gray-500">Cupons ativos</p>
-              <p className="mt-2 text-2xl font-bold text-gray-900">{activeCoupons}</p>
+              <p className="mt-2 text-2xl font-medium font-serif text-gray-900">{activeCoupons}</p>
             </div>
             <div className="rounded-2xl border border-gray-100 bg-gray-50 p-5">
               <p className="text-sm text-gray-500">Pedidos processando</p>
-              <p className="mt-2 text-2xl font-bold text-gray-900">{statusMap.get("PROCESSING") ?? 0}</p>
+              <p className="mt-2 text-2xl font-medium font-serif text-gray-900">{statusMap.get("PROCESSING") ?? 0}</p>
             </div>
             <div className="rounded-2xl border border-gray-100 bg-gray-50 p-5">
               <p className="text-sm text-gray-500">Pedidos enviados</p>
-              <p className="mt-2 text-2xl font-bold text-gray-900">{statusMap.get("SHIPPED") ?? 0}</p>
+              <p className="mt-2 text-2xl font-medium font-serif text-gray-900">{statusMap.get("SHIPPED") ?? 0}</p>
             </div>
             <div className="rounded-2xl border border-gray-100 bg-gray-50 p-5">
               <p className="text-sm text-gray-500">Pedidos entregues</p>
-              <p className="mt-2 text-2xl font-bold text-gray-900">{statusMap.get("DELIVERED") ?? 0}</p>
+              <p className="mt-2 text-2xl font-medium font-serif text-gray-900">{statusMap.get("DELIVERED") ?? 0}</p>
             </div>
           </div>
         </section>
@@ -155,7 +155,7 @@ export default async function AdminDashboardPage() {
                         <p className="mt-1 text-sm text-gray-500">Estoque atual: {product?.quantity ?? 0}</p>
                       </div>
                       <div className="text-right">
-                        <p className="text-xl font-bold text-gray-900">{item._sum.quantity ?? 0}</p>
+                        <p className="text-xl font-medium font-serif text-gray-900">{item._sum.quantity ?? 0}</p>
                         <p className="text-xs uppercase tracking-wide text-gray-400">unidades</p>
                       </div>
                     </div>

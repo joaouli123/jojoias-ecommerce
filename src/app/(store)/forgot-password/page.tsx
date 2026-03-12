@@ -41,7 +41,7 @@ export default function ForgotPasswordPage() {
     >
       <form action={onSubmit} className="space-y-4">
         <div className="space-y-1.5">
-          <label htmlFor="forgot-email" className="text-sm font-semibold text-zinc-900">E-mail da conta</label>
+          <label htmlFor="forgot-email" className="text-sm font-semibold text-[#1A1A1A]">E-mail da conta</label>
           <Input id="forgot-email" name="email" type="email" autoComplete="email" placeholder="voce@exemplo.com" required />
         </div>
 
@@ -53,7 +53,7 @@ export default function ForgotPasswordPage() {
         </Button>
       </form>
 
-      <p className="mt-5 border-t border-[#e7ddce] pt-5 text-sm text-zinc-600">
+      <p className="mt-5 border-t border-[#e7ddce] pt-5 text-sm text-[#666666]">
         Lembrou a senha? <Link href="/login" className="font-semibold text-[#111111] underline decoration-[#D4AF37] decoration-2 underline-offset-4 hover:text-[#8a6e1e]">Voltar para login</Link>
       </p>
     </AuthShell>

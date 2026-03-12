@@ -73,7 +73,7 @@ export function ProductShippingEstimator({ subtotal }: ProductShippingEstimatorP
 
   return (
     <div className="flex flex-col gap-3">
-      <span className="text-[15px] font-bold text-[#111827]">Calcular Frete</span>
+      <span className="text-[15px] font-medium font-serif text-[#111827]">Calcular Frete</span>
       <div className="flex flex-row gap-2 w-full">
         <input
           type="text"
@@ -81,7 +81,7 @@ export function ProductShippingEstimator({ subtotal }: ProductShippingEstimatorP
           value={zipcode}
           onChange={(event) => setZipcode(formatZipcode(event.target.value))}
           placeholder="00000-000"
-          className="h-[52px] flex-1 min-w-0 rounded-[8px] border border-zinc-200 outline-none focus:border-[#111827] text-[15px] text-[#111111] placeholder:text-zinc-400 px-4"
+          className="h-[52px] flex-1 min-w-0 rounded-[8px] border border-zinc-200 outline-none focus:border-[#111827] text-[15px] text-[#111111] placeholder:text-[#E5E5E5] px-4"
         />
         <Button
           type="button"
@@ -96,8 +96,8 @@ export function ProductShippingEstimator({ subtotal }: ProductShippingEstimatorP
       {error ? <p className="text-xs font-medium text-red-600">{error}</p> : null}
 
       {quote ? (
-        <div className="rounded-xl border border-zinc-200 bg-zinc-50 px-4 py-3 text-sm text-zinc-700">
-          <p className="font-semibold text-zinc-900">{quote.service} • {formatCurrency(quote.amount)}</p>
+        <div className="rounded-xl border border-zinc-200 bg-[#FFFFFF] px-4 py-3 text-sm text-[#666666]">
+          <p className="font-semibold text-[#1A1A1A]">{quote.service} • {formatCurrency(quote.amount)}</p>
           <p className="mt-1">Entrega estimada em até {quote.estimatedDays} dias úteis para {quote.region}.</p>
           {!quote.isFree && quote.missingForFree > 0 ? (
             <p className="mt-1 text-emerald-700">Adicione mais {formatCurrency(quote.missingForFree)} para liberar frete grátis.</p>

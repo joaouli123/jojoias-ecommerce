@@ -584,7 +584,7 @@ export function ProductEditorForm(props: ProductEditorFormProps) {
                                 key={`${variant.id}-${url}`}
                                 type="button"
                                 onClick={() => setVariants((current) => current.map((entry) => entry.id === variant.id ? { ...entry, image: url } : entry))}
-                                className={`overflow-hidden rounded-xl border p-1 transition ${selected ? "border-zinc-900 bg-zinc-900/5" : "border-gray-200 bg-white hover:border-zinc-400"}`}
+                                className={`overflow-hidden rounded-xl border p-1 transition ${selected ? "border-zinc-900 bg-[#1A1A1A]/5" : "border-gray-200 bg-white hover:border-zinc-400"}`}
                               >
                                 <div className="relative aspect-square overflow-hidden rounded-lg bg-gray-100">
                                   <Image src={url} alt={`Imagem disponível para a variação ${variant.label || variant.id}`} fill sizes="120px" className="object-cover" />
@@ -625,7 +625,7 @@ export function ProductEditorForm(props: ProductEditorFormProps) {
               </Link>
             ) : null}
           </div>
-          <button type="submit" className="inline-flex items-center justify-center rounded-md bg-zinc-900 px-5 py-2.5 text-sm font-semibold text-white hover:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-zinc-900/20 focus:ring-offset-2">
+          <button type="submit" className="inline-flex items-center justify-center rounded-md bg-[#1A1A1A] px-5 py-2.5 text-sm font-semibold text-white hover:bg-[#666666] focus:outline-none focus:ring-2 focus:ring-zinc-900/20 focus:ring-offset-2">
             {submitLabel}
           </button>
         </div>

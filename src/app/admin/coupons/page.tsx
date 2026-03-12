@@ -35,7 +35,7 @@ export default async function AdminCouponsPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-gray-900">Cupons</h1>
+          <h1 className="text-3xl font-medium font-serif tracking-tight text-gray-900">Cupons</h1>
           <p className="mt-1 text-sm text-gray-500">Gerencie descontos, regras e campanhas promocionais.</p>
         </div>
         <Link href="/admin/coupons/new" className="inline-flex h-10 items-center justify-center rounded-md bg-primary-600 px-4 py-2 text-sm font-medium text-white hover:bg-primary-700">
@@ -64,7 +64,7 @@ export default async function AdminCouponsPage() {
               coupons.map((coupon) => (
                 <tr key={coupon.id} className="hover:bg-gray-50/50">
                   <td className="p-4">
-                    <p className="font-mono text-sm font-bold text-gray-900">{coupon.code}</p>
+                    <p className="font-mono text-sm font-medium font-serif text-gray-900">{coupon.code}</p>
                     <p className="text-xs text-gray-500">{coupon.name}</p>
                   </td>
                   <td className="p-4 text-gray-600">

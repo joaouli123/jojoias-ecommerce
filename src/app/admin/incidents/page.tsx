@@ -44,7 +44,7 @@ export default async function AdminIncidentsPage({
     <div className="space-y-6">
       <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-gray-900">Incidentes do sistema</h1>
+          <h1 className="text-3xl font-medium font-serif tracking-tight text-gray-900">Incidentes do sistema</h1>
           <p className="mt-1 text-sm text-gray-500">
             Painel operacional para acompanhar falhas recentes de checkout, frete, e-mail e webhooks.
           </p>
@@ -146,7 +146,7 @@ export default async function AdminIncidentsPage({
                   <td className="p-4 text-gray-900">{incident.message}</td>
                   <td className="p-4 text-xs text-gray-500">{formatSystemEventPayload(incident.payload)}</td>
                   <td className="p-4">
-                    <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-semibold ${incident.status === "RESOLVED" ? "bg-emerald-100 text-emerald-700" : "bg-zinc-100 text-zinc-700"}`}>
+                    <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-semibold ${incident.status === "RESOLVED" ? "bg-emerald-100 text-emerald-700" : "bg-[#F9F8F6] text-[#666666]"}`}>
                       {incident.status}
                     </span>
                   </td>
@@ -177,7 +177,7 @@ export default async function AdminIncidentsPage({
                       ) : (
                         <form action={reopenSystemEvent}>
                           <input type="hidden" name="id" value={incident.id} />
-                          <button className="rounded-lg border border-zinc-200 bg-white px-3 py-2 text-xs font-semibold text-zinc-700 hover:bg-zinc-50">
+                          <button className="rounded-lg border border-zinc-200 bg-white px-3 py-2 text-xs font-semibold text-[#666666] hover:bg-[#FFFFFF]">
                             Reabrir
                           </button>
                         </form>

@@ -37,11 +37,11 @@ export function MobileFilters({
 
   return (
     <details className="lg:hidden overflow-hidden rounded-2xl border border-zinc-200 bg-white">
-      <summary className="flex cursor-pointer list-none items-center justify-between px-4 py-3 text-sm font-semibold text-zinc-900 marker:hidden">
+      <summary className="flex cursor-pointer list-none items-center justify-between px-4 py-3 text-sm font-semibold text-[#1A1A1A] marker:hidden">
         <span className="flex items-center gap-2">
           <SlidersHorizontal className="h-4 w-4" /> Filtros e ordenação
         </span>
-        <ChevronDown className="h-4 w-4 text-zinc-500" />
+        <ChevronDown className="h-4 w-4 text-[#666666]" />
       </summary>
 
       <form method="get" action={actionPath} className="space-y-4 border-t border-zinc-100 px-4 py-4">
@@ -49,9 +49,9 @@ export function MobileFilters({
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           {categoryOptions?.length ? (
-            <label className="space-y-2 text-sm font-medium text-zinc-700">
+            <label className="space-y-2 text-sm font-medium text-[#666666]">
               <span>Categoria</span>
-              <select name="category" defaultValue={selectedCategory ?? ""} className="h-11 w-full rounded-lg border border-zinc-200 bg-white px-3 text-sm text-zinc-900 outline-none focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37]">
+              <select name="category" defaultValue={selectedCategory ?? ""} className="h-11 w-full rounded-lg border border-zinc-200 bg-white px-3 text-sm text-[#1A1A1A] outline-none focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37]">
                 <option value="">Todas</option>
                 {categoryOptions.map((option) => (
                   <option key={option.value} value={option.value}>{option.label}</option>
@@ -61,9 +61,9 @@ export function MobileFilters({
           ) : null}
 
           {brandOptions?.length ? (
-            <label className="space-y-2 text-sm font-medium text-zinc-700">
+            <label className="space-y-2 text-sm font-medium text-[#666666]">
               <span>Marca</span>
-              <select name="brand" defaultValue={selectedBrand ?? ""} className="h-11 w-full rounded-lg border border-zinc-200 bg-white px-3 text-sm text-zinc-900 outline-none focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37]">
+              <select name="brand" defaultValue={selectedBrand ?? ""} className="h-11 w-full rounded-lg border border-zinc-200 bg-white px-3 text-sm text-[#1A1A1A] outline-none focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37]">
                 <option value="">Todas</option>
                 {brandOptions.map((option) => (
                   <option key={option.value} value={option.value}>{option.label}</option>
@@ -73,9 +73,9 @@ export function MobileFilters({
           ) : null}
 
           {priceOptions?.length ? (
-            <label className="space-y-2 text-sm font-medium text-zinc-700">
+            <label className="space-y-2 text-sm font-medium text-[#666666]">
               <span>Faixa de preço</span>
-              <select name="price" defaultValue={selectedPrice ?? ""} className="h-11 w-full rounded-lg border border-zinc-200 bg-white px-3 text-sm text-zinc-900 outline-none focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37]">
+              <select name="price" defaultValue={selectedPrice ?? ""} className="h-11 w-full rounded-lg border border-zinc-200 bg-white px-3 text-sm text-[#1A1A1A] outline-none focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37]">
                 <option value="">Todas</option>
                 {priceOptions.map((option) => (
                   <option key={option.value} value={option.value}>{option.label}</option>
@@ -84,9 +84,9 @@ export function MobileFilters({
             </label>
           ) : null}
 
-          <label className="space-y-2 text-sm font-medium text-zinc-700">
+          <label className="space-y-2 text-sm font-medium text-[#666666]">
             <span>Ordenar por</span>
-            <select name="sort" defaultValue={selectedSort} className="h-11 w-full rounded-lg border border-zinc-200 bg-white px-3 text-sm text-zinc-900 outline-none focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37]">
+            <select name="sort" defaultValue={selectedSort} className="h-11 w-full rounded-lg border border-zinc-200 bg-white px-3 text-sm text-[#1A1A1A] outline-none focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37]">
               {sortOptions.map((option) => (
                 <option key={option.value} value={option.value}>{option.label}</option>
               ))}
@@ -95,11 +95,11 @@ export function MobileFilters({
         </div>
 
         <div className="flex items-center gap-3">
-          <button type="submit" className="inline-flex h-11 items-center justify-center rounded-xl bg-zinc-900 px-5 text-sm font-bold text-white hover:bg-zinc-800">
+          <button type="submit" className="inline-flex h-11 items-center justify-center rounded-xl bg-[#1A1A1A] px-5 text-sm font-medium font-serif text-white hover:bg-[#666666]">
             Aplicar filtros
           </button>
           {hasExtraFilters ? (
-            <Link href={clearHref} className="text-sm font-semibold text-zinc-600 hover:text-[#D4AF37]">
+            <Link href={clearHref} className="text-sm font-semibold text-[#666666] hover:text-[#D4AF37]">
               Limpar filtros
             </Link>
           ) : null}

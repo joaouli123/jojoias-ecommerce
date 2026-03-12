@@ -60,7 +60,7 @@ export default function LoginPage() {
     >
       <form className="space-y-4" onSubmit={onSubmit}>
         <div className="space-y-1.5">
-          <label htmlFor="login-email" className="text-sm font-semibold text-zinc-900">E-mail</label>
+          <label htmlFor="login-email" className="text-sm font-semibold text-[#1A1A1A]">E-mail</label>
           <Input
             id="login-email"
             type="email"
@@ -73,7 +73,7 @@ export default function LoginPage() {
         </div>
 
         <div className="space-y-1.5">
-          <label htmlFor="login-password" className="text-sm font-semibold text-zinc-900">Senha</label>
+          <label htmlFor="login-password" className="text-sm font-semibold text-[#1A1A1A]">Senha</label>
           <Input
             id="login-password"
             type="password"
@@ -92,7 +92,7 @@ export default function LoginPage() {
         </Button>
       </form>
 
-      <div className="mt-5 space-y-3 border-t border-[#e7ddce] pt-5 text-sm text-zinc-600">
+      <div className="mt-5 space-y-3 border-t border-[#e7ddce] pt-5 text-sm text-[#666666]">
         <p>
           Ainda não tem conta?{" "}
           <Link href="/register" className="font-semibold text-[#111111] underline decoration-[#D4AF37] decoration-2 underline-offset-4 hover:text-[#8a6e1e]">

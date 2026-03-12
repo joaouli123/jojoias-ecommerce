@@ -24,13 +24,13 @@ export default async function CartPage() {
       />
       <div className="flex flex-col gap-2 md:gap-3">
         <Breadcrumbs items={[{ label: "Início", href: "/" }, { label: "Carrinho" }]} />
-        <h1 className="text-3xl sm:text-4xl font-black text-zinc-950 tracking-tight">Carrinho de Compras</h1>
-        <p className="text-zinc-500">Revise seus itens e avance para um checkout rápido e seguro.</p>
+        <h1 className="text-3xl sm:text-4xl font-medium font-serif text-[#1A1A1A] tracking-tight">Carrinho de Compras</h1>
+        <p className="text-[#666666]">Revise seus itens e avance para um checkout rápido e seguro.</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
         <div className="lg:col-span-8 flex flex-col gap-6">
-          <div className="hidden sm:grid grid-cols-12 gap-4 text-sm font-semibold text-zinc-400 border-b border-zinc-200 pb-4 px-2">
+          <div className="hidden sm:grid grid-cols-12 gap-4 text-sm font-semibold text-[#E5E5E5] border-b border-zinc-200 pb-4 px-2">
             <div className="col-span-6">Produto</div>
             <div className="col-span-3 text-center">Quantidade</div>
             <div className="col-span-3 text-right">Subtotal</div>
@@ -38,28 +38,28 @@ export default async function CartPage() {
 
           <div className="flex flex-col mb-4">
             {items.length === 0 ? (
-              <div className="rounded-xl border border-zinc-200 bg-white p-8 text-center text-zinc-500">
+              <div className="rounded-xl border border-zinc-200 bg-white p-8 text-center text-[#666666]">
                 Seu carrinho está vazio no momento.
               </div>
             ) : (
               items.map((item) => (
                 <div key={`${item.productId}-${item.variantId ?? "base"}`} className="grid grid-cols-1 sm:grid-cols-12 gap-4 items-center py-6 border-b border-zinc-100 last:border-0 group">
                   <div className="col-span-1 border-b border-zinc-100 pb-4 sm:border-0 sm:pb-0 sm:col-span-6 flex gap-4">
-                    <div className="h-24 w-24 rounded-lg bg-zinc-50 border border-zinc-100 flex items-center justify-center shrink-0 overflow-hidden">
+                    <div className="h-24 w-24 rounded-lg bg-[#FFFFFF] border border-zinc-100 flex items-center justify-center shrink-0 overflow-hidden">
                       <div
                         className="w-full h-full bg-cover bg-center"
                         style={{ backgroundImage: `url(${item.image || "https://images.unsplash.com/photo-1611095567219-79caa80c5980?q=80&w=400"})` }}
                       />
                     </div>
                     <div className="flex flex-col justify-center">
-                      <Link href={`/produto/${item.slug}`} className="font-semibold text-zinc-900 group-hover:text-[#D4AF37] transition-colors line-clamp-2 leading-tight">
+                      <Link href={`/produto/${item.slug}`} className="font-semibold text-[#1A1A1A] group-hover:text-[#D4AF37] transition-colors line-clamp-2 leading-tight">
                         {item.name}
                       </Link>
                       {item.variantName ? (
-                        <span className="mt-1 text-sm text-zinc-500">Variação: {item.variantName}</span>
+                        <span className="mt-1 text-sm text-[#666666]">Variação: {item.variantName}</span>
                       ) : null}
                       {item.sku ? (
-                        <span className="mt-1 text-xs uppercase tracking-wide text-zinc-400">SKU: {item.sku}</span>
+                        <span className="mt-1 text-xs uppercase tracking-wide text-[#E5E5E5]">SKU: {item.sku}</span>
                       ) : null}
                       <div className="mt-3 flex items-center justify-between gap-3 sm:hidden">
                         <div className="flex items-center rounded-[20px] border border-zinc-200 bg-white">
@@ -69,7 +69,7 @@ export default async function CartPage() {
                               await updateCartItemAction(item.productId, item.quantity - 1, item.variantId || undefined);
                             }}
                           >
-                            <button type="submit" className="p-2 text-zinc-500 hover:text-zinc-900 hover:bg-zinc-50 rounded-l-[20px] transition-colors">
+                            <button type="submit" className="p-2 text-[#666666] hover:text-[#1A1A1A] hover:bg-[#FFFFFF] rounded-l-[20px] transition-colors">
                               <Minus className="h-4 w-4" />
                             </button>
                           </form>
@@ -80,14 +80,14 @@ export default async function CartPage() {
                               await updateCartItemAction(item.productId, item.quantity + 1, item.variantId || undefined);
                             }}
                           >
-                            <button type="submit" className="p-2 text-zinc-500 hover:text-zinc-900 hover:bg-zinc-50 rounded-r-[20px] transition-colors">
+                            <button type="submit" className="p-2 text-[#666666] hover:text-[#1A1A1A] hover:bg-[#FFFFFF] rounded-r-[20px] transition-colors">
                               <Plus className="h-4 w-4" />
                             </button>
                           </form>
                         </div>
                         <div className="text-right">
-                          <span className="block text-lg font-black text-zinc-950">{formatCurrency(item.lineTotal)}</span>
-                          <span className="block text-xs text-zinc-500">{formatCurrency(item.unitPrice)} cada</span>
+                          <span className="block text-lg font-medium font-serif text-[#1A1A1A]">{formatCurrency(item.lineTotal)}</span>
+                          <span className="block text-xs text-[#666666]">{formatCurrency(item.unitPrice)} cada</span>
                         </div>
                       </div>
                       <form
@@ -112,7 +112,7 @@ export default async function CartPage() {
                           await updateCartItemAction(item.productId, item.quantity - 1, item.variantId || undefined);
                         }}
                       >
-                        <button type="submit" className="p-2 text-zinc-500 hover:text-zinc-900 hover:bg-zinc-50 rounded-l-lg transition-colors">
+                        <button type="submit" className="p-2 text-[#666666] hover:text-[#1A1A1A] hover:bg-[#FFFFFF] rounded-l-lg transition-colors">
                           <Minus className="h-4 w-4" />
                         </button>
                       </form>
@@ -123,7 +123,7 @@ export default async function CartPage() {
                           await updateCartItemAction(item.productId, item.quantity + 1, item.variantId || undefined);
                         }}
                       >
-                        <button type="submit" className="p-2 text-zinc-500 hover:text-zinc-900 hover:bg-zinc-50 rounded-r-lg transition-colors">
+                        <button type="submit" className="p-2 text-[#666666] hover:text-[#1A1A1A] hover:bg-[#FFFFFF] rounded-r-lg transition-colors">
                           <Plus className="h-4 w-4" />
                         </button>
                       </form>
@@ -131,7 +131,7 @@ export default async function CartPage() {
                   </div>
 
                   <div className="col-span-1 hidden justify-between items-center sm:col-span-3 sm:flex sm:justify-end">
-                    <span className="font-black text-zinc-950 text-lg">{formatCurrency(item.lineTotal)}</span>
+                    <span className="font-medium font-serif text-[#1A1A1A] text-lg">{formatCurrency(item.lineTotal)}</span>
                   </div>
 
                 </div>

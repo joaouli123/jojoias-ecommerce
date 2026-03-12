@@ -74,9 +74,9 @@ export default async function CheckoutPage() {
       />
       <div className="mb-8 md:mb-10">
         <Breadcrumbs items={[{ label: "Início", href: "/" }, { label: "Carrinho", href: "/cart" }, { label: "Checkout" }]} />
-        <h1 className="text-3xl sm:text-4xl font-black text-zinc-950 tracking-tight">Checkout Seguro</h1>
-        <p className="text-zinc-500 mt-2">Finalize seu pedido em poucos passos com total segurança.</p>
-        <Link href="/cart" className="mt-2 inline-block text-sm font-semibold text-zinc-700 hover:text-zinc-900">
+        <h1 className="text-3xl sm:text-4xl font-medium font-serif text-[#1A1A1A] tracking-tight">Checkout Seguro</h1>
+        <p className="text-[#666666] mt-2">Finalize seu pedido em poucos passos com total segurança.</p>
+        <Link href="/cart" className="mt-2 inline-block text-sm font-semibold text-[#666666] hover:text-[#1A1A1A]">
           Voltar ao carrinho
         </Link>
       </div>
@@ -99,11 +99,11 @@ export default async function CheckoutPage() {
           <PaymentMethodsSection pixDiscountPercent={pixDiscountPercent} />
 
           <section className="rounded-[20px] border border-zinc-200 bg-white p-5 md:p-6">
-            <label htmlFor="notes" className="mb-2 block text-sm font-semibold text-zinc-800">
+            <label htmlFor="notes" className="mb-2 block text-sm font-semibold text-[#1A1A1A]">
               Observações do pedido (opcional)
             </label>
             <div className="relative">
-              <MessageSquareText className="pointer-events-none absolute left-3 top-3.5 h-4 w-4 text-zinc-400" />
+              <MessageSquareText className="pointer-events-none absolute left-3 top-3.5 h-4 w-4 text-[#E5E5E5]" />
               <textarea
                 id="notes"
                 name="notes"
@@ -115,33 +115,33 @@ export default async function CheckoutPage() {
           </section>
 
           <div className="lg:hidden">
-            <Button type="submit" size="lg" className="w-full h-14 rounded-[20px] text-base font-bold bg-[#111111] hover:bg-[#111111]/90">
+            <Button type="submit" size="lg" className="w-full h-14 rounded-[20px] text-base font-medium font-serif bg-[#111111] hover:bg-[#111111]/90">
               Finalizar compra <ArrowRight className="h-5 w-5 ml-2" />
             </Button>
           </div>
         </div>
 
         <aside className="hidden lg:block lg:col-span-4 lg:sticky lg:top-24">
-          <div className="rounded-[20px] border border-zinc-200 bg-zinc-50 p-6">
-            <h2 className="text-xl font-bold text-zinc-950 mb-5">Resumo do Pedido</h2>
+          <div className="rounded-[20px] border border-zinc-200 bg-[#FFFFFF] p-6">
+            <h2 className="text-xl font-medium font-serif text-[#1A1A1A] mb-5">Resumo do Pedido</h2>
 
             <div className="space-y-3 max-h-[240px] overflow-auto pr-1">
               {cart.items.map((item) => (
                 <div key={`${item.productId}-${item.variantId ?? "base"}`} className="flex items-center justify-between gap-3 text-sm">
                   <div className="min-w-0">
-                    <p className="font-semibold text-zinc-900 truncate">{item.name}</p>
-                    {item.variantName ? <p className="text-zinc-500">Variação: {item.variantName}</p> : null}
-                    <p className="text-zinc-500">Qtd: {item.quantity}</p>
+                    <p className="font-semibold text-[#1A1A1A] truncate">{item.name}</p>
+                    {item.variantName ? <p className="text-[#666666]">Variação: {item.variantName}</p> : null}
+                    <p className="text-[#666666]">Qtd: {item.quantity}</p>
                   </div>
-                  <span className="font-bold text-zinc-900 whitespace-nowrap">{formatCurrency(item.lineTotal)}</span>
+                  <span className="font-medium font-serif text-[#1A1A1A] whitespace-nowrap">{formatCurrency(item.lineTotal)}</span>
                 </div>
               ))}
             </div>
 
             <dl className="border-t border-zinc-200 mt-5 pt-5 space-y-3 text-sm">
               <div className="flex items-center justify-between">
-                <dt className="text-zinc-500">Subtotal</dt>
-                <dd className="font-semibold text-zinc-900">{formatCurrency(cart.subtotal)}</dd>
+                <dt className="text-[#666666]">Subtotal</dt>
+                <dd className="font-semibold text-[#1A1A1A]">{formatCurrency(cart.subtotal)}</dd>
               </div>
               <CheckoutTotalsSummary subtotal={cart.subtotal} pixDiscountPercent={pixDiscountPercent} />
             </dl>
@@ -158,7 +158,7 @@ export default async function CheckoutPage() {
             </div>
 
             <div className="mt-6">
-              <Button type="submit" size="lg" className="w-full h-14 rounded-[20px] text-base font-bold bg-[#111111] hover:bg-[#111111]/90">
+              <Button type="submit" size="lg" className="w-full h-14 rounded-[20px] text-base font-medium font-serif bg-[#111111] hover:bg-[#111111]/90">
                 Finalizar compra <ArrowRight className="h-5 w-5 ml-2" />
               </Button>
             </div>

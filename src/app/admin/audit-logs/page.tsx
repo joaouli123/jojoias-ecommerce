@@ -59,7 +59,7 @@ export default async function AdminAuditLogsPage({
     <div className="space-y-6">
       <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-gray-900">Auditoria administrativa</h1>
+          <h1 className="text-3xl font-medium font-serif tracking-tight text-gray-900">Auditoria administrativa</h1>
           <p className="mt-1 text-sm text-gray-500">
             Últimas ações críticas executadas no backoffice para apoio operacional e rastreabilidade.
           </p>
@@ -132,7 +132,7 @@ export default async function AdminAuditLogsPage({
         {entitySummary.map((item) => (
           <div key={item.entityType} className="rounded-xl border border-gray-200 bg-white p-4 shadow-sm">
             <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">{item.entityType}</p>
-            <p className="mt-2 text-2xl font-bold text-gray-900">{item._count._all}</p>
+            <p className="mt-2 text-2xl font-medium font-serif text-gray-900">{item._count._all}</p>
             <p className="text-xs text-gray-500">eventos recentes</p>
           </div>
         ))}

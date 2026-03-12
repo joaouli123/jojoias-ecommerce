@@ -177,10 +177,10 @@ export default async function CategoryPage({
       />
 
       <div className="flex flex-col gap-4 border-b border-zinc-200 pb-8">
-        <h1 className="text-3xl sm:text-4xl font-black text-zinc-950 tracking-tight">
+        <h1 className="text-3xl sm:text-4xl font-medium font-serif text-[#1A1A1A] tracking-tight">
           {title}
         </h1>
-        <p className="text-zinc-500 max-w-2xl">
+        <p className="text-[#666666] max-w-2xl">
           Compre {title.toLowerCase()} com curadoria premium, envio nacional e condições especiais da Luxijóias.
         </p>
       </div>
@@ -202,7 +202,7 @@ export default async function CategoryPage({
           <div className="hidden lg:flex flex-col gap-8 sticky top-24">
             {/* Filter Group: Price */}
             <div>
-              <h3 className="font-bold text-zinc-900 mb-4">Preço</h3>
+              <h3 className="font-medium font-serif text-[#1A1A1A] mb-4">Preço</h3>
               <div className="space-y-3">
                 {PRICE_FILTERS.map((range) => {
                   const isActive = priceValue === range.value
@@ -212,7 +212,7 @@ export default async function CategoryPage({
                     <Link
                       key={range.value}
                       href={href ? `${categoryPath}?${href}` : categoryPath}
-                      className={`flex items-center gap-3 rounded-lg px-2 py-1 transition-colors ${isActive ? "bg-[#D4AF37]/10 text-zinc-900" : "hover:bg-zinc-50 text-zinc-600"}`}
+                      className={`flex items-center gap-3 rounded-lg px-2 py-1 transition-colors ${isActive ? "bg-[#D4AF37]/10 text-[#1A1A1A]" : "hover:bg-[#FFFFFF] text-[#666666]"}`}
                     >
                       <div className={`w-4 h-4 rounded border flex items-center justify-center transition-colors ${isActive ? "border-[#D4AF37] bg-[#D4AF37]" : "border-zinc-300"}`}>
                         <span className={`h-1.5 w-1.5 rounded-full bg-white ${isActive ? "block" : "hidden"}`} />
@@ -226,7 +226,7 @@ export default async function CategoryPage({
 
             {facets.brands.length ? (
               <div>
-                <h3 className="font-bold text-zinc-900 mb-4">Marcas</h3>
+                <h3 className="font-medium font-serif text-[#1A1A1A] mb-4">Marcas</h3>
                 <div className="space-y-2">
                   {facets.brands.map((brand) => {
                     const isActive = selectedBrand === brand.slug
@@ -236,10 +236,10 @@ export default async function CategoryPage({
                       <Link
                         key={brand.id}
                         href={href ? `${categoryPath}?${href}` : categoryPath}
-                        className={`flex items-center justify-between gap-3 rounded-lg px-3 py-2 text-sm transition-colors ${isActive ? "bg-zinc-900 text-white" : "bg-zinc-50 text-zinc-700 hover:bg-zinc-100"}`}
+                        className={`flex items-center justify-between gap-3 rounded-lg px-3 py-2 text-sm transition-colors ${isActive ? "bg-[#1A1A1A] text-white" : "bg-[#FFFFFF] text-[#666666] hover:bg-[#F9F8F6]"}`}
                       >
                         <span>{brand.name}</span>
-                        <span className={`text-xs ${isActive ? "text-white/80" : "text-zinc-500"}`}>{brand.productCount}</span>
+                        <span className={`text-xs ${isActive ? "text-white/80" : "text-[#666666]"}`}>{brand.productCount}</span>
                       </Link>
                     )
                   })}
@@ -248,7 +248,7 @@ export default async function CategoryPage({
             ) : null}
 
             <div>
-              <h3 className="font-bold text-zinc-900 mb-4">Ordenação rápida</h3>
+              <h3 className="font-medium font-serif text-[#1A1A1A] mb-4">Ordenação rápida</h3>
               <div className="space-y-2">
                 {SORT_OPTIONS.map((option) => {
                   const isActive = sort === option.value
@@ -258,7 +258,7 @@ export default async function CategoryPage({
                     <Link
                       key={option.value}
                       href={href ? `${categoryPath}?${href}` : categoryPath}
-                      className={`block rounded-lg px-3 py-2 text-sm transition-colors ${isActive ? "bg-zinc-900 text-white" : "bg-zinc-50 text-zinc-700 hover:bg-zinc-100"}`}
+                      className={`block rounded-lg px-3 py-2 text-sm transition-colors ${isActive ? "bg-[#1A1A1A] text-white" : "bg-[#FFFFFF] text-[#666666] hover:bg-[#F9F8F6]"}`}
                     >
                       {option.label}
                     </Link>
@@ -273,18 +273,18 @@ export default async function CategoryPage({
         <div className="flex-1 w-full">
           {/* Active Filters & Sorting */}
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-            <p className="text-sm text-zinc-500">
-              Mostrando <span className="font-bold text-zinc-900">{products.length}</span> de <span className="font-bold text-zinc-900">{catalog.total}</span> produtos
+            <p className="text-sm text-[#666666]">
+              Mostrando <span className="font-medium font-serif text-[#1A1A1A]">{products.length}</span> de <span className="font-medium font-serif text-[#1A1A1A]">{catalog.total}</span> produtos
             </p>
             <form method="get" className="w-full sm:w-auto flex gap-2">
               {priceValue ? <input type="hidden" name="price" value={priceValue} /> : null}
               {selectedBrand ? <input type="hidden" name="brand" value={selectedBrand} /> : null}
-              <select name="sort" defaultValue={sort} className="h-10 rounded-lg border border-zinc-200 bg-white px-3 text-sm text-zinc-900 outline-none focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37] cursor-pointer w-full sm:w-auto">
+              <select name="sort" defaultValue={sort} className="h-10 rounded-lg border border-zinc-200 bg-white px-3 text-sm text-[#1A1A1A] outline-none focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37] cursor-pointer w-full sm:w-auto">
                 {SORT_OPTIONS.map((option) => (
                   <option key={option.value} value={option.value}>{option.label}</option>
                 ))}
               </select>
-              <button type="submit" className="h-10 rounded-lg bg-zinc-900 px-4 text-sm font-bold text-white hover:bg-zinc-800">
+              <button type="submit" className="h-10 rounded-lg bg-[#1A1A1A] px-4 text-sm font-medium font-serif text-white hover:bg-[#666666]">
                 Aplicar
               </button>
             </form>
@@ -292,11 +292,11 @@ export default async function CategoryPage({
 
           {priceValue || selectedBrand ? (
             <div className="mb-6 flex flex-wrap items-center gap-3">
-              <span className="text-sm text-zinc-500">Filtros ativos:</span>
+              <span className="text-sm text-[#666666]">Filtros ativos:</span>
               {PRICE_FILTERS.filter((option) => option.value === priceValue).map((option) => {
                 const clearHref = buildQueryString(currentQuery, { price: undefined, page: undefined })
                 return (
-                  <Link key={option.value} href={clearHref ? `${categoryPath}?${clearHref}` : categoryPath} className="inline-flex items-center rounded-full bg-zinc-100 px-3 py-1 text-sm font-semibold text-zinc-800 hover:bg-zinc-200">
+                  <Link key={option.value} href={clearHref ? `${categoryPath}?${clearHref}` : categoryPath} className="inline-flex items-center rounded-full bg-[#F9F8F6] px-3 py-1 text-sm font-semibold text-[#1A1A1A] hover:bg-zinc-200">
                     {option.label} ×
                   </Link>
                 )
@@ -304,7 +304,7 @@ export default async function CategoryPage({
               {facets.brands.filter((brand) => brand.slug === selectedBrand).map((brand) => {
                 const clearHref = buildQueryString(currentQuery, { brand: undefined, page: undefined })
                 return (
-                  <Link key={brand.id} href={clearHref ? `${categoryPath}?${clearHref}` : categoryPath} className="inline-flex items-center rounded-full bg-zinc-100 px-3 py-1 text-sm font-semibold text-zinc-800 hover:bg-zinc-200">
+                  <Link key={brand.id} href={clearHref ? `${categoryPath}?${clearHref}` : categoryPath} className="inline-flex items-center rounded-full bg-[#F9F8F6] px-3 py-1 text-sm font-semibold text-[#1A1A1A] hover:bg-zinc-200">
                     Marca: {brand.name} ×
                   </Link>
                 )
@@ -334,7 +334,7 @@ export default async function CategoryPage({
               ))}
             </div>
           ) : (
-            <div className="rounded-xl border border-zinc-200 bg-white p-10 text-center text-zinc-500">
+            <div className="rounded-xl border border-zinc-200 bg-white p-10 text-center text-[#666666]">
               Nenhum produto encontrado nesta categoria no momento.
             </div>
           )}
@@ -345,7 +345,7 @@ export default async function CategoryPage({
                 <Link
                   href={page > 2 ? `${categoryPath}?${buildQueryString(currentQuery, { page: String(page - 1) })}` : `${categoryPath}?${buildQueryString(currentQuery, { page: page - 1 === 1 ? undefined : String(page - 1) })}`}
                   aria-disabled={page === 1}
-                  className={`h-10 min-w-10 rounded-lg border border-zinc-200 px-3 flex items-center justify-center text-sm font-medium ${page === 1 ? "pointer-events-none opacity-50" : "hover:bg-zinc-50"}`}
+                  className={`h-10 min-w-10 rounded-lg border border-zinc-200 px-3 flex items-center justify-center text-sm font-medium ${page === 1 ? "pointer-events-none opacity-50" : "hover:bg-[#FFFFFF]"}`}
                 >
                   &lt;
                 </Link>
@@ -355,7 +355,7 @@ export default async function CategoryPage({
                     <Link
                       key={pageNumber}
                       href={href ? `${categoryPath}?${href}` : categoryPath}
-                      className={`h-10 min-w-10 rounded-lg px-3 flex items-center justify-center text-sm font-bold ${pageNumber === page ? "bg-[#111111] text-white" : "border border-zinc-200 hover:bg-zinc-50"}`}
+                      className={`h-10 min-w-10 rounded-lg px-3 flex items-center justify-center text-sm font-medium font-serif ${pageNumber === page ? "bg-[#111111] text-white" : "border border-zinc-200 hover:bg-[#FFFFFF]"}`}
                     >
                       {pageNumber}
                     </Link>
@@ -364,7 +364,7 @@ export default async function CategoryPage({
                 <Link
                   href={`${categoryPath}?${buildQueryString(currentQuery, { page: String(page + 1) })}`}
                   aria-disabled={page === catalog.totalPages}
-                  className={`h-10 min-w-10 rounded-lg border border-zinc-200 px-3 flex items-center justify-center text-sm font-medium ${page === catalog.totalPages ? "pointer-events-none opacity-50" : "hover:bg-zinc-50"}`}
+                  className={`h-10 min-w-10 rounded-lg border border-zinc-200 px-3 flex items-center justify-center text-sm font-medium ${page === catalog.totalPages ? "pointer-events-none opacity-50" : "hover:bg-[#FFFFFF]"}`}
                 >
                   &gt;
                 </Link>

@@ -32,7 +32,7 @@ export default async function EditCouponPage({ params }: { params: Promise<{ id:
         <Link href="/admin/coupons" className="rounded-md border border-gray-100 bg-white p-2 text-gray-500 shadow-sm transition-colors hover:text-gray-900">
           <ArrowLeft className="h-5 w-5" />
         </Link>
-        <h1 className="text-3xl font-bold tracking-tight text-gray-900">Editar cupom</h1>
+        <h1 className="text-3xl font-medium font-serif tracking-tight text-gray-900">Editar cupom</h1>
       </div>
 
       <div className="overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm">

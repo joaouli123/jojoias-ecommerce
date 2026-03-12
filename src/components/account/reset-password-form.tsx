@@ -38,9 +38,9 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
     <form action={onSubmit} className="mt-6 space-y-4">
       <input type="hidden" name="token" value={token} />
       <div className="space-y-1.5">
-        <label htmlFor="reset-password" className="text-sm font-semibold text-zinc-900">Nova senha</label>
+        <label htmlFor="reset-password" className="text-sm font-semibold text-[#1A1A1A]">Nova senha</label>
         <Input id="reset-password" name="password" type="password" autoComplete="new-password" minLength={6} required placeholder="Crie uma nova senha segura" />
-        <p className="text-xs leading-5 text-zinc-500">Use pelo menos 6 caracteres. Se puder, combine letras e números.</p>
+        <p className="text-xs leading-5 text-[#666666]">Use pelo menos 6 caracteres. Se puder, combine letras e números.</p>
       </div>
 
       {message ? <p className="rounded-[18px] border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-700">{message}</p> : null}
@@ -50,7 +50,7 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
         {isPending ? "Salvando..." : "Redefinir senha"}
       </Button>
 
-      <p className="text-sm text-zinc-500">
+      <p className="text-sm text-[#666666]">
         <Link href="/login" className="font-semibold text-[#111111] underline decoration-[#D4AF37] decoration-2 underline-offset-4 hover:text-[#8a6e1e]">Voltar para login</Link>
       </p>
     </form>

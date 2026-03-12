@@ -109,8 +109,8 @@ export function OrderPaymentStatusCard({
       <div className="flex items-start gap-3">
         <HeaderIcon className={`mt-0.5 h-6 w-6 shrink-0 ${headerColor}`} />
         <div className="min-w-0 flex-1">
-          <h2 className="text-lg font-bold text-zinc-900">Pagamento no site</h2>
-          <p className="mt-1 text-sm text-zinc-600">
+          <h2 className="text-lg font-medium font-serif text-[#1A1A1A]">Pagamento no site</h2>
+          <p className="mt-1 text-sm text-[#666666]">
             {isApproved
               ? "Pagamento identificado com sucesso."
               : isFailed
@@ -118,13 +118,13 @@ export function OrderPaymentStatusCard({
                 : "Aguardando confirmação automática do pagamento."}
           </p>
           {countdown && isPending ? <p className="mt-2 text-sm font-semibold text-amber-700">Expira em {countdown}</p> : null}
-          {copyFeedback ? <p className="mt-2 text-xs font-semibold text-zinc-700">{copyFeedback}</p> : null}
+          {copyFeedback ? <p className="mt-2 text-xs font-semibold text-[#666666]">{copyFeedback}</p> : null}
         </div>
       </div>
 
       {paymentMethod === "PIX" && details?.qrCodeBase64 ? (
         <div className="mt-5 grid gap-5 lg:grid-cols-[220px_1fr]">
-          <div className="rounded-[20px] border border-zinc-200 bg-zinc-50 p-4">
+          <div className="rounded-[20px] border border-zinc-200 bg-[#FFFFFF] p-4">
             <img
               src={`data:image/png;base64,${details.qrCodeBase64}`}
               alt="QR Code Pix"
@@ -132,15 +132,15 @@ export function OrderPaymentStatusCard({
             />
           </div>
           <div className="space-y-3">
-            <p className="text-sm font-semibold text-zinc-900 flex items-center gap-2"><QrCode className="h-4 w-4 text-[#32BCAD]" /> Pix copia e cola</p>
-            <div className="rounded-[20px] border border-zinc-200 bg-zinc-50 p-4 text-sm text-zinc-700 break-all">
+            <p className="text-sm font-semibold text-[#1A1A1A] flex items-center gap-2"><QrCode className="h-4 w-4 text-[#32BCAD]" /> Pix copia e cola</p>
+            <div className="rounded-[20px] border border-zinc-200 bg-[#FFFFFF] p-4 text-sm text-[#666666] break-all">
               {details.qrCode || "Código Pix indisponível."}
             </div>
             {details.qrCode ? (
               <button
                 type="button"
                 onClick={() => void handleCopy(details.qrCode || "")}
-                className="inline-flex h-11 items-center justify-center gap-2 rounded-[20px] bg-[#111111] px-5 text-sm font-bold text-white hover:bg-[#111111]/90"
+                className="inline-flex h-11 items-center justify-center gap-2 rounded-[20px] bg-[#111111] px-5 text-sm font-medium font-serif text-white hover:bg-[#111111]/90"
               >
                 <Copy className="h-4 w-4" /> Copiar código Pix
               </button>
@@ -151,10 +151,10 @@ export function OrderPaymentStatusCard({
 
       {paymentMethod === "BOLETO" ? (
         <div className="mt-5 space-y-4">
-          <div className="rounded-[20px] border border-zinc-200 bg-zinc-50 p-4 text-sm text-zinc-700">
-            <p className="font-semibold text-zinc-900">Boleto gerado com instruções de pagamento</p>
+          <div className="rounded-[20px] border border-zinc-200 bg-[#FFFFFF] p-4 text-sm text-[#666666]">
+            <p className="font-semibold text-[#1A1A1A]">Boleto gerado com instruções de pagamento</p>
             <p className="mt-1">Use o botão abaixo para abrir ou baixar o boleto e acompanhe a compensação automática nesta página.</p>
-            {details?.barcodeContent ? <p className="mt-3 break-all text-xs text-zinc-600">Linha digitável: {details.barcodeContent}</p> : null}
+            {details?.barcodeContent ? <p className="mt-3 break-all text-xs text-[#666666]">Linha digitável: {details.barcodeContent}</p> : null}
           </div>
           {details?.ticketUrl ? (
             <>
@@ -165,7 +165,7 @@ export function OrderPaymentStatusCard({
                 href={details.ticketUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex h-11 items-center justify-center gap-2 rounded-[20px] bg-[#111111] px-5 text-sm font-bold text-white hover:bg-[#111111]/90"
+                className="inline-flex h-11 items-center justify-center gap-2 rounded-[20px] bg-[#111111] px-5 text-sm font-medium font-serif text-white hover:bg-[#111111]/90"
               >
                 <Download className="h-4 w-4" /> Abrir ou baixar boleto
               </a>

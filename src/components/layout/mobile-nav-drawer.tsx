@@ -24,7 +24,7 @@ export function MobileNavDrawer() {
       <button
         type="button"
         onClick={() => setIsOpen(true)}
-        className="lg:hidden p-2 -ml-2 text-zinc-900 group"
+        className="lg:hidden p-2 -ml-2 text-[#1A1A1A] group"
         aria-label="Abrir menu"
       >
         <Menu className="w-6 h-6 group-hover:text-[#D4AF37] transition-colors" />
@@ -44,31 +44,31 @@ export function MobileNavDrawer() {
         <div className="flex items-center justify-between border-b border-zinc-200 px-5 py-4">
           <div className="space-y-2">
             <Image src="/logo-oficial.avif" alt="Luxijóias Semijoias" width={170} height={50} quality={50} sizes="150px" className="h-auto w-[150px]" />
-            <h2 className="text-lg font-black text-zinc-900">Menu</h2>
+            <h2 className="text-lg font-medium font-serif text-[#1A1A1A]">Menu</h2>
           </div>
           <button
             type="button"
             onClick={() => setIsOpen(false)}
-            className="rounded-full p-2 text-zinc-500 transition-colors hover:bg-zinc-100 hover:text-zinc-900"
+            className="rounded-full p-2 text-[#666666] transition-colors hover:bg-[#F9F8F6] hover:text-[#1A1A1A]"
             aria-label="Fechar menu"
           >
             <X className="h-5 w-5" />
           </button>
         </div>
 
-        <div className="border-b border-zinc-100 bg-zinc-50 px-5 py-4">
-          <p className="text-sm text-zinc-600">Acesso rápido</p>
+        <div className="border-b border-zinc-100 bg-[#FFFFFF] px-5 py-4">
+          <p className="text-sm text-[#666666]">Acesso rápido</p>
           <div className="mt-3 grid grid-cols-2 gap-3">
             <Link
               href="/login"
-              className="flex items-center gap-2 rounded-[20px] border border-zinc-200 bg-white px-4 py-3 text-sm font-semibold text-zinc-900"
+              className="flex items-center gap-2 rounded-[20px] border border-zinc-200 bg-white px-4 py-3 text-sm font-semibold text-[#1A1A1A]"
               onClick={() => setIsOpen(false)}
             >
               <LogIn className="h-4 w-4 text-[#D4AF37]" /> Entrar
             </Link>
             <Link
               href="/account"
-              className="flex items-center gap-2 rounded-[20px] border border-zinc-200 bg-white px-4 py-3 text-sm font-semibold text-zinc-900"
+              className="flex items-center gap-2 rounded-[20px] border border-zinc-200 bg-white px-4 py-3 text-sm font-semibold text-[#1A1A1A]"
               onClick={() => setIsOpen(false)}
             >
               <User className="h-4 w-4 text-[#D4AF37]" /> Minha conta
@@ -78,7 +78,7 @@ export function MobileNavDrawer() {
 
         <nav className="flex-1 overflow-y-auto px-5 py-5">
           <div className="mb-6 rounded-[20px] bg-[#111111] px-4 py-4 text-[#D4AF37]">
-            <div className="flex items-center gap-2 text-sm font-bold uppercase tracking-wide">
+            <div className="flex items-center gap-2 text-sm font-medium font-serif uppercase tracking-wide">
               <Percent className="h-4 w-4" /> Oferta ativa
             </div>
             <p className="mt-2 text-sm leading-6 text-white/90">Use o cupom PRIM e ganhe 10% na primeira compra.</p>
@@ -89,11 +89,11 @@ export function MobileNavDrawer() {
               <Link
                 key={item.label}
                 href={item.href}
-                className="flex items-center justify-between rounded-[20px] border border-zinc-200 px-4 py-3 text-sm font-semibold text-zinc-900 transition-colors hover:border-[#D4AF37] hover:bg-[#D4AF37]/[0.08]"
+                className="flex items-center justify-between rounded-[20px] border border-zinc-200 px-4 py-3 text-sm font-semibold text-[#1A1A1A] transition-colors hover:border-[#D4AF37] hover:bg-[#D4AF37]/[0.08]"
                 onClick={() => setIsOpen(false)}
               >
                 <span>{item.label}</span>
-                <ChevronRight className="h-4 w-4 text-zinc-400" />
+                <ChevronRight className="h-4 w-4 text-[#E5E5E5]" />
               </Link>
             ))}
           </div>
@@ -102,7 +102,7 @@ export function MobileNavDrawer() {
         <div className="border-t border-zinc-200 px-5 py-4">
           <Link
             href="/contato"
-            className="flex items-center gap-3 rounded-[20px] bg-zinc-100 px-4 py-3 text-sm font-semibold text-zinc-900"
+            className="flex items-center gap-3 rounded-[20px] bg-[#F9F8F6] px-4 py-3 text-sm font-semibold text-[#1A1A1A]"
             onClick={() => setIsOpen(false)}
           >
             <HeadphonesIcon className="h-4 w-4 text-[#D4AF37]" /> Central de ajuda

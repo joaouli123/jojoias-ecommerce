@@ -11,7 +11,7 @@ export default async function AdminSettingsPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight text-gray-900">Configurações da loja</h1>
+        <h1 className="text-3xl font-medium font-serif tracking-tight text-gray-900">Configurações da loja</h1>
         <p className="mt-2 max-w-3xl text-sm text-gray-600">
           Ajuste dados institucionais, contato e o conteúdo das páginas fixas exibidas no storefront.
         </p>

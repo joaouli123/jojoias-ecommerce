@@ -85,9 +85,9 @@ export default async function OrderSuccessPage({
         <div className="flex items-start gap-4">
           <HeaderIcon className={`h-10 w-10 shrink-0 ${headerColor}`} />
           <div>
-            <h1 className="text-3xl font-black text-zinc-950 tracking-tight">{heading}</h1>
-            <p className="text-zinc-600 mt-2">{description}</p>
-            <p className="text-sm text-zinc-500 mt-2">Número do pedido: <span className="font-bold text-zinc-900">#{order.id.slice(-8).toUpperCase()}</span></p>
+            <h1 className="text-3xl font-medium font-serif text-[#1A1A1A] tracking-tight">{heading}</h1>
+            <p className="text-[#666666] mt-2">{description}</p>
+            <p className="text-sm text-[#666666] mt-2">Número do pedido: <span className="font-medium font-serif text-[#1A1A1A]">#{order.id.slice(-8).toUpperCase()}</span></p>
           </div>
         </div>
       </section>
@@ -105,36 +105,36 @@ export default async function OrderSuccessPage({
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
         <section className="lg:col-span-8 rounded-[20px] border border-zinc-200 bg-white p-6">
-          <h2 className="text-xl font-bold text-zinc-900 mb-5 flex items-center gap-2"><Package className="h-5 w-5" /> Itens comprados</h2>
+          <h2 className="text-xl font-medium font-serif text-[#1A1A1A] mb-5 flex items-center gap-2"><Package className="h-5 w-5" /> Itens comprados</h2>
 
           <div className="space-y-4">
             {order.items.map((item) => (
               <div key={item.id} className="flex items-center justify-between border-b border-zinc-100 pb-4 last:border-0 last:pb-0">
                 <div>
-                  <p className="font-semibold text-zinc-900">{item.product.name}</p>
-                  {item.variant ? <p className="text-sm text-zinc-500">Variação: {item.variant.name}</p> : null}
-                  <p className="text-sm text-zinc-500">Qtd: {item.quantity}</p>
+                  <p className="font-semibold text-[#1A1A1A]">{item.product.name}</p>
+                  {item.variant ? <p className="text-sm text-[#666666]">Variação: {item.variant.name}</p> : null}
+                  <p className="text-sm text-[#666666]">Qtd: {item.quantity}</p>
                 </div>
-                <span className="font-bold text-zinc-900">{formatCurrency(item.price * item.quantity)}</span>
+                <span className="font-medium font-serif text-[#1A1A1A]">{formatCurrency(item.price * item.quantity)}</span>
               </div>
             ))}
           </div>
         </section>
 
         <aside className="lg:col-span-4 space-y-6">
-          <section className="rounded-[20px] border border-zinc-200 bg-zinc-50 p-6">
-            <h2 className="text-lg font-bold text-zinc-900 mb-4">Resumo financeiro</h2>
+          <section className="rounded-[20px] border border-zinc-200 bg-[#FFFFFF] p-6">
+            <h2 className="text-lg font-medium font-serif text-[#1A1A1A] mb-4">Resumo financeiro</h2>
             <dl className="space-y-3 text-sm">
-              <div className="flex justify-between"><dt className="text-zinc-500">Subtotal</dt><dd className="font-semibold text-zinc-900">{formatCurrency(order.subtotal)}</dd></div>
-              <div className="flex justify-between"><dt className="text-zinc-500">Frete</dt><dd className="font-semibold text-emerald-600">{formatCurrency(order.shipping)}</dd></div>
-              <div className="flex justify-between"><dt className="text-zinc-500">Desconto</dt><dd className="font-semibold text-zinc-900">- {formatCurrency(order.discount)}</dd></div>
-              <div className="flex justify-between border-t border-zinc-200 pt-3"><dt className="font-bold text-zinc-900">Total</dt><dd className="text-xl font-black text-zinc-950">{formatCurrency(order.total)}</dd></div>
+              <div className="flex justify-between"><dt className="text-[#666666]">Subtotal</dt><dd className="font-semibold text-[#1A1A1A]">{formatCurrency(order.subtotal)}</dd></div>
+              <div className="flex justify-between"><dt className="text-[#666666]">Frete</dt><dd className="font-semibold text-emerald-600">{formatCurrency(order.shipping)}</dd></div>
+              <div className="flex justify-between"><dt className="text-[#666666]">Desconto</dt><dd className="font-semibold text-[#1A1A1A]">- {formatCurrency(order.discount)}</dd></div>
+              <div className="flex justify-between border-t border-zinc-200 pt-3"><dt className="font-medium font-serif text-[#1A1A1A]">Total</dt><dd className="text-xl font-medium font-serif text-[#1A1A1A]">{formatCurrency(order.total)}</dd></div>
             </dl>
           </section>
 
           <section className="rounded-[20px] border border-zinc-200 bg-white p-6">
-            <h2 className="text-lg font-bold text-zinc-900 mb-4">Dados do pedido</h2>
-            <div className="space-y-3 text-sm text-zinc-700">
+            <h2 className="text-lg font-medium font-serif text-[#1A1A1A] mb-4">Dados do pedido</h2>
+            <div className="space-y-3 text-sm text-[#666666]">
               <p className="flex items-center gap-2"><User className="h-4 w-4" /> {order.user?.name || order.guestName || "Cliente"}</p>
               <p className="flex items-center gap-2"><Mail className="h-4 w-4" /> {order.user?.email || order.guestEmail || "Não informado"}</p>
               <p>Pagamento: <span className="font-semibold">{order.paymentMethod || "Não informado"}</span></p>
@@ -147,8 +147,8 @@ export default async function OrderSuccessPage({
           </section>
 
           <section className="rounded-[20px] border border-zinc-200 bg-white p-6">
-            <h2 className="text-lg font-bold text-zinc-900 mb-4">Entrega</h2>
-            <div className="space-y-3 text-sm text-zinc-700">
+            <h2 className="text-lg font-medium font-serif text-[#1A1A1A] mb-4">Entrega</h2>
+            <div className="space-y-3 text-sm text-[#666666]">
               <p className="flex items-start gap-2"><MapPin className="mt-0.5 h-4 w-4" /> <span>{order.addressStreet}, {order.addressNumber}{order.addressComplement ? ` • ${order.addressComplement}` : ""}<br />{order.addressDistrict} • {order.addressCity}/{order.addressState}<br />CEP {order.addressZipcode}</span></p>
               <p className="flex items-center gap-2"><Truck className="h-4 w-4" /> {order.shippingService || "Frete calculado no checkout"} • até {order.shippingEstimatedDays || 0} dia(s) úteis</p>
               {order.trackingCode ? <p>Código de rastreio: <span className="font-semibold">{order.trackingCode}</span></p> : null}
@@ -158,15 +158,15 @@ export default async function OrderSuccessPage({
       </div>
 
       <div className="mt-8 flex flex-wrap gap-3">
-        <Link href="/" className="inline-flex items-center justify-center h-12 px-6 rounded-[20px] bg-[#111111] text-white font-bold hover:bg-[#111111]/90 transition-colors">
+        <Link href="/" className="inline-flex items-center justify-center h-12 px-6 rounded-[20px] bg-[#111111] text-white font-medium font-serif hover:bg-[#111111]/90 transition-colors">
           Continuar comprando <ArrowRight className="h-4 w-4 ml-2" />
         </Link>
         {session ? (
-          <Link href="/account" className="inline-flex items-center justify-center h-12 px-6 rounded-[20px] border border-zinc-200 bg-white text-zinc-900 font-bold hover:bg-zinc-50 transition-colors">
+          <Link href="/account" className="inline-flex items-center justify-center h-12 px-6 rounded-[20px] border border-zinc-200 bg-white text-[#1A1A1A] font-medium font-serif hover:bg-[#FFFFFF] transition-colors">
             Ver minha conta
           </Link>
         ) : null}
-        <Link href={`/rastreio?pedido=${encodeURIComponent(order.trackingCode || order.id)}&email=${encodeURIComponent(order.user?.email || order.guestEmail || "")}`} className="inline-flex items-center justify-center h-12 px-6 rounded-[20px] border border-zinc-200 bg-white text-zinc-900 font-bold hover:bg-zinc-50 transition-colors">
+        <Link href={`/rastreio?pedido=${encodeURIComponent(order.trackingCode || order.id)}&email=${encodeURIComponent(order.user?.email || order.guestEmail || "")}`} className="inline-flex items-center justify-center h-12 px-6 rounded-[20px] border border-zinc-200 bg-white text-[#1A1A1A] font-medium font-serif hover:bg-[#FFFFFF] transition-colors">
           Acompanhar rastreio
         </Link>
       </div>

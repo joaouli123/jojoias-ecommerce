@@ -129,9 +129,9 @@ export function CartDrawer({ initialCart = getEmptyCartState() }: CartDrawerProp
           aria-label={itemCount > 0 ? `Abrir carrinho com ${itemCount} item(ns)` : "Abrir carrinho"}
         >
           <div className="relative">
-            <ShoppingCart className="h-7 w-7 text-zinc-800" strokeWidth={1.5} />
+            <ShoppingCart className="h-7 w-7 text-[#1A1A1A]" strokeWidth={1.5} />
           </div>
-          <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[#D4AF37] text-xs font-bold text-white">
+          <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[#D4AF37] text-xs font-medium font-serif text-white">
             {itemCount}
           </span>
         </button>
@@ -139,39 +139,39 @@ export function CartDrawer({ initialCart = getEmptyCartState() }: CartDrawerProp
         <div className={`absolute right-0 top-full z-40 hidden w-80 pt-4 lg:block ${isHoverOpen && !isOpen ? "pointer-events-auto" : "pointer-events-none"}`}>
           <div className={`rounded-[20px] border border-zinc-200 bg-white p-4 shadow-[0_20px_50px_-20px_rgba(0,0,0,0.25)] transition-all duration-200 ${isHoverOpen && !isOpen ? "translate-y-0 opacity-100" : "translate-y-2 opacity-0"}`}>
             <div className="mb-3 flex items-center justify-between">
-              <p className="text-sm font-bold text-zinc-950">Seu carrinho</p>
-              <span className="text-xs text-zinc-500">{itemCount} item(ns)</span>
+              <p className="text-sm font-medium font-serif text-[#1A1A1A]">Seu carrinho</p>
+              <span className="text-xs text-[#666666]">{itemCount} item(ns)</span>
             </div>
 
             {!cart.items.length && !isLoading ? (
-              <p className="rounded-[20px] border border-zinc-200 bg-zinc-50 p-4 text-sm text-zinc-500">Seu carrinho está vazio.</p>
+              <p className="rounded-[20px] border border-zinc-200 bg-[#FFFFFF] p-4 text-sm text-[#666666]">Seu carrinho está vazio.</p>
             ) : (
               <div className="space-y-3">
                 {cart.items.slice(0, 3).map((item) => (
                   <div key={`${item.productId}-${item.variantId ?? "base"}`} className="flex gap-3">
-                    <div className="h-14 w-14 overflow-hidden rounded-[20px] border border-zinc-200 bg-zinc-50">
+                    <div className="h-14 w-14 overflow-hidden rounded-[20px] border border-zinc-200 bg-[#FFFFFF]">
                       <div className="h-full w-full bg-cover bg-center" style={{ backgroundImage: `url(${item.image || "https://images.unsplash.com/photo-1611095567219-79caa80c5980?q=80&w=300"})` }} />
                     </div>
                     <div className="min-w-0 flex-1">
-                      <p className="truncate text-sm font-medium text-zinc-900">{item.name}</p>
-                      {item.variantName ? <p className="truncate text-xs text-zinc-500">{item.variantName}</p> : null}
-                      <p className="mt-1 text-xs text-zinc-500">Qtd: {item.quantity}</p>
+                      <p className="truncate text-sm font-medium text-[#1A1A1A]">{item.name}</p>
+                      {item.variantName ? <p className="truncate text-xs text-[#666666]">{item.variantName}</p> : null}
+                      <p className="mt-1 text-xs text-[#666666]">Qtd: {item.quantity}</p>
                     </div>
-                    <span className="text-sm font-bold text-zinc-950">{formatCurrency(item.lineTotal)}</span>
+                    <span className="text-sm font-medium font-serif text-[#1A1A1A]">{formatCurrency(item.lineTotal)}</span>
                   </div>
                 ))}
 
-                {cart.items.length > 3 ? <p className="text-xs text-zinc-500">+ {cart.items.length - 3} item(ns) no carrinho</p> : null}
+                {cart.items.length > 3 ? <p className="text-xs text-[#666666]">+ {cart.items.length - 3} item(ns) no carrinho</p> : null}
               </div>
             )}
 
             <div className="mt-4 border-t border-zinc-200 pt-4">
               <div className="flex items-center justify-between text-sm">
-                <span className="text-zinc-500">Subtotal</span>
-                <span className="font-bold text-zinc-950">{formatCurrency(cart.total)}</span>
+                <span className="text-[#666666]">Subtotal</span>
+                <span className="font-medium font-serif text-[#1A1A1A]">{formatCurrency(cart.total)}</span>
               </div>
               <div className="mt-3 grid grid-cols-2 gap-2">
-                <Link href="/cart" className="inline-flex h-11 items-center justify-center rounded-[20px] border border-zinc-200 px-4 text-sm font-semibold text-zinc-900 hover:border-[#D4AF37] hover:text-[#D4AF37]">
+                <Link href="/cart" className="inline-flex h-11 items-center justify-center rounded-[20px] border border-zinc-200 px-4 text-sm font-semibold text-[#1A1A1A] hover:border-[#D4AF37] hover:text-[#D4AF37]">
                   Ver carrinho
                 </Link>
                 <button type="button" onClick={() => setIsOpen(true)} className="inline-flex h-11 items-center justify-center rounded-[20px] bg-[#111111] px-4 text-sm font-semibold text-white hover:bg-[#111111]/90">
@@ -200,13 +200,13 @@ export function CartDrawer({ initialCart = getEmptyCartState() }: CartDrawerProp
         <div className="flex h-full flex-col">
           {/* Header */}
           <div className="flex items-center justify-between border-b border-zinc-100 px-6 py-4">
-            <h2 className="text-lg font-bold text-zinc-950 flex items-center gap-2">
+            <h2 className="text-lg font-medium font-serif text-[#1A1A1A] flex items-center gap-2">
               <ShoppingCart className="h-5 w-5" /> Seu Carrinho
             </h2>
             <button 
               type="button"
               onClick={() => setIsOpen(false)}
-              className="rounded-full p-2 text-zinc-400 hover:bg-zinc-100 hover:text-zinc-900 transition-colors"
+              className="rounded-full p-2 text-[#E5E5E5] hover:bg-[#F9F8F6] hover:text-[#1A1A1A] transition-colors"
               aria-label="Fechar carrinho"
             >
               <X className="h-5 w-5" />
@@ -216,13 +216,13 @@ export function CartDrawer({ initialCart = getEmptyCartState() }: CartDrawerProp
           {/* Items */}
           <div className="flex-1 overflow-y-auto p-6 space-y-6">
             {!cart.items.length && !isLoading ? (
-              <div className="rounded-[20px] border border-zinc-200 bg-zinc-50 p-6 text-center text-sm text-zinc-500">
+              <div className="rounded-[20px] border border-zinc-200 bg-[#FFFFFF] p-6 text-center text-sm text-[#666666]">
                 Seu carrinho está vazio.
               </div>
             ) : (
               cart.items.map((item) => (
                 <div key={`${item.productId}-${item.variantId ?? "base"}`} className="flex gap-4">
-                  <div className="h-20 w-20 flex-shrink-0 rounded-[20px] border border-zinc-200 bg-zinc-50 overflow-hidden">
+                  <div className="h-20 w-20 flex-shrink-0 rounded-[20px] border border-zinc-200 bg-[#FFFFFF] overflow-hidden">
                     <div
                       className="w-full h-full bg-cover bg-center"
                       style={{ backgroundImage: `url(${item.image || "https://images.unsplash.com/photo-1611095567219-79caa80c5980?q=80&w=300"})` }}
@@ -230,17 +230,17 @@ export function CartDrawer({ initialCart = getEmptyCartState() }: CartDrawerProp
                   </div>
                   <div className="flex flex-1 flex-col justify-between">
                     <div>
-                      <Link href={`/produto/${item.slug}`} className="text-sm font-medium text-zinc-900 line-clamp-1 hover:text-[#D4AF37] transition-colors" onClick={() => setIsOpen(false)}>
+                      <Link href={`/produto/${item.slug}`} className="text-sm font-medium text-[#1A1A1A] line-clamp-1 hover:text-[#D4AF37] transition-colors" onClick={() => setIsOpen(false)}>
                         {item.name}
                       </Link>
-                      {item.variantName ? <p className="mt-1 text-xs text-zinc-500">{item.variantName}</p> : null}
-                      <p className="mt-1 text-sm font-bold text-zinc-950">{formatCurrency(item.unitPrice)}</p>
+                      {item.variantName ? <p className="mt-1 text-xs text-[#666666]">{item.variantName}</p> : null}
+                      <p className="mt-1 text-sm font-medium font-serif text-[#1A1A1A]">{formatCurrency(item.unitPrice)}</p>
                     </div>
                     <div className="flex items-center justify-between mt-2">
                       <div className="flex items-center rounded-[20px] border border-zinc-200">
                         <button
                           onClick={() => void updateQuantity(item.productId, item.quantity - 1, item.variantId)}
-                          className="px-2 py-1 text-zinc-500 hover:text-zinc-900 disabled:opacity-50"
+                          className="px-2 py-1 text-[#666666] hover:text-[#1A1A1A] disabled:opacity-50"
                           disabled={isLoading}
                           aria-label="Diminuir quantidade"
                         >
@@ -249,7 +249,7 @@ export function CartDrawer({ initialCart = getEmptyCartState() }: CartDrawerProp
                         <span className="px-2 text-sm font-medium">{item.quantity}</span>
                         <button
                           onClick={() => void updateQuantity(item.productId, item.quantity + 1, item.variantId)}
-                          className="px-2 py-1 text-zinc-500 hover:text-zinc-900 disabled:opacity-50"
+                          className="px-2 py-1 text-[#666666] hover:text-[#1A1A1A] disabled:opacity-50"
                           disabled={isLoading}
                           aria-label="Aumentar quantidade"
                         >
@@ -271,12 +271,12 @@ export function CartDrawer({ initialCart = getEmptyCartState() }: CartDrawerProp
           </div>
 
           {/* Footer - Checkout */}
-          <div className="border-t border-zinc-100 bg-zinc-50 p-6">
+          <div className="border-t border-zinc-100 bg-[#FFFFFF] p-6">
             <div className="flex items-center justify-between mb-4">
-              <span className="text-base font-medium text-zinc-500">Subtotal</span>
-              <span className="text-xl font-black text-zinc-950">{formatCurrency(cart.total)}</span>
+              <span className="text-base font-medium text-[#666666]">Subtotal</span>
+              <span className="text-xl font-medium font-serif text-[#1A1A1A]">{formatCurrency(cart.total)}</span>
             </div>
-            <p className="text-sm text-zinc-500 mb-6">Frete e impostos calculados no checkout.</p>
+            <p className="text-sm text-[#666666] mb-6">Frete e impostos calculados no checkout.</p>
             <Link
               href="/cart"
               onClick={() => setIsOpen(false)}

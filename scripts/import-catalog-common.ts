@@ -157,6 +157,10 @@ export function buildSkuSlugSuffix(sku: string) {
   return compactSku.slice(-10) || normalizedSku || "item";
 }
 
+export function buildVariantSku(productKey: string, _variantSku: string | undefined, index: number) {
+  return `${productKey}-${String(index + 1).padStart(2, "0")}`.toUpperCase();
+}
+
 export function resolveImportSlug(baseSlug: string, sourceSku: string, duplicateSlugCounts: Map<string, number>) {
   const normalizedBaseSlug = generateProductSlug(baseSlug || sourceSku);
   if ((duplicateSlugCounts.get(normalizedBaseSlug) || 0) <= 1) {
@@ -373,7 +377,7 @@ export async function persistImportedProducts(products: SourceProduct[], sourceL
         data: source.variants.map((variant, index) => ({
           productId: created.id,
           name: variant.type === "Padrão" ? variant.label : `${variant.type}: ${variant.label}`,
-          sku: variant.sku || `${source.sku}-${String(index + 1).padStart(2, "0")}`,
+          sku: buildVariantSku(created.id, variant.sku, index),
           price: variant.price ?? source.price,
           quantity: variant.quantity || DEFAULT_IMPORTED_VARIANT_QUANTITY,
           image: variant.image ?? primaryImage,

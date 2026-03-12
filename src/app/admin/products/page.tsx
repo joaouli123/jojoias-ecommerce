@@ -16,10 +16,10 @@ export default async function AdminProductsPage() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold tracking-tight text-gray-900">Produtos</h1>
+        <h1 className="text-3xl font-medium font-serif tracking-tight text-gray-900">Produtos</h1>
         <Link
           href="/admin/products/new"
-          className="inline-flex h-10 items-center justify-center rounded-md bg-zinc-900 px-4 py-2 text-sm font-medium text-white hover:bg-zinc-800"
+          className="inline-flex h-10 items-center justify-center rounded-md bg-[#1A1A1A] px-4 py-2 text-sm font-medium text-white hover:bg-[#666666]"
         >
           <Plus className="mr-2 h-4 w-4" /> Novo Produto
         </Link>

@@ -13,7 +13,7 @@ export default async function NewBannerPage() {
         <Link href="/admin/banners" className="rounded-md border border-gray-100 bg-white p-2 text-gray-500 shadow-sm hover:text-gray-900">
           <ArrowLeft className="h-5 w-5" />
         </Link>
-        <h1 className="text-3xl font-bold tracking-tight text-gray-900">Novo banner</h1>
+        <h1 className="text-3xl font-medium font-serif tracking-tight text-gray-900">Novo banner</h1>
       </div>
 
       <div className="overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm">
