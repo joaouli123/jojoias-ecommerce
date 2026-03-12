@@ -47,7 +47,7 @@ function useDragScroll() {
 
   function onPointerMove(event: React.PointerEvent<HTMLDivElement>) {
     const container = event.currentTarget;
-    if (!isDragging || dragState.current.pointerId !== event.pointerId) return;
+    if (dragState.current.pointerId !== event.pointerId) return;
 
     const deltaX = event.clientX - dragState.current.startX;
     if (Math.abs(deltaX) > 6) {
@@ -74,6 +74,7 @@ function useDragScroll() {
     if (dragState.current.pointerId === event.pointerId && container.hasPointerCapture(event.pointerId)) {
       container.releasePointerCapture(event.pointerId);
     }
+    dragState.current.pointerId = -1;
     setIsDragging(false);
   }
 
@@ -88,57 +89,6 @@ function useDragScroll() {
       onDragStart: (event: React.DragEvent<HTMLDivElement>) => event.preventDefault(),
     },
   };
-}
-
-function useSwipeCarousel(totalItems: number) {
-  const pointerState = useRef({ startX: 0, pointerId: -1, hasMoved: false });
-
-  function createHandlers(setActiveIndex: React.Dispatch<React.SetStateAction<number>>) {
-    function onPointerDown(event: React.PointerEvent<HTMLDivElement>) {
-      pointerState.current = { startX: event.clientX, pointerId: event.pointerId, hasMoved: false };
-      event.currentTarget.setPointerCapture(event.pointerId);
-    }
-
-    function onPointerMove(event: React.PointerEvent<HTMLDivElement>) {
-      if (pointerState.current.pointerId !== event.pointerId) return;
-
-      const deltaX = event.clientX - pointerState.current.startX;
-      if (Math.abs(deltaX) > 8) {
-        pointerState.current.hasMoved = true;
-        event.preventDefault();
-      }
-    }
-
-    function onPointerUp(event: React.PointerEvent<HTMLDivElement>) {
-      if (pointerState.current.pointerId !== event.pointerId) return;
-
-      const deltaX = event.clientX - pointerState.current.startX;
-      if (Math.abs(deltaX) > 50) {
-        setActiveIndex((current) => {
-          const nextIndex = deltaX < 0 ? current + 1 : current - 1;
-          return (nextIndex + totalItems) % totalItems;
-        });
-      }
-
-      if (event.currentTarget.hasPointerCapture(event.pointerId)) {
-        event.currentTarget.releasePointerCapture(event.pointerId);
-      }
-
-      pointerState.current.pointerId = -1;
-    }
-
-    function onClickCapture(event: React.MouseEvent<HTMLDivElement>) {
-      if (pointerState.current.hasMoved) {
-        event.preventDefault();
-        event.stopPropagation();
-        pointerState.current.hasMoved = false;
-      }
-    }
-
-    return { onPointerDown, onPointerMove, onPointerUp, onPointerCancel: onPointerUp, onClickCapture };
-  }
-
-  return { createHandlers };
 }
 
 function resolveBannerImageUrl(imageUrl: string | null | undefined, fallbackUrl: string) {
@@ -227,7 +177,7 @@ export function BenefitsCarousel() {
         <div 
           ref={scrollRef}
           className={`flex overflow-x-auto snap-x snap-mandatory gap-4 no-scrollbar pb-2 pr-6 ${isDragging ? "cursor-grabbing" : "cursor-grab"}`}
-          style={{ touchAction: "pan-x" }}
+          style={{ touchAction: "pan-y pinch-zoom" }}
           {...dragProps}
         >
           {benefits.map((benefit, i) => (
@@ -278,49 +228,149 @@ export function BenefitsCarousel() {
 }
 
 export function BannerCarousel({ banners = [] }: { banners?: StoreBanner[] }) {
-  const [activeIndex, setActiveIndex] = useState(0);
-
   const secondaryBannerImage = HERO_SECONDARY_FALLBACK;
   const secondaryMobileBannerImage = HERO_SECONDARY_MOBILE_FALLBACK;
-
-  const scroll = (direction: "left" | "right") => {
-    setActiveIndex((current) => {
-      const nextIndex = direction === "right" ? current + 1 : current - 1;
-      return (nextIndex + items.length) % items.length;
-    });
-  };
+  const pointerState = useRef({ startX: 0, pointerId: -1, hasMoved: false });
 
   const fallbackBanners: StoreBanner[] = [
     { id: "hero-1", title: "Banner principal", subtitle: null, imageUrl: HERO_PRIMARY_FALLBACK, mobileUrl: HERO_PRIMARY_MOBILE_FALLBACK, href: null, placement: "hero", position: 0 },
     { id: "hero-2", title: "Banner secundário", subtitle: null, imageUrl: secondaryBannerImage, mobileUrl: secondaryMobileBannerImage, href: null, placement: "hero", position: 1 },
   ];
 
-  const items = banners.length >= 2
+  const baseItems = banners.length >= 2
     ? banners.slice(0, 2)
     : banners.length === 1
       ? [banners[0], fallbackBanners[1]]
       : fallbackBanners;
-  const { createHandlers } = useSwipeCarousel(items.length);
-  const swipeHandlers = createHandlers(setActiveIndex);
+
+  const loopedItems = baseItems.length > 1
+    ? [baseItems[baseItems.length - 1], ...baseItems, baseItems[0]]
+    : baseItems;
+
+  const [activeIndex, setActiveIndex] = useState(baseItems.length > 1 ? 1 : 0);
+  const [isAnimating, setIsAnimating] = useState(true);
+  const logicalIndex = baseItems.length > 1 ? (activeIndex - 1 + baseItems.length) % baseItems.length : activeIndex;
 
   useEffect(() => {
-    if (items.length <= 1) return;
+    setIsAnimating(false);
+    setActiveIndex(baseItems.length > 1 ? 1 : 0);
+
+    const animationFrame = window.requestAnimationFrame(() => {
+      setIsAnimating(true);
+    });
+
+    return () => window.cancelAnimationFrame(animationFrame);
+  }, [baseItems.length]);
+
+  function moveSlide(direction: "left" | "right") {
+    if (baseItems.length <= 1) return;
+
+    setIsAnimating(true);
+    setActiveIndex((current) => current + (direction === "right" ? 1 : -1));
+  }
+
+  function jumpToSlide(index: number) {
+    if (baseItems.length <= 1) return;
+
+    setIsAnimating(true);
+    setActiveIndex(index + 1);
+  }
+
+  function onPointerDown(event: React.PointerEvent<HTMLDivElement>) {
+    pointerState.current = { startX: event.clientX, pointerId: event.pointerId, hasMoved: false };
+    event.currentTarget.setPointerCapture(event.pointerId);
+  }
+
+  function onPointerMove(event: React.PointerEvent<HTMLDivElement>) {
+    if (pointerState.current.pointerId !== event.pointerId) return;
+
+    const deltaX = event.clientX - pointerState.current.startX;
+    if (Math.abs(deltaX) > 8) {
+      pointerState.current.hasMoved = true;
+      event.preventDefault();
+    }
+  }
+
+  function onPointerUp(event: React.PointerEvent<HTMLDivElement>) {
+    if (pointerState.current.pointerId !== event.pointerId) return;
+
+    const deltaX = event.clientX - pointerState.current.startX;
+    if (Math.abs(deltaX) > 50) {
+      moveSlide(deltaX < 0 ? "right" : "left");
+    }
+
+    if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+      event.currentTarget.releasePointerCapture(event.pointerId);
+    }
+
+    pointerState.current.pointerId = -1;
+  }
+
+  function onClickCapture(event: React.MouseEvent<HTMLDivElement>) {
+    if (pointerState.current.hasMoved) {
+      event.preventDefault();
+      event.stopPropagation();
+      pointerState.current.hasMoved = false;
+    }
+  }
+
+  function onTransitionEnd() {
+    if (baseItems.length <= 1) return;
+
+    if (activeIndex === 0) {
+      setIsAnimating(false);
+      setActiveIndex(baseItems.length);
+      return;
+    }
+
+    if (activeIndex === loopedItems.length - 1) {
+      setIsAnimating(false);
+      setActiveIndex(1);
+      return;
+    }
+  }
+
+  useEffect(() => {
+    if (isAnimating) return;
+
+    const animationFrame = window.requestAnimationFrame(() => {
+      setIsAnimating(true);
+    });
+
+    return () => window.cancelAnimationFrame(animationFrame);
+  }, [isAnimating]);
+
+  useEffect(() => {
+    if (baseItems.length <= 1) return;
 
     const intervalId = window.setInterval(() => {
-      setActiveIndex((current) => (current + 1) % items.length);
+      moveSlide("right");
     }, 5000);
 
     return () => {
       window.clearInterval(intervalId);
     };
-  }, [items.length]);
+  }, [baseItems.length]);
 
   return (
     <section className="group relative mt-4 w-full max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 md:mt-6">
-      <div className="relative overflow-hidden rounded-2xl shadow-sm md:rounded-3xl" style={{ touchAction: "pan-y pinch-zoom" }} {...swipeHandlers}>
-        <div className="flex transition-transform duration-500 ease-out" style={{ transform: `translateX(-${activeIndex * 100}%)` }}>
-          {items.map((banner) => {
-            const isFirstBanner = banner.id === items[0]?.id;
+      <div
+        className="relative overflow-hidden rounded-2xl shadow-sm md:rounded-3xl"
+        style={{ touchAction: "pan-y pinch-zoom" }}
+        onPointerDown={onPointerDown}
+        onPointerMove={onPointerMove}
+        onPointerUp={onPointerUp}
+        onPointerCancel={onPointerUp}
+        onClickCapture={onClickCapture}
+      >
+        <div
+          className={`flex ease-out ${isAnimating ? "transition-transform duration-500" : "transition-none"}`}
+          style={{ transform: `translateX(-${activeIndex * 100}%)` }}
+          onTransitionEnd={onTransitionEnd}
+        >
+          {loopedItems.map((banner, index) => {
+            const realIndex = baseItems.length > 1 ? (index - 1 + baseItems.length) % baseItems.length : index;
+            const isFirstBanner = realIndex === 0;
             const desktopImage = resolveBannerImageUrl(
               banner.imageUrl,
               isFirstBanner ? HERO_PRIMARY_FALLBACK : secondaryBannerImage,
@@ -367,15 +417,15 @@ export function BannerCarousel({ banners = [] }: { banners?: StoreBanner[] }) {
           })}
         </div>
 
-        {items.length > 1 ? (
+        {baseItems.length > 1 ? (
           <div className="pointer-events-none absolute inset-x-0 bottom-4 z-10 flex justify-center gap-2">
-            {items.map((item, index) => (
+            {baseItems.map((item, index) => (
               <button
                 key={item.id}
                 type="button"
                 aria-label={`Ir para banner ${index + 1}`}
-                onClick={() => setActiveIndex(index)}
-                className={`pointer-events-auto h-2.5 rounded-full transition-all ${index === activeIndex ? "w-8 bg-white" : "w-2.5 bg-white/50"}`}
+                onClick={() => jumpToSlide(index)}
+                className={`pointer-events-auto h-2.5 rounded-full transition-all ${index === logicalIndex ? "w-8 bg-white" : "w-2.5 bg-white/50"}`}
               />
             ))}
           </div>
@@ -422,7 +472,7 @@ export function SecondaryBanners({ banners = [] }: { banners?: StoreBanner[] }) 
       <div 
         ref={scrollRef}
         className={`flex overflow-x-auto snap-x snap-mandatory gap-4 no-scrollbar pb-2 pr-6 md:grid md:grid-cols-3 md:gap-6 md:overflow-visible md:pb-0 ${isDragging ? "cursor-grabbing" : "cursor-grab md:cursor-default"}`}
-        style={{ touchAction: "pan-x" }}
+        style={{ touchAction: "pan-y pinch-zoom" }}
         {...dragProps}
       >
         {items.map((banner, index) => {
@@ -502,7 +552,7 @@ export function CategoriesCarousel({ categories = [] }: { categories?: StoreCate
         <div 
           ref={scrollRef}
           className={`flex overflow-x-auto snap-x snap-mandatory gap-5 no-scrollbar px-1 pb-2 pr-8 ${isDragging ? "cursor-grabbing" : "cursor-grab"}`}
-          style={{ touchAction: "pan-x pinch-zoom" }}
+          style={{ touchAction: "pan-y pinch-zoom" }}
           {...dragProps}
         >
           {items.map((cat, i) => (
