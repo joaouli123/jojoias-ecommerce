@@ -30,6 +30,7 @@
     "db:push": "prisma db push",
     "seo:products": "tsx scripts/backfill-product-seo.ts",
     "catalog:review": "tsx scripts/review-catalog-with-ai.ts",
+    "catalog:cleanup-categories": "tsx scripts/cleanup-canonical-categories.ts",
     "admin:ensure": "tsx scripts/ensure-admin.ts",
     "coupon:ensure": "tsx scripts/ensure-default-coupon.ts",
     "ga4:ensure": "tsx scripts/ensure-ga4.ts",
@@ -41,6 +42,7 @@
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.11.1",
+    "@iconify/react": "^6.0.2",
     "@prisma/client": "^6.19.2",
     "@sentry/nextjs": "^10.43.0",
     "@upstash/ratelimit": "^2.0.8",

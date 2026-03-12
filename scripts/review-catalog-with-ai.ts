@@ -321,9 +321,10 @@ function normalizeBrandName(brandName: string | null | undefined, brandSlug: str
   return normalizedName || "Luxijóias";
 }
 
-function resolveCanonicalCategory(candidate: string, fallbackName: string) {
+function resolveCanonicalCategory(candidate: string, fallbackName: string, productName?: string) {
   const normalizedCandidate = normalizeComparableText(candidate);
   const normalizedFallback = normalizeComparableText(fallbackName);
+  const normalizedProductName = normalizeComparableText(productName);
 
   const match = CANONICAL_CATEGORIES.find((category) => normalizeComparableText(category) === normalizedCandidate);
   if (match) {
@@ -346,10 +347,10 @@ function resolveCanonicalCategory(candidate: string, fallbackName: string) {
     [/(relogio|rel[oó]gio|casio)/i, "Relógios"],
     [/(oculos|[óo]culos)/i, "Óculos"],
     [/(bolsa)/i, "Bolsas"],
-    [/(cartela|espelho|veludo|saquinho|acessorio|acess[oó]rio|organza|kit|acr[ií]lico)/i, "Acessórios"],
+    [/(cartela|espelho|veludo|saquinho|acessorio|acess[oó]rio|organza|kit|acr[ií]lico|maleta|estojo|expositor|porta\s*joias?)/i, "Acessórios"],
   ];
 
-  const source = `${normalizedCandidate} ${normalizedFallback}`;
+  const source = `${normalizedCandidate} ${normalizedFallback} ${normalizedProductName}`;
   for (const [pattern, category] of aliasMap) {
     if (pattern.test(source)) {
       return category;
@@ -500,7 +501,7 @@ function buildFallbackPlan(input: {
   price: number;
   comparePrice: number | null;
 }) {
-  const categoryName = resolveCanonicalCategory(input.name, input.currentCategory);
+  const categoryName = resolveCanonicalCategory(input.name, input.currentCategory, input.name);
   const description = buildFallbackBody(input.name, input.description, categoryName, input.brandName);
   const highlights = input.highlights;
 
@@ -648,7 +649,11 @@ async function main() {
           comparePrice: entry.product.comparePrice,
         });
 
-        const categoryName = resolveCanonicalCategory(aiProduct?.category || fallback.categoryName, entry.product.category.name);
+        const categoryName = resolveCanonicalCategory(
+          aiProduct?.category || fallback.categoryName,
+          entry.product.category.name,
+          entry.product.name,
+        );
         const descriptionBody = cleanWhitespace(aiProduct?.description || fallback.description);
         const mergedHighlights = Array.from(new Set([
           ...entry.extracted.infoItems.map((item) => item.value),

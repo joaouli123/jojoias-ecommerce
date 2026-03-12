@@ -2,7 +2,22 @@ import "dotenv/config";
 import { prisma } from "../src/lib/prisma";
 import { buildStructuredProductDescription, extractProductInfoFromDescription, type ProductSpecItem } from "../src/lib/product-content";
 
-const DEFAULT_LIMIT = Math.max(1, Number.parseInt(process.env.SPEC_PASS_LIMIT || "0", 10) || 0);
+declare const process: {
+  env: Record<string, string | undefined>;
+  argv: string[];
+  exit(code?: number): never;
+};
+
+const parsedDefaultLimit = Number.parseInt(process.env.SPEC_PASS_LIMIT || "0", 10) || 0;
+const DEFAULT_LIMIT = parsedDefaultLimit > 0 ? parsedDefaultLimit : 0;
+const parsedDefaultConcurrency = Number.parseInt(process.env.SPEC_PASS_CONCURRENCY || "8", 10) || 8;
+const DEFAULT_CONCURRENCY = Math.max(1, parsedDefaultConcurrency);
+
+type ProductRow = {
+  id: string;
+  name: string;
+  description: string | null;
+};
 
 function cleanLine(value: string) {
   return value.replace(/\s+/g, " ").trim();
@@ -127,10 +142,51 @@ function splitInfoAndSpecCandidates(infoItems: Array<{ label: string; value: str
   return { retainedInfo, derivedSpecs };
 }
 
+function parseNumericFlag(flag: string, fallback: number) {
+  const index = process.argv.findIndex((argument: string) => argument === flag);
+  if (index < 0) {
+    return fallback;
+  }
+
+  const parsed = Number.parseInt(process.argv[index + 1] || String(fallback), 10) || fallback;
+  return parsed > 0 ? parsed : fallback;
+}
+
+async function processProduct(product: ProductRow, dryRun: boolean) {
+  const currentDescription = product.description ?? "";
+  const parsed = extractProductInfoFromDescription(currentDescription);
+  const fromInfo = splitInfoAndSpecCandidates(parsed.infoItems);
+  const fromBody = extractSentenceSpecs(parsed.descriptionBody);
+  const mergedSpecs = [...parsed.specItems];
+
+  for (const spec of [...fromInfo.derivedSpecs, ...fromBody]) {
+    pushSpec(mergedSpecs, spec.label, spec.value);
+  }
+
+  const nextDescription = buildStructuredProductDescription(
+    parsed.descriptionBody,
+    fromInfo.retainedInfo,
+    mergedSpecs,
+  );
+
+  if (nextDescription === currentDescription) {
+    return { updated: false, name: product.name };
+  }
+
+  if (!dryRun) {
+    await prisma.product.update({
+      where: { id: product.id },
+      data: { description: nextDescription },
+    });
+  }
+
+  return { updated: true, name: product.name };
+}
+
 async function main() {
   const dryRun = process.argv.includes("--dry-run");
-  const limitIndex = process.argv.findIndex((argument) => argument === "--limit");
-  const limit = Number.parseInt((limitIndex >= 0 ? process.argv[limitIndex + 1] : String(DEFAULT_LIMIT)) || String(DEFAULT_LIMIT), 10) || DEFAULT_LIMIT;
+  const limit = parseNumericFlag("--limit", DEFAULT_LIMIT);
+  const concurrency = parseNumericFlag("--concurrency", DEFAULT_CONCURRENCY);
 
   const products = await prisma.product.findMany({
     where: {
@@ -147,39 +203,30 @@ async function main() {
   });
 
   let updated = 0;
+  let failed = 0;
 
-  for (const product of products) {
-    const parsed = extractProductInfoFromDescription(product.description);
-    const fromInfo = splitInfoAndSpecCandidates(parsed.infoItems);
-    const fromBody = extractSentenceSpecs(parsed.descriptionBody);
-    const mergedSpecs = [...parsed.specItems];
+  for (let index = 0; index < products.length; index += concurrency) {
+    const chunk = products.slice(index, index + concurrency);
+    const results = await Promise.allSettled(chunk.map((product) => processProduct(product, dryRun)));
 
-    for (const spec of [...fromInfo.derivedSpecs, ...fromBody]) {
-      pushSpec(mergedSpecs, spec.label, spec.value);
+    for (const result of results) {
+      if (result.status === "rejected") {
+        failed += 1;
+        console.error("Falha ao revisar especificações:");
+        console.error(result.reason);
+        continue;
+      }
+
+      if (!result.value.updated) {
+        continue;
+      }
+
+      updated += 1;
+      console.log(`[${updated}] Especificações revisadas: ${result.value.name}`);
     }
-
-    const nextDescription = buildStructuredProductDescription(
-      parsed.descriptionBody,
-      fromInfo.retainedInfo,
-      mergedSpecs,
-    );
-
-    if (nextDescription === product.description) {
-      continue;
-    }
-
-    if (!dryRun) {
-      await prisma.product.update({
-        where: { id: product.id },
-        data: { description: nextDescription },
-      });
-    }
-
-    updated += 1;
-    console.log(`[${updated}] Especificações revisadas: ${product.name}`);
   }
 
-  console.log(JSON.stringify({ processed: products.length, updated, dryRun }, null, 2));
+  console.log(JSON.stringify({ processed: products.length, updated, failed, dryRun, concurrency }, null, 2));
 }
 
 main()
