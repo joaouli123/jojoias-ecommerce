@@ -25,9 +25,10 @@ interface ProductCardProps {
     requiresSelection?: boolean
     whatsappBaseUrl?: string
   }
+  pixIconClassName?: string
 }
 
-export function ProductCard({ product }: ProductCardProps) {
+export function ProductCard({ product, pixIconClassName }: ProductCardProps) {
   const router = useRouter();
   const [isPending, setIsPending] = useState(false);
   const [showCartNotice, setShowCartNotice] = useState(false);
@@ -190,7 +191,7 @@ export function ProductCard({ product }: ProductCardProps) {
           </span>
 
           <div className="mt-2 flex w-full items-center gap-2 border-t border-zinc-200 pt-3 text-left">
-            <PixIcon className="h-[13px] w-[13px] shrink-0 translate-y-px text-[#32BCAD]" />
+            <PixIcon className={`h-[13px] w-[13px] shrink-0 text-[#32BCAD] ${pixIconClassName ?? "translate-y-px"}`} />
             <span className="text-sm font-medium leading-none text-[#1A1A1A]">
               ou {formatCurrency(pixPrice)} via Pix
             </span>

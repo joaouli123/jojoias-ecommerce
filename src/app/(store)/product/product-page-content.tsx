@@ -364,6 +364,7 @@ function RelatedProductsSection({
         {relatedProducts.map((relatedProduct) => (
           <ProductCard
             key={relatedProduct.id}
+            pixIconClassName="translate-y-[2px]"
             product={{
               id: relatedProduct.id,
               name: relatedProduct.name,
