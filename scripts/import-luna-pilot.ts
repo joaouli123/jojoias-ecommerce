@@ -1,7 +1,7 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { PrismaClient, ProductStatus } from "@prisma/client";
-import type { Browser, BrowserContext, Page } from "playwright";
+// import { Browser, BrowserContext, Page } from "playwright";
 import { buildProductMetaDescription, buildProductSeoTitle, generateProductSlug } from "../src/lib/product-seo";
 import { generateProductSeoWithAi } from "../src/lib/product-seo-ai";
 import { buildImportedDescription } from "../src/lib/product-content";
