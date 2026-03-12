@@ -11,20 +11,20 @@ export async function Footer() {
   return (
     <footer className="w-full border-t border-zinc-200 bg-[#FCFCFC] pt-16 pb-28 md:pb-8">
       <div className="mx-auto max-w-[1440px] px-6 lg:px-10">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 pb-16 border-b border-zinc-200">
+        <div className="grid grid-cols-1 gap-12 border-b border-zinc-200 pb-16 lg:grid-cols-12 lg:gap-10">
           
           {/* Brand & Newsletter Column */}
-          <div className="lg:col-span-5 flex flex-col space-y-8">
+          <div className="flex flex-col space-y-8 lg:col-span-5">
             <div>
               <Image src="/logo-oficial.avif" alt="Luxijóias Semijoias" width={220} height={66} quality={50} sizes="(max-width: 640px) 180px, 220px" className="h-auto w-[180px] sm:w-[220px]" />
-              <p className="mt-4 text-[15px] leading-relaxed text-[#666666] max-w-sm">
+              <p className="mt-4 max-w-sm text-[15px] leading-relaxed text-zinc-600" style={{ color: "#666666" }}>
                 {settings.tagline}
               </p>
             </div>
 
             <div className="space-y-4">
-              <h3 className="font-serif text-[clamp(2rem,3.1vw,2.5rem)] font-medium tracking-[-0.03em] text-[#1A1A1A]">Acompanhe as Novidades</h3>
-              <p className="text-sm text-[#666666] max-w-sm">Inscreva-se para receber tendências, lançamentos e ofertas exclusivas no seu e-mail.</p>
+              <h3 className="font-serif text-[clamp(2rem,3.1vw,2.5rem)] font-medium tracking-[-0.03em] text-zinc-900" style={{ color: "#1A1A1A" }}>Acompanhe as Novidades</h3>
+              <p className="max-w-sm text-sm text-zinc-600" style={{ color: "#666666" }}>Inscreva-se para receber tendências, lançamentos e ofertas exclusivas no seu e-mail.</p>
               <NewsletterSubscribeForm />
             </div>
 
@@ -44,39 +44,39 @@ export async function Footer() {
             </div>
           </div>
 
-          <div className="lg:col-span-7 grid grid-cols-1 gap-8 sm:gap-10 md:grid-cols-3">
+          <div className="grid grid-cols-1 gap-8 sm:gap-10 md:grid-cols-3 lg:col-span-7 lg:max-w-[860px] lg:justify-self-end lg:gap-x-12">
             {/* Links Columns */}
             <div className="hidden md:block">
-              <h3 className="font-semibold text-[#1A1A1A] mb-6 uppercase tracking-wider text-xs">A Luxijóias</h3>
+              <h3 className="mb-6 text-xs font-semibold uppercase tracking-wider text-zinc-900" style={{ color: "#1A1A1A" }}>A Luxijóias</h3>
               <ul className="space-y-4">
-                <li><Link href="/quem-somos" className="text-[15px] text-[#666666] hover:text-[#D4AF37] hover:pl-1 transition-all">Quem Somos</Link></li>
-                <li><Link href="/marcas" className="text-[15px] text-[#666666] hover:text-[#D4AF37] hover:pl-1 transition-all">Marcas</Link></li>
-                <li><Link href="/blog" className="text-[15px] text-[#666666] hover:text-[#D4AF37] hover:pl-1 transition-all">Blog</Link></li>
-                <li><Link href="/search?q=lancamentos" className="text-[15px] text-[#666666] hover:text-[#D4AF37] hover:pl-1 transition-all">Lançamentos</Link></li>
-                <li><Link href="/categoria/ofertas" className="text-[15px] text-[#666666] hover:text-[#D4AF37] hover:pl-1 transition-all">Ofertas</Link></li>
-                <li><Link href="/favorites" className="text-[15px] text-[#666666] hover:text-[#D4AF37] hover:pl-1 transition-all">Favoritos</Link></li>
-                <li><Link href="/account" className="text-[15px] text-[#666666] hover:text-[#D4AF37] hover:pl-1 transition-all">Minha Conta</Link></li>
+                <li><Link href="/quem-somos" className="text-[15px] text-zinc-600 transition-all hover:pl-1 hover:text-[#D4AF37]" style={{ color: "#666666" }}>Quem Somos</Link></li>
+                <li><Link href="/marcas" className="text-[15px] text-zinc-600 transition-all hover:pl-1 hover:text-[#D4AF37]" style={{ color: "#666666" }}>Marcas</Link></li>
+                <li><Link href="/blog" className="text-[15px] text-zinc-600 transition-all hover:pl-1 hover:text-[#D4AF37]" style={{ color: "#666666" }}>Blog</Link></li>
+                <li><Link href="/search?q=lancamentos" className="text-[15px] text-zinc-600 transition-all hover:pl-1 hover:text-[#D4AF37]" style={{ color: "#666666" }}>Lançamentos</Link></li>
+                <li><Link href="/categoria/ofertas" className="text-[15px] text-zinc-600 transition-all hover:pl-1 hover:text-[#D4AF37]" style={{ color: "#666666" }}>Ofertas</Link></li>
+                <li><Link href="/favorites" className="text-[15px] text-zinc-600 transition-all hover:pl-1 hover:text-[#D4AF37]" style={{ color: "#666666" }}>Favoritos</Link></li>
+                <li><Link href="/account" className="text-[15px] text-zinc-600 transition-all hover:pl-1 hover:text-[#D4AF37]" style={{ color: "#666666" }}>Minha Conta</Link></li>
               </ul>
             </div>
 
             <div className="hidden md:block">
-              <h3 className="font-semibold text-[#1A1A1A] mb-6 uppercase tracking-wider text-xs">Suporte</h3>
+              <h3 className="mb-6 text-xs font-semibold uppercase tracking-wider text-zinc-900" style={{ color: "#1A1A1A" }}>Suporte</h3>
               <ul className="space-y-4">
-                <li><Link href="/contato" className="text-[15px] text-[#666666] hover:text-[#D4AF37] hover:pl-1 transition-all">Central de Ajuda</Link></li>
-                <li><Link href="/trocas-e-devolucoes" className="text-[15px] text-[#666666] hover:text-[#D4AF37] hover:pl-1 transition-all">Trocas e Devoluções</Link></li>
-                <li><Link href="/rastreio" className="text-[15px] text-[#666666] hover:text-[#D4AF37] hover:pl-1 transition-all">Rastrear Pedido</Link></li>
-                <li><Link href="/checkout" className="text-[15px] text-[#666666] hover:text-[#D4AF37] hover:pl-1 transition-all">Entregas</Link></li>
-                <li><Link href="/faq" className="text-[15px] text-[#666666] hover:text-[#D4AF37] hover:pl-1 transition-all">FAQ</Link></li>
+                <li><Link href="/contato" className="text-[15px] text-zinc-600 transition-all hover:pl-1 hover:text-[#D4AF37]" style={{ color: "#666666" }}>Central de Ajuda</Link></li>
+                <li><Link href="/trocas-e-devolucoes" className="text-[15px] text-zinc-600 transition-all hover:pl-1 hover:text-[#D4AF37]" style={{ color: "#666666" }}>Trocas e Devoluções</Link></li>
+                <li><Link href="/rastreio" className="text-[15px] text-zinc-600 transition-all hover:pl-1 hover:text-[#D4AF37]" style={{ color: "#666666" }}>Rastrear Pedido</Link></li>
+                <li><Link href="/checkout" className="text-[15px] text-zinc-600 transition-all hover:pl-1 hover:text-[#D4AF37]" style={{ color: "#666666" }}>Entregas</Link></li>
+                <li><Link href="/faq" className="text-[15px] text-zinc-600 transition-all hover:pl-1 hover:text-[#D4AF37]" style={{ color: "#666666" }}>FAQ</Link></li>
               </ul>
             </div>
 
             <div className="hidden md:block">
-              <h3 className="font-semibold text-[#1A1A1A] mb-6 uppercase tracking-wider text-xs">Legal</h3>
+              <h3 className="mb-6 text-xs font-semibold uppercase tracking-wider text-zinc-900" style={{ color: "#1A1A1A" }}>Legal</h3>
               <ul className="space-y-4">
-                <li><Link href="/termos-de-uso" className="text-[15px] text-[#666666] hover:text-[#D4AF37] hover:pl-1 transition-all">Termos de Uso</Link></li>
-                <li><Link href="/privacidade" className="text-[15px] text-[#666666] hover:text-[#D4AF37] hover:pl-1 transition-all">Privacidade</Link></li>
-                <li><Link href="/trocas-e-devolucoes" className="text-[15px] text-[#666666] hover:text-[#D4AF37] hover:pl-1 transition-all">Políticas de Compras</Link></li>
-                <li><Link href="/privacidade" className="text-[15px] text-[#666666] hover:text-[#D4AF37] hover:pl-1 transition-all">Cookies</Link></li>
+                <li><Link href="/termos-de-uso" className="text-[15px] text-zinc-600 transition-all hover:pl-1 hover:text-[#D4AF37]" style={{ color: "#666666" }}>Termos de Uso</Link></li>
+                <li><Link href="/privacidade" className="text-[15px] text-zinc-600 transition-all hover:pl-1 hover:text-[#D4AF37]" style={{ color: "#666666" }}>Privacidade</Link></li>
+                <li><Link href="/trocas-e-devolucoes" className="text-[15px] text-zinc-600 transition-all hover:pl-1 hover:text-[#D4AF37]" style={{ color: "#666666" }}>Políticas de Compras</Link></li>
+                <li><Link href="/privacidade" className="text-[15px] text-zinc-600 transition-all hover:pl-1 hover:text-[#D4AF37]" style={{ color: "#666666" }}>Cookies</Link></li>
               </ul>
             </div>
 
@@ -116,34 +116,34 @@ export async function Footer() {
               </details>
             </div>
             
-            <div className="col-span-2 md:col-span-3 pt-6 lg:pt-2">
-              <h3 className="mb-5 font-serif text-[clamp(2rem,3vw,2.45rem)] font-medium uppercase tracking-[0.14em] text-[#1A1A1A]">Fale com a gente</h3>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+            <div className="pt-4 md:col-span-3 lg:pt-2">
+              <h3 className="mb-5 font-serif text-[clamp(2rem,3vw,2.45rem)] font-medium uppercase tracking-[0.14em] text-zinc-900" style={{ color: "#1A1A1A" }}>Fale com a gente</h3>
+              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 lg:gap-x-10">
                 <div className="flex items-start gap-4">
                   <div className="w-10 h-10 rounded-full bg-white border border-zinc-200 flex items-center justify-center flex-shrink-0">
-                    <Phone className="w-4 h-4 stroke-[1.8] text-[#666666]" />
+                    <Phone className="w-4 h-4 stroke-[1.8] text-zinc-600" style={{ color: "#666666" }} />
                   </div>
                   <div>
-                    <h4 className="text-base font-medium text-[#1A1A1A] md:text-[1.1rem]">Telefone / WhatsApp</h4>
-                    <p className="mt-1 text-base text-[#666666] transition-colors cursor-pointer hover:text-[#D4AF37]">{settings.supportPhone}</p>
+                    <h4 className="text-base font-medium text-zinc-900 md:text-[1.1rem]" style={{ color: "#1A1A1A" }}>Telefone / WhatsApp</h4>
+                    <p className="mt-1 text-base text-zinc-600 transition-colors cursor-pointer hover:text-[#D4AF37]" style={{ color: "#666666" }}>{settings.supportPhone}</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-4">
                   <div className="w-10 h-10 rounded-full bg-white border border-zinc-200 flex items-center justify-center flex-shrink-0">
-                    <Mail className="w-4 h-4 stroke-[1.8] text-[#666666]" />
+                    <Mail className="w-4 h-4 stroke-[1.8] text-zinc-600" style={{ color: "#666666" }} />
                   </div>
                   <div>
-                    <h4 className="text-base font-medium text-[#1A1A1A] md:text-[1.1rem]">E-mail</h4>
-                    <Link href="/contato" className="mt-1 inline-flex text-base text-[#666666] transition-colors hover:text-[#D4AF37]">Abrir atendimento por e-mail</Link>
+                    <h4 className="text-base font-medium text-zinc-900 md:text-[1.1rem]" style={{ color: "#1A1A1A" }}>E-mail</h4>
+                    <Link href="/contato" className="mt-1 inline-flex text-base text-zinc-600 transition-colors hover:text-[#D4AF37]" style={{ color: "#666666" }}>Abrir atendimento por e-mail</Link>
                   </div>
                 </div>
                 <div className="flex items-start gap-4">
                   <div className="w-10 h-10 rounded-full bg-white border border-zinc-200 flex items-center justify-center flex-shrink-0">
-                    <MapPin className="w-4 h-4 stroke-[1.8] text-[#666666]" />
+                    <MapPin className="w-4 h-4 stroke-[1.8] text-zinc-600" style={{ color: "#666666" }} />
                   </div>
                   <div>
-                    <h4 className="text-base font-medium text-[#1A1A1A] md:text-[1.1rem]">Escritório</h4>
-                    <p className="mt-1 text-base text-[#666666]">{settings.addressLine}<br />{settings.businessHours}</p>
+                    <h4 className="text-base font-medium text-zinc-900 md:text-[1.1rem]" style={{ color: "#1A1A1A" }}>Escritório</h4>
+                    <p className="mt-1 text-base text-zinc-600" style={{ color: "#666666" }}>{settings.addressLine}<br />{settings.businessHours}</p>
                   </div>
                 </div>
               </div>
