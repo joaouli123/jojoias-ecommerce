@@ -6,11 +6,11 @@ const SEARCH_CACHE_TTL_SECONDS = 60 * 5;
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
-  const query = searchParams.get("q")?.trim() ?? "";
+  const query = searchParams.get("q")?.trim().replace(/\s+/g, " ").slice(0, 80) ?? "";
   const limit = Number.parseInt(searchParams.get("limit") ?? "5", 10);
   const normalizedLimit = Number.isNaN(limit) ? 5 : Math.min(Math.max(limit, 1), 10);
 
-  if (!query) {
+  if (query.length < 2) {
     return NextResponse.json({ products: [], categories: [], brands: [] });
   }
 

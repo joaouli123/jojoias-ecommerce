@@ -259,17 +259,8 @@ function normalizePageSize(value?: number) {
   return Math.min(Math.floor(value), 48);
 }
 
-function buildCatalogCacheKey(filters: CatalogFilters = {}) {
-  return JSON.stringify({
-    categorySlug: filters.categorySlug ?? null,
-    brandSlug: filters.brandSlug ?? null,
-    query: filters.query?.trim() ?? null,
-    minPrice: filters.minPrice ?? null,
-    maxPrice: filters.maxPrice ?? null,
-    sort: filters.sort ?? "relevance",
-    page: normalizePage(filters.page),
-    pageSize: normalizePageSize(filters.pageSize),
-  });
+function getRelevanceCandidateLimit(page: number, pageSize: number) {
+  return Math.min(Math.max(page * pageSize * 8, 120), 480);
 }
 
 function buildCatalogWhere(filters: CatalogFilters): Prisma.ProductWhereInput {
@@ -679,43 +670,35 @@ export async function getCatalogProducts(filters: CatalogFilters = {}): Promise<
   const where = buildCatalogWhere(filters);
 
   try {
-    const cacheKey = buildCatalogCacheKey(filters);
-    const { total, products } = await unstable_cache(
-      async () => {
-        const total = await prisma.product.count({ where });
+    const total = await prisma.product.count({ where });
 
-        const baseQuery = {
-          where,
-          include: {
-            category: { select: { name: true, slug: true } },
-            brand: { select: { name: true, slug: true } },
-            galleryImages: true,
-            variants: { where: { isActive: true }, orderBy: [{ createdAt: "asc" as const }] },
-          },
-        };
-
-        const products = filters.query?.trim() && (filters.sort ?? "relevance") === "relevance"
-          ? (await prisma.product.findMany({
-              ...baseQuery,
-              orderBy: [{ createdAt: "desc" }],
-            })).sort((left, right) => {
-              const leftScore = scoreSearchFields(filters.query ?? "", [left.name, left.sku, left.description, left.brand?.name, left.category.name]);
-              const rightScore = scoreSearchFields(filters.query ?? "", [right.name, right.sku, right.description, right.brand?.name, right.category.name]);
-              if (rightScore !== leftScore) return rightScore - leftScore;
-              return right.createdAt.getTime() - left.createdAt.getTime();
-            }).slice((page - 1) * pageSize, page * pageSize)
-          : await prisma.product.findMany({
-              ...baseQuery,
-              orderBy: buildCatalogOrderBy(filters.sort),
-              skip: (page - 1) * pageSize,
-              take: pageSize,
-            });
-
-        return { total, products };
+    const baseQuery = {
+      where,
+      include: {
+        category: { select: { name: true, slug: true } },
+        brand: { select: { name: true, slug: true } },
+        galleryImages: true,
+        variants: { where: { isActive: true }, orderBy: [{ createdAt: "asc" as const }] },
       },
-      ["store-catalog-products", cacheKey],
-      { revalidate: 120, tags: ["store:products"] },
-    )();
+    };
+
+    const products = filters.query?.trim() && (filters.sort ?? "relevance") === "relevance"
+      ? (await prisma.product.findMany({
+          ...baseQuery,
+          orderBy: [{ createdAt: "desc" }],
+          take: getRelevanceCandidateLimit(page, pageSize),
+        })).sort((left, right) => {
+          const leftScore = scoreSearchFields(filters.query ?? "", [left.name, left.sku, left.description, left.brand?.name, left.category.name]);
+          const rightScore = scoreSearchFields(filters.query ?? "", [right.name, right.sku, right.description, right.brand?.name, right.category.name]);
+          if (rightScore !== leftScore) return rightScore - leftScore;
+          return right.createdAt.getTime() - left.createdAt.getTime();
+        }).slice((page - 1) * pageSize, page * pageSize)
+      : await prisma.product.findMany({
+          ...baseQuery,
+          orderBy: buildCatalogOrderBy(filters.sort),
+          skip: (page - 1) * pageSize,
+          take: pageSize,
+        });
 
     return {
       products: products.map(mapProduct),
@@ -754,37 +737,83 @@ export async function getCatalogFacets(filters: CatalogFilters = {}): Promise<Ca
   });
 
   try {
-    const cacheKey = buildCatalogCacheKey({
-      ...filters,
-      page: undefined,
-      pageSize: undefined,
-    });
-    const { brandEntries, categoryEntries } = await unstable_cache(
-      async () => {
-        const [brandEntries, categoryEntries] = await Promise.all([
-          prisma.product.findMany({
-            where: brandWhere,
-            select: {
-              brand: { select: { id: true, name: true, slug: true } },
-            },
-          }),
-          prisma.product.findMany({
-            where: categoryWhere,
-            select: {
-              category: { select: { id: true, name: true, slug: true } },
-            },
-          }),
-        ]);
+    const [brandCounts, categoryCounts] = await Promise.all([
+      prisma.product.groupBy({
+        by: ["brandId"],
+        where: {
+          ...brandWhere,
+          brandId: { not: null },
+        },
+        _count: {
+          _all: true,
+        },
+      }),
+      prisma.product.groupBy({
+        by: ["categoryId"],
+        where: categoryWhere,
+        _count: {
+          _all: true,
+        },
+      }),
+    ]);
 
-        return { brandEntries, categoryEntries };
-      },
-      ["store-catalog-facets", cacheKey],
-      { revalidate: 300, tags: ["store:products", "store:brands", "store:categories"] },
-    )();
+    const [brands, categories] = await Promise.all([
+      prisma.brand.findMany({
+        where: {
+          id: { in: brandCounts.map((entry) => entry.brandId).filter((brandId): brandId is string => Boolean(brandId)) },
+        },
+        select: {
+          id: true,
+          name: true,
+          slug: true,
+        },
+      }),
+      prisma.category.findMany({
+        where: {
+          id: { in: categoryCounts.map((entry) => entry.categoryId) },
+        },
+        select: {
+          id: true,
+          name: true,
+          slug: true,
+        },
+      }),
+    ]);
+
+    const brandLookup = new Map(brands.map((brand) => [brand.id, brand]));
+    const categoryLookup = new Map(categories.map((category) => [category.id, category]));
 
     return {
-      brands: summarizeCatalogFacets(brandEntries).brands,
-      categories: summarizeCatalogFacets(categoryEntries).categories,
+      brands: sortFacetList(
+        brandCounts
+          .map((entry) => {
+            const brand = entry.brandId ? brandLookup.get(entry.brandId) : null;
+            if (!brand) return null;
+
+            return {
+              id: brand.id,
+              name: brand.name,
+              slug: brand.slug,
+              productCount: entry._count._all,
+            };
+          })
+          .filter((brand): brand is SearchSuggestionFacet => Boolean(brand)),
+      ),
+      categories: sortFacetList(
+        categoryCounts
+          .map((entry) => {
+            const category = categoryLookup.get(entry.categoryId);
+            if (!category) return null;
+
+            return {
+              id: category.id,
+              name: category.name,
+              slug: category.slug,
+              productCount: entry._count._all,
+            };
+          })
+          .filter((category): category is SearchSuggestionFacet => Boolean(category)),
+      ),
     };
   } catch {
     return { brands: [], categories: [] };
@@ -835,91 +864,82 @@ export async function getStoreBanners(placement: "hero" | "secondary"): Promise<
 }
 
 export async function getSearchSuggestions(query: string, limit = 5): Promise<SearchSuggestionsResult> {
-  const search = query.trim();
+  const search = query.trim().replace(/\s+/g, " ").slice(0, 80);
 
   if (!search || !hasDatabaseUrl()) {
     return { products: [], categories: [], brands: [] };
   }
 
   try {
-    const cacheKey = JSON.stringify({ search, limit });
-    const { products, categories, brands, categoryCounts, brandCounts } = await unstable_cache(
-      async () => {
-        const [products, categories, brands] = await Promise.all([
-          prisma.product.findMany({
-            where: {
-              status: "ACTIVE",
-              OR: buildProductSearchClauses(search),
-            },
-            select: {
-              id: true,
-              name: true,
-              slug: true,
-              category: { select: { name: true, slug: true } },
-              price: true,
-              image: true,
-              brand: { select: { name: true } },
-              description: true,
-              sku: true,
-              createdAt: true,
-            },
-            orderBy: [{ createdAt: "desc" }],
-            take: Math.max(limit * 4, 12),
-          }),
-          prisma.category.findMany({
-            where: {
-              OR: [
-                ...Array.from(new Set([search, ...expandSearchTerms(search)])).filter((term) => term.length >= 2).map((term) => ({ name: { contains: term } })),
-                {
-                  products: {
-                    some: {
-                      status: "ACTIVE",
-                      OR: buildProductSearchClauses(search),
-                    },
-                  },
+    const [products, categories, brands] = await Promise.all([
+      prisma.product.findMany({
+        where: {
+          status: "ACTIVE",
+          OR: buildProductSearchClauses(search),
+        },
+        select: {
+          id: true,
+          name: true,
+          slug: true,
+          category: { select: { name: true, slug: true } },
+          price: true,
+          image: true,
+          brand: { select: { name: true } },
+          description: true,
+          sku: true,
+          createdAt: true,
+        },
+        orderBy: [{ createdAt: "desc" }],
+        take: Math.max(limit * 4, 12),
+      }),
+      prisma.category.findMany({
+        where: {
+          OR: [
+            ...Array.from(new Set([search, ...expandSearchTerms(search)])).filter((term) => term.length >= 2).map((term) => ({ name: { contains: term } })),
+            {
+              products: {
+                some: {
+                  status: "ACTIVE",
+                  OR: buildProductSearchClauses(search),
                 },
-              ],
+              },
             },
-            select: {
-              id: true,
-              name: true,
-              slug: true,
-            },
-            take: 3,
-          }),
-          prisma.brand.findMany({
-            where: {
-              OR: [
-                ...Array.from(new Set([search, ...expandSearchTerms(search)])).filter((term) => term.length >= 2).map((term) => ({ name: { contains: term } })),
-                {
-                  products: {
-                    some: {
-                      status: "ACTIVE",
-                      OR: buildProductSearchClauses(search),
-                    },
-                  },
+          ],
+        },
+        select: {
+          id: true,
+          name: true,
+          slug: true,
+        },
+        take: 3,
+      }),
+      prisma.brand.findMany({
+        where: {
+          OR: [
+            ...Array.from(new Set([search, ...expandSearchTerms(search)])).filter((term) => term.length >= 2).map((term) => ({ name: { contains: term } })),
+            {
+              products: {
+                some: {
+                  status: "ACTIVE",
+                  OR: buildProductSearchClauses(search),
                 },
-              ],
+              },
             },
-            select: {
-              id: true,
-              name: true,
-              slug: true,
-            },
-            take: 3,
-          }),
-        ]);
+          ],
+        },
+        select: {
+          id: true,
+          name: true,
+          slug: true,
+        },
+        take: 3,
+      }),
+    ]);
 
-        const [categoryCounts, brandCounts] = await Promise.all([
-          Promise.all(categories.map((category) => prisma.product.count({ where: { status: "ACTIVE", categoryId: category.id } }))),
-          Promise.all(brands.map((brand) => prisma.product.count({ where: { status: "ACTIVE", brandId: brand.id } }))),
-        ]);
-
-        return { products, categories, brands, categoryCounts, brandCounts };
-      },
-      ["store-search-suggestions", cacheKey],
-      { revalidate: 120, tags: ["store:products", "store:categories", "store:brands"] },
-    )();
+    const [categoryCounts, brandCounts] = await Promise.all([
+      Promise.all(categories.map((category) => prisma.product.count({ where: { status: "ACTIVE", categoryId: category.id } }))),
+      Promise.all(brands.map((brand) => prisma.product.count({ where: { status: "ACTIVE", brandId: brand.id } }))),
+    ]);
 
     return {
       products: products
