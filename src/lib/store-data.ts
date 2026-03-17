@@ -413,27 +413,36 @@ export async function getFeaturedProducts(limit = 8): Promise<StoreProduct[]> {
   }
 }
 
-export async function getProductsByCategorySlug(slug: string): Promise<StoreProduct[]> {
+export async function getProductsByCategorySlug(slug: string, limit?: number): Promise<StoreProduct[]> {
   if (!hasDatabaseUrl()) return [];
 
+  const normalizedLimit = typeof limit === "number" && Number.isFinite(limit)
+    ? Math.max(1, Math.min(Math.floor(limit), 48))
+    : undefined;
+
+  const fetchProducts = async () => prisma.product.findMany({
+    where: {
+      status: "ACTIVE",
+      category: { slug },
+    },
+    include: {
+      category: { select: { name: true, slug: true } },
+      brand: { select: { name: true, slug: true } },
+      galleryImages: true,
+      variants: { where: { isActive: true }, orderBy: [{ createdAt: "asc" }] },
+    },
+    orderBy: [{ createdAt: "desc" }],
+    ...(normalizedLimit ? { take: normalizedLimit } : {}),
+  });
+
   try {
-    const products = await unstable_cache(
-      async () => prisma.product.findMany({
-        where: {
-          status: "ACTIVE",
-          category: { slug },
-        },
-        include: {
-          category: { select: { name: true, slug: true } },
-          brand: { select: { name: true, slug: true } },
-          galleryImages: true,
-          variants: { where: { isActive: true }, orderBy: [{ createdAt: "asc" }] },
-        },
-        orderBy: [{ createdAt: "desc" }],
-      }),
-      ["store-products-by-category", slug],
-      { revalidate: 300, tags: ["store:products", `store:category:${slug}`] },
-    )();
+    const products = normalizedLimit
+      ? await unstable_cache(
+          fetchProducts,
+          ["store-products-by-category", slug, String(normalizedLimit)],
+          { revalidate: 300, tags: ["store:products", `store:category:${slug}`] },
+        )()
+      : await fetchProducts();
 
     return products.map(mapProduct);
   } catch {

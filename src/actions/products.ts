@@ -27,8 +27,8 @@ export async function getBrandsAction(limit = 24) {
   return getStoreBrands(limit);
 }
 
-export async function getProductsByCategoryAction(slug: string) {
-  return getProductsByCategorySlug(slug);
+export async function getProductsByCategoryAction(slug: string, limit?: number) {
+  return getProductsByCategorySlug(slug, limit);
 }
 
 export async function getProductBySlugAction(slug: string) {

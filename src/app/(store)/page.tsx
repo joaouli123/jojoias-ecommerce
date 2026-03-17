@@ -3,7 +3,6 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import Script from "next/script";
 import { ArrowRight, Instagram } from "lucide-react";
-import { ProductCard } from "@/components/product/product-card";
 import { getBrandsAction, getCategoriesAction, getFeaturedProductsAction, getProductsByCategoryAction, getStoreBannersAction } from "@/actions/products";
 import { BannerCarousel, BenefitsCarousel, CategoriesCarousel, SecondaryBanners } from "@/components/home/carousels";
 import { BrandGrid } from "@/components/catalog/brand-grid";
@@ -75,7 +74,7 @@ export default async function Home() {
   const categoryRailProducts = await Promise.all(
     railCategories.map(async (category) => ({
       category,
-      products: (await getProductsByCategoryAction(category.slug)).slice(0, 8),
+      products: await getProductsByCategoryAction(category.slug, 8),
     })),
   );
 
@@ -283,7 +282,7 @@ function NewsletterEditorialSection() {
         <h2 className="font-serif text-[clamp(2.2rem,4vw,3.35rem)] leading-[1.1] tracking-[-0.03em] text-[#1A1A1A] mb-4">
           Fique por dentro das promoções
         </h2>
-        <p className="mb-8 text-sm leading-relaxed text-[#4b5563] md:text-base">
+        <p className="mb-8 text-sm leading-relaxed text-[#4F5560] md:text-base">
           Receba novidades, campanhas sazonais, acesso antecipado a seleções especiais e condições pensadas para quem acompanha a marca de perto.
         </p>
         
@@ -291,7 +290,7 @@ function NewsletterEditorialSection() {
           <NewsletterSubscribeForm />
         </div>
 
-        <div className="mt-8 flex flex-wrap justify-center gap-4 text-[11px] font-medium uppercase tracking-[0.18em] text-[#6b7280]">
+        <div className="mt-8 flex flex-wrap justify-center gap-4 text-[11px] font-medium uppercase tracking-[0.18em] text-[#5F6874]">
           <span>Lançamentos exclusivos</span>
           <span className="hidden sm:inline">•</span>
           <span>Cupons especiais</span>
